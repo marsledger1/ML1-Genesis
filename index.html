@@ -3,218 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML1 Protocol V5.0 | Mars Sovereign Mesh Node</title>
+    <title>ML1 V5.0 | MARS SOVEREIGN SUPREMACY</title>
     <style>
         :root {
-            --bg-color: #030105;
-            --mars-orange: #FF4500;
-            --mars-dust: #E34234;
+            --bg-deep: #050505;
+            --mars-red: #8c3b23;
+            --tech-green: #00ff41;
             --lag-blue: #00BFFF;
-            --hull-gray: rgba(20, 20, 22, 0.95);
-            --gray-text: #858095;
-            --accent-green: #5af7b1;
+            --terminal-gray: rgba(15, 15, 15, 0.96);
+            --text-glow: 0 0 15px rgba(0, 255, 65, 0.4);
         }
+
+        * { cursor: crosshair; box-sizing: border-box; border-radius: 0 !important; }
+
         body {
             margin: 0; padding: 0;
-            background-color: var(--bg-color); color: #f0f0f5;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-height: 100vh; text-align: center;
+            background-color: var(--bg-deep);
+            color: #d1d1d1;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
             overflow-x: hidden;
-            position: relative;
+            line-height: 1.6;
         }
-        #telemetry-canvas {
+
+        /* 背景：圖 1 (火星地表) */
+        .mars-bg-layer {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -2; pointer-events: none;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.85)), 
+                        url('https://i.imgur.com/BCWZEEA.jpeg'); 
+            background-size: cover; background-position: center;
+            z-index: -2; filter: contrast(120%) brightness(70%);
         }
-        .mars-atmosphere {
-            position: fixed; top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--mars-orange), transparent);
-            box-shadow: 0 0 15px var(--mars-orange); z-index: 10;
+
+        /* CRT 掃描線效果 */
+        body::after {
+            content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 999; background-size: 100% 3px, 3px 100%; pointer-events: none;
         }
-        .mars-horizon {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--mars-dust), transparent);
-            box-shadow: 0 0 15px var(--mars-dust); z-index: 10;
+
+        .telemetry-bar {
+            position: fixed; top: 0; width: 100%; height: 35px;
+            background: #000; border-bottom: 1px solid #333;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; font-size: 0.65rem; color: var(--tech-green); z-index: 1000;
         }
-        .telemetry-overlay {
-            position: fixed; top: 20px; left: 20px;
-            font-size: 0.7rem; color: var(--mars-orange);
-            text-align: left; line-height: 1.5; letter-spacing: 0.05rem; opacity: 0.8;
+
+        .container { max-width: 1100px; margin: 100px auto; padding: 40px; position: relative; z-index: 10; }
+
+        /* 創辦人區塊 (圖 2) */
+        .architect-profile {
+            display: flex; align-items: stretch; gap: 40px; margin-bottom: 80px;
+            background: var(--terminal-gray); border: 1px solid #333; padding: 40px;
+            box-shadow: 12px 12px 0px var(--mars-red);
         }
-        .signal-lag {
-            position: fixed; bottom: 20px; right: 25px;
-            font-size: 0.75rem; color: var(--lag-blue);
-            letter-spacing: 0.1rem; z-index: 10;
-            text-shadow: 0 0 4px var(--lag-blue); font-weight: bold;
+        .architect-photo {
+            width: 300px; height: 360px; flex-shrink: 0;
+            border: 1px solid var(--tech-green);
+            background: url('https://i.imgur.com/vbvlavU.jpeg') center/cover;
+            filter: contrast(110%);
         }
-        .container { max-width: 750px; padding: 60px 20px; z-index: 1; }
-        .logo { font-size: 2.6rem; font-weight: 900; letter-spacing: 0.5rem; text-shadow: 0 0 25px rgba(255, 69, 0, 0.6); margin-bottom: 2px; color: #fff; }
-        .version { font-size: 0.75rem; color: var(--gray-text); letter-spacing: 0.2rem; text-transform: uppercase; margin-bottom: 40px; }
+        .architect-bio h2 { font-size: 2.2rem; color: #fff; margin: 0; text-transform: uppercase; }
+        .architect-bio .position { color: var(--tech-green); font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 20px; display: block; }
+        .architect-bio p { font-size: 0.95rem; line-height: 1.7; color: #ccc; }
+
+        h1 { font-size: 4.5rem; letter-spacing: -4px; margin: 0; text-transform: uppercase; color: #fff; }
+        .tagline { color: var(--lag-blue); letter-spacing: 4px; font-size: 0.9rem; margin-bottom: 50px; border-left: 4px solid var(--mars-red); padding-left: 20px; }
+
+        /* 技術規格區塊 */
+        .tech-section { margin: 60px 0; }
+        .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .spec-card { border: 1px solid #222; padding: 30px; background: rgba(0,0,0,0.8); border-left: 2px solid var(--mars-red); }
+        .spec-card h4 { color: #fff; margin: 0 0 15px 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .spec-card p { font-size: 0.8rem; color: #999; margin: 0; }
+
+        /* 進度條 */
+        .sync-monitor { background: #000; border: 1px solid #222; padding: 35px; margin: 50px 0; }
+        .percentage { font-size: 2rem; color: var(--tech-green); font-weight: bold; }
+        .bar-outer { width: 100%; height: 8px; background: #111; margin: 20px 0; }
+        .bar-inner { height: 100%; background: var(--tech-green); box-shadow: 0 0 15px var(--tech-green); width: 0%; transition: width 2s ease; }
+
+        /* 表單與位址 */
+        .node-allocation { background: #000; border: 1px solid #333; padding: 40px; margin-bottom: 30px; }
+        .address-item { display: flex; justify-content: space-between; align-items: center; background: #0a0a0a; padding: 15px; border: 1px solid #222; margin-bottom: 10px; }
+        .address-item code { color: var(--tech-green); font-size: 0.85rem; }
         
-        .manifesto { 
-            font-size: 1.35rem; line-height: 1.8; margin-bottom: 35px; font-weight: bold; 
-            letter-spacing: 0.05rem; color: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.1);
-        }
-        .sub-manifesto { 
-            font-size: 0.95rem; line-height: 1.7; color: #b5b2c2; margin-bottom: 40px; 
-            text-align: justify; text-justify: inter-word; 
-            border: 1px solid rgba(255, 69, 0, 0.15); border-radius: 2px;
-            padding: 20px; background: var(--hull-gray);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-        }
-        
-        .code-box {
-            background-color: var(--hull-gray); border: 1px solid rgba(255, 69, 0, 0.2);
-            border-radius: 3px; padding: 25px; text-align: left;
-            font-size: 0.85rem; color: #e2e0eb; margin-bottom: 40px; 
-            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9), 0 4px 15px rgba(0,0,0,0.5);
-            border-left: 4px solid var(--mars-orange);
-        }
-        .quote { font-style: italic; color: var(--gray-text); font-size: 0.9rem; border-left: 2px solid var(--mars-dust); padding-left: 15px; margin-bottom: 50px; text-align: left; }
-        
-        .funding-box { 
-            background: var(--hull-gray); border: 1px dashed rgba(0, 191, 255, 0.3); 
-            border-radius: 3px; padding: 30px 25px; margin-top: 40px; text-align: left;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-        }
-        .funding-title { font-size: 1.1rem; letter-spacing: 0.1rem; font-weight: 700; margin-bottom: 15px; text-align: center; color: #fff; border-bottom: 1px solid #222; padding-bottom: 10px; }
-        .address-label { font-size: 0.8rem; color: var(--lag-blue); font-weight: 600; margin-top: 15px; margin-bottom: 5px; letter-spacing: 0.05rem; }
-        .address-tag { font-size: 0.85rem; background: #000; padding: 12px; border-radius: 3px; color: var(--accent-green); margin: 5px 0 15px 0; word-break: break-all; border: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
-        
-        .copy-btn { background: transparent; border: 1px solid #333; color: var(--gray-text); padding: 5px 12px; font-size: 0.7rem; cursor: pointer; transition: all 0.2s; font-weight: bold; }
-        .copy-btn:hover { background: var(--mars-orange); color: #000; border-color: var(--mars-orange); }
+        input, select { width: 100%; background: #000; color: var(--tech-green); border: 1px solid #333; padding: 15px; font-family: inherit; margin-bottom: 15px; font-size: 0.8rem; }
+        .btn-submit { background: var(--lag-blue); color: #fff; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; letter-spacing: 2px; }
+
+        footer { text-align: center; font-size: 0.65rem; color: #444; margin-top: 100px; padding-bottom: 50px; }
     </style>
 </head>
 <body>
-    <div class="mars-atmosphere"></div>
-    <div class="mars-horizon"></div>
-
-    <canvas id="telemetry-canvas"></canvas>
-    
-    <div class="telemetry-overlay">
-        LOC: JEZERO CRATER, MARS<br>
-        COORD: 18.38°N, 77.58°E<br>
-        SYS_REF: ML1_CORE_V5.0
+    <div class="mars-bg-layer"></div>
+    <div class="telemetry-bar">
+        <span>LOC: JEZERO_CRATER_ALPHA</span>
+        <span id="lag-counter">SIGNAL_LAG: 624.00s</span>
+        <span>SYS_STATUS: TOP_SECRET</span>
     </div>
 
-    <div class="signal-lag" id="lag-timer">LINK STATUS: TELEMETRY PENDING...</div>
-
     <div class="container">
-        <div class="logo">MARS LEDGER 1</div>
-        <div class="version">Protocol V5.0 // Interstellar Sovereign Mesh</div>
+        <header>
+            <h1>MARS LEDGER 1</h1>
+            <div class="tagline">PROTOCOL: ML1-2026-ALPHA // BEYOND THE LATENCY WALL</div>
+        </header>
 
-        <div class="manifesto">"Code is Law, Physics is the Judge."</div>
-
-        <div class="sub-manifesto">
-            At 2.25 × 10⁸ km, Earth-centric consensus protocols don’t just lag—they collapse. On Mars, physics is the only regulator. ML1 V5.0 is the first financial infrastructure designed to breathe within the 20-minute latency. We aren't optimizing for speed; we are mastering time.
-        </div>
-
-        <div class="code-box">
-            <span style="color: #666;">// ML1 Interstellar Bridge Synchronization Engine (Jezero Mesh)</span><br>
-            <span style="color: #666;">// Anti-Quantum Lattice-Based Cryptography Protocol</span><br><br>
-            <span style="color: #FF4500;">pub fn</span> <span style="color: #fff;">initialize_genesis_block</span>(intent: Checksum) -> Result&lt;LedgerState, InterstellarError&gt; {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF4500;">let</span> bridge = PostQuantumBridge::new(Algorithm::ML_KEM);<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF4500;">let</span> allocation = AsynchronousSnapshot::apply_rule_433();<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;commit_to_jezero_crater_mesh(bridge, allocation)<br>
-            }
-        </div>
-
-        <div class="quote">"Ref: Phase 1 Synchronization. Data verified. Vision driven." — Lead Architect</div>
-
-        <div class="funding-box">
-            <div class="funding-title">ANONYMOUS ECOSYSTEM FUELING (NODE VALIDATION)</div>
-            <div style="font-size:0.85rem; color:var(--gray-text); margin-bottom:20px; line-height:1.6; text-align: justify;">
-                Funding the physical persistence of the genesis node. Operating strictly under the Rule 433 Protocol, the system asynchronously distributes 10M deflationary capped ML1 Genesis Pioneer Credits (Mars Access Vouchers) to visionary early expanders.
+        <section class="architect-profile">
+            <div class="architect-photo"></div>
+            <div class="architect-bio">
+                <h2>Jack Yiu</h2>
+                <span class="position">CHIEF ARCHITECT // MARS COLONY ONE</span>
+                <p>
+                    "Traditional TCP/IP collapses under the 3-22 minute Latency Wall. ML1 is the first asynchronous state machine designed for the vacuum of deep space. We enable Starship and Optimus fleets to govern resources without Earth-side permissions."
+                </p>
             </div>
+        </section>
 
-            <div class="address-label">BTC Address (Native SegWit):</div>
-            <div class="address-tag">
-                <span id="btc-addr">bc1qr4gcc28muy5arydmpsmxr8p5tvf3de30eqftv3</span>
-                <button class="copy-btn" onclick="copyText('btc-addr', this)">VALIDATE NODE</button>
+        <!-- 技術白皮書核心板塊 -->
+        <section class="tech-section">
+            <h3 style="color: var(--mars-red); border-bottom: 1px solid #333; padding-bottom: 10px;">CORE INFRASTRUCTURE PILLARS</h3>
+            <div class="tech-grid">
+                <div class="spec-card">
+                    <h4>ASYNCHRONOUS STATE MACHINE</h4>
+                    <p>Abandoning synchronous confirmation for "Incremental Snapshot Synchronization." Mars nodes process local ledgers and emit encrypted state-diffs, eliminating the requirement for Earth-side real-time ACKs.</p>
+                </div>
+                <div class="spec-card">
+                    <h4>OPTIMUS AUTONOMOUS NODES</h4>
+                    <p>Every Tesla Optimus unit acts as a mobile validator. Utilizing FSD edge-compute, Optimus fleets verify ISRU production (e.g. Water-Ice harvesting) directly on the Jezero Mesh.</p>
+                </div>
+                <div class="spec-card">
+                    <h4>LATENCY-RESILIENT CREDIT</h4>
+                    <p>First-gen Martian liquidity. Predictive settlement based on ISRU production rates ensures the colony economy persists even during 24-hour signal blackout events.</p>
+                </div>
+                <div class="spec-card">
+                    <h4>2026 UNCREWED MISSION</h4>
+                    <p>Targeting 5 Starship uncrewed deployments to establish the first hardware node-mesh in the Martian North Pole, integrating orbital Starlink telemetry.</p>
+                </div>
             </div>
+        </section>
 
-            <div class="address-label">ETH / Base EVM Address (MetaMask Sync):</div>
-            <div class="address-tag">
-                <span id="eth-addr">0x359523F159DC11d3E88EeC7FeAB9750cBfF575f5</span>
-                <button class="copy-btn" onclick="copyText('eth-addr', this)">VALIDATE NODE</button>
+        <!-- 籌款進度 -->
+        <section class="sync-monitor">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <h3 style="font-size: 0.8rem; color: var(--lag-blue); margin: 0;">GENESIS FUNDING SYNCHRONIZATION</h3>
+                <div class="percentage" id="sync-percent">0%</div>
             </div>
+            <div class="bar-outer"><div class="bar-inner" id="sync-bar"></div></div>
+        </section>
 
-            <div class="address-label">SOL Address (Solana High-Throughput Mesh):</div>
-            <div class="address-tag">
-                <span id="sol-addr">HaxcCmk9zDndKPiudNJKTGtXueSNHQC6FrmnTPnH8g7f</span>
-                <button class="copy-btn" onclick="copyText('sol-addr', this)">VALIDATE NODE</button>
+        <!-- 驗證位址 -->
+        <section class="node-allocation">
+            <h3 style="margin-top: 0; font-size: 1rem; color: #fff;">PIONEER VALIDATION NODES</h3>
+            <div class="address-item">
+                <span style="color:#555;">BTC</span>
+                <code>bc1qr4gcc28muy5arydmpsmxr8p5tvf3de30eqftv3</code>
+                <button style="background:none; border:1px solid #333; color:#666; font-size:0.6rem; cursor:pointer;" onclick="copy('bc1qr4gcc28muy5arydmpsmxr8p5tvf3de30eqftv3')">COPY</button>
             </div>
-        </div>
+            <div class="address-item">
+                <span style="color:#555;">ETH / BASE</span>
+                <code>0x359523F159DC11d3E88EeC7FeAB9750cBfF575f5</code>
+                <button style="background:none; border:1px solid #333; color:#666; font-size:0.6rem; cursor:pointer;" onclick="copy('0x359523F159DC11d3E88EeC7FeAB9750cBfF575f5')">COPY</button>
+            </div>
+            <div class="address-item">
+                <span style="color:#555;">SOLANA</span>
+                <code>HaxcCmk9zDndKPiudNJKTGtXueSNHQC6FrmnTPnH8g7f</code>
+                <button style="background:none; border:1px solid #333; color:#666; font-size:0.6rem; cursor:pointer;" onclick="copy('HaxcCmk9zDndKPiudNJKTGtXueSNHQC6FrmnTPnH8g7f')">COPY</button>
+            </div>
+        </section>
+
+        <!-- 先鋒登記 (VC & Angel Portal) -->
+        <section class="node-allocation" style="border-color: var(--lag-blue);">
+            <h3 style="margin-top: 0; font-size: 1rem; color: var(--lag-blue);">PIONEER REGISTRY (VC PORTAL)</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <select id="reg-network"><option value="BTC">BTC</option><option value="ETH/BASE">ETH/BASE</option><option value="SOL">SOLANA</option></select>
+                <input type="number" id="reg-amount" placeholder="Commitment Amount">
+            </div>
+            <input type="text" id="reg-hash" placeholder="Transaction Hash (TXID)">
+            <button class="btn-submit" onclick="submitToLedger()">COMMIT TO INTERSTELLAR LEDGER</button>
+        </section>
+
+        <footer>JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT</footer>
     </div>
 
     <script>
-        const canvas = document.getElementById('telemetry-canvas');
-        const ctx = canvas.getContext('2d');
-        let points = [];
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        for(let i=0; i<60; i++) {
-            points.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 1.5,
-                vx: (Math.random() - 0.5) * 0.3,
-                vy: (Math.random() - 0.5) * 0.3
-            });
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'rgba(255, 69, 0, 0.05)';
-            for(let i=0; i<canvas.width; i+=15) {
-                for(let j=0; j<canvas.height; j+=15) {
-                    if(Math.random() > 0.92) ctx.fillRect(i, j, 1, 1);
-                }
-            }
-            
-            ctx.fillStyle = 'rgba(0, 191, 255, 0.3)';
-            points.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.random() * Math.PI * 2);
-                ctx.fill();
-                p.x += p.vx; p.y += p.vy;
-                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
-                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
-            });
-            requestAnimationFrame(animate);
-        }
-        animate();
+        const API_URL = 'https://sheetdb.io';
+        const GOAL = 1000000; 
 
         setInterval(() => {
-            const currentLag = 600 + Math.random() * 40;
-            document.getElementById('lag-timer').innerText = `OWLT LINK // SIGNAL LAG: ${currentLag.toFixed(2)}s`;
+            const lag = (601.66 + Math.random() * 5).toFixed(2);
+            document.getElementById('lag-counter').innerText = `SIGNAL_LAG: ${lag}s`;
         }, 1000);
 
-        function copyText(id, btn) {
-            const text = document.getElementById(id).innerText.trim();
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = btn.innerText;
-                btn.innerText = "SUCCESSFUL AMENDMENT ✓";
-                btn.style.backgroundColor = "var(--accent-green)";
-                btn.style.color = "#000";
-                btn.style.borderColor = "var(--accent-green)";
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.style.backgroundColor = "transparent";
-                    btn.style.color = "var(--gray-text)";
-                    btn.style.borderColor = "#333";
-                }, 1200);
-            }).catch(err => {
-                console.error('Critical Link Intercept Error: ', err);
-            });
+        async function updateProgress() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                let totalUSD = data.reduce((sum, item) => sum + parseFloat(item.USD_VALUATION || 0), 0);
+                let percent = Math.min((totalUSD / GOAL) * 100, 100).toFixed(1);
+                document.getElementById('sync-bar').style.width = percent + '%';
+                document.getElementById('sync-percent').innerText = percent + '%';
+            } catch (e) { console.error('Sync Error'); }
         }
+
+        async function submitToLedger() {
+            const network = document.getElementById('reg-network').value;
+            const amount = document.getElementById('reg-amount').value;
+            const hash = document.getElementById('reg-hash').value;
+            if(!amount || !hash) { alert("DATA INCOMPLETE"); return; }
+            const payload = { data: [{"TIMESTAMP (UTC)": new Date().toISOString(), "NETWORK": network, "ASSET_AMOUNT": amount, "PIONEER_ADDRESS": hash, "VALIDATION_STATUS": "PENDING"}] };
+            try {
+                const response = await fetch(API_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+                if(response.ok) { alert("SUCCESS: COMMITMENT RECORDED. NOTIFYING CHIEF ARCHITECT."); updateProgress(); }
+            } catch (e) { alert("SIGNAL LOSS"); }
+        }
+
+        function copy(t) { navigator.clipboard.writeText(t); alert("COPIED TO TERMINAL"); }
+        updateProgress();
+        setInterval(updateProgress, 30000);
     </script>
 </body>
 </html>
