@@ -92,6 +92,35 @@
         .btn-submit { background: var(--lag-blue); color: #fff; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; letter-spacing: 2px; }
 
         footer { text-align: center; font-size: 0.65rem; color: #444; margin-top: 100px; padding-bottom: 50px; }
+
+/* --- MOBILE REPAIR PATCH --- */
+@media (max-width: 768px) {
+    h1 { font-size: 2.2rem !important; } /* 縮小手機端標題 */
+    .architect-profile { 
+        flex-direction: column !important; /* 手機端改為垂直排列 */
+        align-items: center; 
+        text-align: center;
+        padding: 20px !important;
+    }
+    .architect-photo { 
+        width: 100% !important; 
+        max-width: 280px; 
+        height: 320px !important; 
+        margin-bottom: 20px;
+    }
+    .tech-grid { 
+        grid-template-columns: 1fr !important; /* 技術卡片改為單列 */
+    }
+    .address-item { 
+        flex-direction: column !important; 
+        gap: 10px;
+    }
+    .address-item code {
+        font-size: 0.65rem !important;
+        white-space: pre-wrap; /* 讓地址自動換行，不飛出去 */
+    }
+    .container { padding: 15px !important; }
+}
     </style>
 </head>
 <body>
