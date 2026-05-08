@@ -186,41 +186,78 @@
         <footer>JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT</footer>
     </div>
 
-    <script>
-        const API_URL = 'https://sheetdb.io';
-        const GOAL = 1000000; 
+<script>
+    // 確定的 API 連結
+    const API_URL = 'https://sheetdb.io/api/v1/fw7pgw2cushvq';
+    const GOAL = 1000000; 
 
-        setInterval(() => {
-            const lag = (601.66 + Math.random() * 5).toFixed(2);
-            document.getElementById('lag-counter').innerText = `SIGNAL_LAG: ${lag}s`;
-        }, 1000);
+    // 1. 訊號延遲模擬
+    setInterval(() => {
+        const lag = (601.66 + Math.random() * 5).toFixed(2);
+        document.getElementById('lag-counter').innerText = `SIGNAL_LAG: ${lag}s`;
+    }, 1000);
 
-        async function updateProgress() {
-            try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
-                let totalUSD = data.reduce((sum, item) => sum + parseFloat(item.USD_VALUATION || 0), 0);
-                let percent = Math.min((totalUSD / GOAL) * 100, 100).toFixed(1);
-                document.getElementById('sync-bar').style.width = percent + '%';
-                document.getElementById('sync-percent').innerText = percent + '%';
-            } catch (e) { console.error('Sync Error'); }
+    // 2. 高相容性數據抓取邏輯
+    async function updateProgress() {
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            
+            let totalUSD = 0;
+            if (data && data.length > 0) {
+                data.forEach(item => {
+                    // 自動匹配任何包含 USD 和 VALUATION 的欄位名稱
+                    for (let key in item) {
+                        if (key.toUpperCase().includes('USD') && key.toUpperCase().includes('VALUATION')) {
+                            let val = parseFloat(item[key]);
+                            if (!isNaN(val)) totalUSD += val;
+                        }
+                    }
+                });
+            }
+
+            let percent = Math.min((totalUSD / GOAL) * 100, 100).toFixed(1);
+            document.getElementById('sync-bar').style.width = percent + '%';
+            document.getElementById('sync-percent').innerText = percent + '%';
+            console.log("ML1 Ledger Synced. Total Amount: $" + totalUSD);
+        } catch (e) { 
+            console.error('Telemetry Interrupted:', e); 
         }
+    }
 
-        async function submitToLedger() {
-            const network = document.getElementById('reg-network').value;
-            const amount = document.getElementById('reg-amount').value;
-            const hash = document.getElementById('reg-hash').value;
-            if(!amount || !hash) { alert("DATA INCOMPLETE"); return; }
-            const payload = { data: [{"TIMESTAMP (UTC)": new Date().toISOString(), "NETWORK": network, "ASSET_AMOUNT": amount, "PIONEER_ADDRESS": hash, "VALIDATION_STATUS": "PENDING"}] };
-            try {
-                const response = await fetch(API_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
-                if(response.ok) { alert("SUCCESS: COMMITMENT RECORDED. NOTIFYING CHIEF ARCHITECT."); updateProgress(); }
-            } catch (e) { alert("SIGNAL LOSS"); }
-        }
+    // 3. 提交功能 (Pioneer Registry)
+    async function submitToLedger() {
+        const network = document.getElementById('reg-network').value;
+        const amount = document.getElementById('reg-amount').value;
+        const hash = document.getElementById('reg-hash').value;
+        if(!amount || !hash) { alert("DATA INCOMPLETE"); return; }
+        
+        const payload = { data: [{
+            "TIMESTAMP (UTC)": new Date().toISOString(), 
+            "NETWORK": network, 
+            "ASSET_AMOUNT": amount, 
+            "PIONEER_ADDRESS": hash, 
+            "VALIDATION_STATUS": "PENDING"
+        }] };
 
-        function copy(t) { navigator.clipboard.writeText(t); alert("COPIED TO TERMINAL"); }
-        updateProgress();
-        setInterval(updateProgress, 30000);
+        try {
+            const response = await fetch(API_URL, { 
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify(payload) 
+            });
+            if(response.ok) { 
+                alert("DATA COMMITTED TO INTERSTELLAR LEDGER."); 
+                updateProgress(); 
+            }
+        } catch (e) { alert("SIGNAL LOSS"); }
+    }
+
+    function copy(t) { navigator.clipboard.writeText(t); alert("COPIED TO TERMINAL"); }
+
+    // 啟動與循環刷新
+    updateProgress();
+    setInterval(updateProgress, 30000); 
     </script>
 </body>
 </html>
