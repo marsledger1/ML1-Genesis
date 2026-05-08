@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML1 Protocol V3.8 | Mars Sovereign Mesh Node</title>
+    <style>
+        :root {
+            --bg-color: #030105;
+            --mars-orange: #FF4500;
+            --mars-dust: #E34234;
+            --lag-blue: #00BFFF;
+            --hull-gray: rgba(20, 20, 22, 0.95);
+            --gray-text: #858095;
+            --accent-green: #5af7b1;
+        }
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-color); color: #f0f0f5;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; text-align: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+        #telemetry-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2; pointer-events: none;
+        }
+        .mars-atmosphere {
+            position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--mars-orange), transparent);
+            box-shadow: 0 0 15px var(--mars-orange); z-index: 10;
+        }
+        .mars-horizon {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--mars-dust), transparent);
+            box-shadow: 0 0 15px var(--mars-dust); z-index: 10;
+        }
+        .telemetry-overlay {
+            position: fixed; top: 20px; left: 20px;
+            font-size: 0.7rem; color: var(--mars-orange);
+            text-align: left; line-height: 1.5; letter-spacing: 0.05rem; opacity: 0.8;
+        }
+        .signal-lag {
+            position: fixed; bottom: 20px; right: 25px;
+            font-size: 0.75rem; color: var(--lag-blue);
+            letter-spacing: 0.1rem; z-index: 10;
+            text-shadow: 0 0 4px var(--lag-blue); font-weight: bold;
+        }
+        .container { max-width: 750px; padding: 60px 20px; z-index: 1; }
+        .logo { font-size: 2.6rem; font-weight: 900; letter-spacing: 0.5rem; text-shadow: 0 0 25px rgba(255, 69, 0, 0.6); margin-bottom: 2px; color: #fff; }
+        .version { font-size: 0.75rem; color: var(--gray-text); letter-spacing: 0.2rem; text-transform: uppercase; margin-bottom: 40px; }
+        
+        .manifesto { 
+            font-size: 1.35rem; line-height: 1.8; margin-bottom: 35px; font-weight: bold; 
+            letter-spacing: 0.05rem; color: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.1);
+        }
+        .sub-manifesto { 
+            font-size: 0.95rem; line-height: 1.7; color: #b5b2c2; margin-bottom: 40px; 
+            text-align: justify; text-justify: inter-word; 
+            border: 1px solid rgba(255, 69, 0, 0.15); border-radius: 2px;
+            padding: 20px; background: var(--hull-gray);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+        
+        .code-box {
+            background-color: var(--hull-gray); border: 1px solid rgba(255, 69, 0, 0.2);
+            border-radius: 3px; padding: 25px; text-align: left;
+            font-size: 0.85rem; color: #e2e0eb; margin-bottom: 40px; 
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9), 0 4px 15px rgba(0,0,0,0.5);
+            border-left: 4px solid var(--mars-orange);
+        }
+        .quote { font-style: italic; color: var(--gray-text); font-size: 0.9rem; border-left: 2px solid var(--mars-dust); padding-left: 15px; margin-bottom: 50px; text-align: left; }
+        
+        .funding-box { 
+            background: var(--hull-gray); border: 1px dashed rgba(0, 191, 255, 0.3); 
+            border-radius: 3px; padding: 30px 25px; margin-top: 40px; text-align: left;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+        .funding-title { font-size: 1.1rem; letter-spacing: 0.1rem; font-weight: 700; margin-bottom: 15px; text-align: center; color: #fff; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .address-label { font-size: 0.8rem; color: var(--lag-blue); font-weight: 600; margin-top: 15px; margin-bottom: 5px; letter-spacing: 0.05rem; }
+        .address-tag { font-size: 0.85rem; background: #000; padding: 12px; border-radius: 3px; color: var(--accent-green); margin: 5px 0 15px 0; word-break: break-all; border: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
+        
+        .copy-btn { background: transparent; border: 1px solid #333; color: var(--gray-text); padding: 5px 12px; font-size: 0.7rem; cursor: pointer; transition: all 0.2s; font-weight: bold; }
+        .copy-btn:hover { background: var(--mars-orange); color: #000; border-color: var(--mars-orange); }
+    </style>
+</head>
+<body>
+    <div class="mars-atmosphere"></div>
+    <div class="mars-horizon"></div>
+
+    <canvas id="telemetry-canvas"></canvas>
+    
+    <div class="telemetry-overlay">
+        LOC: JEZERO CRATER, MARS<br>
+        COORD: 18.38°N, 77.58°E<br>
+        SYS_REF: ML1_CORE_V4.3
+    </div>
+
+    <div class="signal-lag" id="lag-timer">LINK STATUS: TELEMETRY PENDING...</div>
+
+    <div class="container">
+        <div class="logo">MARS LEDGER 1</div>
+        <div class="version">Protocol V3.8 // Interstellar Sovereign Mesh</div>
+
+        <div class="manifesto">"Code is Law, Physics is the Judge."</div>
+
+        <div class="sub-manifesto">
+            At 2.25 × 10⁸ km, Earth-centric consensus protocols don’t just lag—they collapse. On Mars, physics is the only regulator. ML1 V3.8 is the first financial infrastructure designed to breathe within the 20-minute latency. We aren't optimizing for speed; we are mastering time.
+        </div>
+
+        <div class="code-box">
+            <span style="color: #666;">// ML1 Interstellar Bridge Synchronization Engine (Jezero Mesh)</span><br>
+            <span style="color: #666;">// Anti-Quantum Lattice-Based Cryptography Protocol</span><br><br>
+            <span style="color: #FF4500;">pub fn</span> <span style="color: #fff;">initialize_genesis_block</span>(intent: Checksum) -> Result&lt;LedgerState, InterstellarError&gt; {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF4500;">let</span> bridge = PostQuantumBridge::new(Algorithm::ML_KEM);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF4500;">let</span> allocation = AsynchronousSnapshot::apply_rule_433();<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;commit_to_jezero_crater_mesh(bridge, allocation)<br>
+            }
+        </div>
+
+        <div class="quote">"Ref: Phase 1 Synchronization. Data verified. Vision driven." — Lead Architect</div>
+
+        <div class="funding-box">
+            <div class="funding-title">ANONYMOUS ECOSYSTEM FUELING (NODE VALIDATION)</div>
+            <div style="font-size:0.85rem; color:var(--gray-text); margin-bottom:20px; line-height:1.6; text-align: justify;">
+                Funding the physical persistence of the genesis node. Operating strictly under the Rule 433 Protocol, the system asynchronously distributes 10M deflationary capped ML1 Genesis Pioneer Credits (Mars Access Vouchers) to visionary early expanders.
+            </div>
+
+            <div class="address-label">BTC Address (Native SegWit):</div>
+            <div class="address-tag">
+                <span id="btc-addr">bc1qr4gcc28muy5arydmpsmxr8p5tvf3de30eqftv3</span>
+                <button class="copy-btn" onclick="copyText('btc-addr', this)">VALIDATE NODE</button>
+            </div>
+
+            <div class="address-label">ETH / Base EVM Address (MetaMask Sync):</div>
+            <div class="address-tag">
+                <span id="eth-addr">0x359523F159DC11d3E88EeC7FeAB9750cBfF575f5</span>
+                <button class="copy-btn" onclick="copyText('eth-addr', this)">VALIDATE NODE</button>
+            </div>
+
+            <div class="address-label">SOL Address (Solana High-Throughput Mesh):</div>
+            <div class="address-tag">
+                <span id="sol-addr">HaxcCmk9zDndKPiudNJKTGtXueSNHQC6FrmnTPnH8g7f</span>
+                <button class="copy-btn" onclick="copyText('sol-addr', this)">VALIDATE NODE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('telemetry-canvas');
+        const ctx = canvas.getContext('2d');
+        let points = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        for(let i=0; i<60; i++) {
+            points.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.5,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(255, 69, 0, 0.05)';
+            for(let i=0; i<canvas.width; i+=15) {
+                for(let j=0; j<canvas.height; j+=15) {
+                    if(Math.random() > 0.92) ctx.fillRect(i, j, 1, 1);
+                }
+            }
+            
+            ctx.fillStyle = 'rgba(0, 191, 255, 0.3)';
+            points.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.random() * Math.PI * 2);
+                ctx.fill();
+                p.x += p.vx; p.y += p.vy;
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        setInterval(() => {
+            const currentLag = 600 + Math.random() * 40;
+            document.getElementById('lag-timer').innerText = `OWLT LINK // SIGNAL LAG: ${currentLag.toFixed(2)}s`;
+        }, 1000);
+
+        function copyText(id, btn) {
+            const text = document.getElementById(id).innerText.trim();
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "SUCCESSFUL AMENDMENT ✓";
+                btn.style.backgroundColor = "var(--accent-green)";
+                btn.style.color = "#000";
+                btn.style.borderColor = "var(--accent-green)";
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.backgroundColor = "transparent";
+                    btn.style.color = "var(--gray-text)";
+                    btn.style.borderColor = "#333";
+                }, 1200);
+            }).catch(err => {
+                console.error('Critical Link Intercept Error: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
