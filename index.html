@@ -47,6 +47,319 @@
             padding: 0 20px; font-size: 0.65rem; color: var(--tech-green); z-index: 1000;
         }
 
+        .lang-switch { position: fixed; top: 45px; right: 20px; z-index: 1100; }
+        .lang-btn { background: rgba(0,0,0,0.7); border: 1px solid var(--lag-blue); color: var(--lag-blue); padding: 4px 10px; font-size: 0.6rem; cursor: pointer; font-family: inherit; }
+        .lang-btn.active { background: var(--lag-blue); color: #000; }
+
+        .container { max-width: 1100px; margin: 100px auto; padding: 40px; position: relative; z-index: 10; }
+
+        .architect-profile {
+            display: flex; align-items: stretch; gap: 40px; margin-bottom: 80px;
+            background: var(--terminal-gray); border: 1px solid #333; padding: 40px;
+            box-shadow: 12px 12px 0px var(--mars-red);
+        }
+        .architect-photo {
+            width: 300px; height: 360px; flex-shrink: 0;
+            border: 1px solid var(--tech-green);
+            background: url('https://i.imgur.com/vbvlavU.jpeg') center/cover;
+            filter: contrast(110%);
+        }
+        .architect-bio h2 { font-size: 2.2rem; color: #fff; margin: 0; text-transform: uppercase; }
+        .architect-bio .position { color: var(--tech-green); font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 20px; display: block; }
+        .architect-bio p { font-size: 0.95rem; line-height: 1.7; color: #ccc; }
+
+        h1 { font-size: 4.5rem; letter-spacing: -4px; margin: 0; text-transform: uppercase; color: #fff; }
+        .tagline { color: var(--lag-blue); letter-spacing: 4px; font-size: 0.9rem; margin-bottom: 50px; border-left: 4px solid var(--mars-red); padding-left: 20px; }
+
+        .tech-section { margin: 60px 0; }
+        .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .spec-card { border: 1px solid #222; padding: 30px; background: rgba(0,0,0,0.8); border-left: 2px solid var(--mars-red); }
+        .spec-card h4 { color: #fff; margin: 0 0 15px 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .spec-card p { font-size: 0.8rem; color: #999; margin: 0; }
+
+        .sync-monitor { background: #000; border: 1px solid #222; padding: 35px; margin: 50px 0; }
+        .percentage { font-size: 2rem; color: var(--tech-green); font-weight: bold; }
+        .bar-outer { width: 100%; height: 8px; background: #111; margin: 20px 0; }
+        .bar-inner { height: 100%; background: var(--tech-green); box-shadow: 0 0 15px var(--tech-green); width: 0%; transition: width 2s ease; }
+
+        .node-allocation { background: #000; border: 1px solid #333; padding: 40px; margin-bottom: 30px; }
+        .address-item { display: flex; justify-content: space-between; align-items: center; background: #0a0a0a; padding: 15px; border: 1px solid #222; margin-bottom: 10px; }
+        .address-item code { color: var(--tech-green); font-size: 0.85rem; }
+        
+        input, select { width: 100%; background: #000; color: var(--tech-green); border: 1px solid #333; padding: 15px; font-family: inherit; margin-bottom: 15px; font-size: 0.8rem; }
+        .btn-submit { background: var(--lag-blue); color: #fff; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; letter-spacing: 2px; font-family: inherit; }
+
+        footer { text-align: center; font-size: 0.65rem; color: #444; margin-top: 100px; padding-bottom: 50px; text-transform: uppercase; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem !important; }
+            .architect-profile { flex-direction: column !important; align-items: center; text-align: center; padding: 20px !important; }
+            .architect-photo { width: 100% !important; max-width: 280px; height: 320px !important; margin-bottom: 20px; }
+            .tech-grid { grid-template-columns: 1fr !important; }
+            .address-item { flex-direction: column !important; gap: 10px; }
+            .address-item code { font-size: 0.65rem !important; white-space: pre-wrap; }
+            .container { padding: 15px !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="mars-bg-layer"></div>
+    <div class="lang-switch">
+        <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">ZH</button>
+    </div>
+    <div class="telemetry-bar">
+        <span id="t-loc">LOC: JEZERO_CRATER_ALPHA</span>
+        <span id="lag-counter">SIGNAL_LAG: 624.00s</span>
+        <span id="t-sys">SYS_STATUS: TOP_SECRET</span>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 id="t-head">MARS LEDGER 1</h1>
+            <div class="tagline" id="t-tag">PROTOCOL: ML1-V5.0 // BEYOND THE LATENCY WALL</div>
+        </header>
+
+        <section class="architect-profile">
+            <div class="architect-photo"></div>
+            <div class="architect-bio">
+                <h2 id="t-name">Jack Yiu</h2>
+                <span class="position" id="t-pos">CHIEF ARCHITECT // MARS COLONY ONE</span>
+                <p id="t-bio">
+                    "Traditional TCP/IP and legacy Earth-bound blockchains (BTC, ETH, SOL) collapse under the 3-22 minute Latency Wall. Their synchronous consensus mechanisms cannot survive the speed of light barrier. ML1 is the first asynchronous state machine designed for the vacuum of deep space—enabling Mars-native liquidity that remains functional even when Earth is occluded."
+                </p>
+            </div>
+        </section>
+
+        <section class="tech-section">
+            <h3 id="t-pill-h" style="color: var(--mars-red); border-bottom: 1px solid #333; padding-bottom: 10px;">CORE INFRASTRUCTURE PILLARS</h3>
+            <div class="tech-grid" id="pill-grid">
+                <!-- Content injected via JS -->
+            </div>
+        </section>
+
+        <section class="tech-section" style="border: 1px solid var(--lag-blue); padding: 30px; background: rgba(0, 191, 255, 0.05); margin-top: -20px; margin-bottom: 40px;">
+            <h3 id="t-tok-h" style="color: var(--lag-blue); border-bottom: 1px solid #00BFFF; padding-bottom: 10px; font-size: 1rem;">V5.0 SUPREMACY: TOKENOMICS</h3>
+            <div class="tech-grid" id="tok-grid">
+                <!-- Content injected via JS -->
+            </div>
+            
+            <p id="t-verify" style="font-size: 0.65rem; color: #666; margin-top: 15px; letter-spacing: 1px; text-align: center;">
+                * ALL COMMITS ARE MANUALLY VERIFIED VIA AIR-GAPPED SNAPSHOT SYNC TO ENSURE INTERSTELLAR LEDGER INTEGRITY.
+            </p>
+
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(0, 191, 255, 0.3); text-align: center;">
+                <p id="t-dust-h" style="font-size: 0.85rem; color: #fff; letter-spacing: 2px; margin: 0; text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);">
+                    CURRENT STATUS: RECRUITMENT OF <span style="color: var(--lag-blue); font-weight: bold;">"GENESIS DUST-SEEDERS"</span> IS ACTIVE.
+                </p>
+                <p id="t-dust-p" style="font-size: 0.65rem; color: var(--tech-green); margin-top: 8px; opacity: 0.8;">
+                    EACH SEEDER WILL BE IMMORTALIZED IN THE ML1 GENESIS BLOCK // FIRST-LEVEL ACCESS GRANTED.
+                </p>
+            </div>
+        </section>
+
+        <section class="sync-monitor">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <h3 id="t-sync-h" style="font-size: 0.8rem; color: var(--lag-blue); margin: 0;">GENESIS FUNDING SYNCHRONIZATION</h3>
+                    <p id="t-sync-p" style="font-size: 0.7rem; color: var(--mars-red); margin: 5px 0 0 0; letter-spacing: 1px;">[ TARGET: 1,000,000 USD TO TRIGGER PHASE 1 HARDWARE FABRICATION ]</p>
+                </div>
+                <div class="percentage" id="sync-percent">0%</div>
+            </div>
+            <div class="bar-outer"><div class="bar-inner" id="sync-bar"></div></div>
+        </section>
+
+        <section class="node-allocation">
+            <h3 id="t-node-h" style="margin-top: 0; font-size: 1rem; color: #fff;">PIONEER VALIDATION NODES</h3>
+            <div class="address-item">
+                <span style="color:#555;">BTC</span>
+                <code>bc1qr4gcc28muy5arydmpsmxr8p5tvf3de30eqftv3</code>
+                <button style="background:none; border:1px solid #333; color:#666; font-size:0.6rem; cursor:pointer;" onclick="copy('bc1qr4gcc28muy5arydmpsmxr8p5tvf3de30eqftv3')">COPY</button>
+            </div>
+            <div class="address-item">
+                <span style="color:#555;">ETH / BASE</span>
+                <code>0x359523F159DC11d3E88EeC7FeAB9750cBfF575f5</code>
+                <button style="background:none; border:1px solid #333; color:#666; font-size:0.6rem; cursor:pointer;" onclick="copy('0x359523F159DC11d3E88EeC7FeAB9750cBfF575f5')">COPY</button>
+            </div>
+            <div class="address-item">
+                <span style="color:#555;">SOLANA</span>
+                <code>HaxcCmk9zDndKPiudNJKTGtXueSNHQC6FrmnTPnH8g7f</code>
+                <button style="background:none; border:1px solid #333; color:#666; font-size:0.6rem; cursor:pointer;" onclick="copy('HaxcCmk9zDndKPiudNJKTGtXueSNHQC6FrmnTPnH8g7f')">COPY</button>
+            </div>
+        </section>
+
+        <section class="node-allocation" style="border-color: var(--lag-blue);">
+            <h3 id="t-reg-h" style="margin-top: 0; font-size: 1rem; color: var(--lag-blue);">PIONEER REGISTRY (VC PORTAL)</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <select id="reg-network"><option value="BTC">BTC</option><option value="ETH/BASE">ETH/BASE</option><option value="SOL">SOLANA</option></select>
+                <input type="number" id="reg-amount" placeholder="Commitment Amount">
+            </div>
+            <input type="text" id="reg-hash" placeholder="Transaction Hash (TXID)">
+            <button class="btn-submit" id="t-btn" onclick="submitToLedger()">COMMIT TO INTERSTELLAR LEDGER</button>
+        </section>
+
+        <footer id="t-foot">JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT</footer>
+    </div>
+
+    <script>
+        const API_URL = 'https://sheetdb.io/api/v1/fw7pgw2cushvq';
+        const GOAL = 1000000; 
+
+        const content = {
+            en: {
+                loc: "LOC: JEZERO_CRATER_ALPHA", sys: "SYS_STATUS: TOP_SECRET",
+                head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V5.0 // BEYOND THE LATENCY WALL",
+                name: "Jack Yiu", pos: "CHIEF ARCHITECT // MARS COLONY ONE",
+                bio: "\"Traditional TCP/IP and legacy Earth-bound blockchains (BTC, ETH, SOL) collapse under the 3-22 minute Latency Wall. Their synchronous consensus mechanisms cannot survive the speed of light barrier. ML1 is the first asynchronous state machine designed for the vacuum of deep space—enabling Mars-native liquidity that remains functional even when Earth is occluded.\"",
+                pillH: "CORE INFRASTRUCTURE PILLARS",
+                pills: [
+                    ["ASYNCHRONOUS STATE MACHINE", "Abandoning synchronous confirmation for \"Incremental Snapshot Synchronization.\" Mars nodes process local ledgers and emit encrypted state-diffs, eliminating the requirement for Earth-side real-time ACKs."],
+                    ["OPTIMUS AUTONOMOUS NODES", "Every Tesla Optimus unit acts as a mobile validator. Utilizing FSD edge-compute, Optimus fleets verify ISRU production directly on the Jezero Mesh."],
+                    ["LATENCY-RESILIENT CREDIT", "First-gen Martian liquidity. Predictive settlement based on ISRU production rates ensures the colony economy persists even during 24-hour signal blackout events. Deflationary resource-anchored model."],
+                    ["2027-2029 UNCREWED MISSION", "Targeting 5 Starship uncrewed deployments to establish the first hardware node-mesh in the Martian North Pole, integrating orbital Starlink telemetry."]
+                ],
+                tokH: "V5.0 SUPREMACY: TOKENOMICS",
+                toks: [
+                    ["10,000,000 FIXED SUPPLY", "Total supply is hard-capped. 1 ML1 represents 1/10M bandwidth allocation of the Jezero Mesh. No inflation, purely anchored to Mars infrastructure growth."],
+                    ["GENESIS EQUITY OPTION", "Phase 1 participants secure 1:1 conversion rights to Mars Ledger Corp. preferred shares. Beyond tokens: you are owning the backbone of Martian utility."]
+                ],
+                verify: "* ALL COMMITS ARE MANUALLY VERIFIED VIA AIR-GAPPED SNAPSHOT SYNC TO ENSURE INTERSTELLAR LEDGER INTEGRITY.",
+                dustH: 'CURRENT STATUS: RECRUITMENT OF <span style="color: var(--lag-blue); font-weight: bold;">"GENESIS DUST-SEEDERS"</span> IS ACTIVE.',
+                dustP: "EACH SEEDER WILL BE IMMORTALIZED IN THE ML1 GENESIS BLOCK // FIRST-LEVEL ACCESS GRANTED.",
+                syncH: "GENESIS FUNDING SYNCHRONIZATION", syncP: "[ TARGET: 1,000,000 USD TO TRIGGER PHASE 1 HARDWARE FABRICATION ]",
+                nodeH: "PIONEER VALIDATION NODES", regH: "PIONEER REGISTRY (VC PORTAL)",
+                btn: "COMMIT TO INTERSTELLAR LEDGER", foot: "JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT"
+            },
+            zh: {
+                loc: "座標: JEZERO_CRATER_ALPHA", sys: "系統狀態: 絕密",
+                head: "火星帳本 1 號", tag: "協議: ML1-V5.0 // 跨越延遲之牆",
+                name: "Jack Yiu", pos: "首席架構師 // 火星第一殖民地",
+                bio: "「傳統 TCP/IP 與舊有的地球鏈協議（BTC, ETH, SOL）在 3-22 分鐘的延遲牆面前會徹底崩潰。它們的同步共識機制無法跨越光速障礙。ML1 是首個為深空真空設計的非同步狀態機——確保在地球信號被遮蔽時，火星本土流動性依然能自主運作。」",
+                pillH: "核心基礎設施四大支柱",
+                pills: [
+                    ["非同步狀態機", "捨棄同步確認機制，採用「增量快照同步」。火星節點處理本地賬本並發射加密狀態差異，徹底消除對地球端實時回應的依賴。"],
+                    ["Optimus 自主驗證節點", "每一台 Tesla Optimus 單位皆作為移動驗證者。利用 FSD 邊緣計算能力，Optimus 集群直接在 Jezero 網格上驗證原位資源 (ISRU) 生產。"],
+                    ["延遲彈性信用體系", "火星第一代流動性。基於生產速率的預測性結算機制，確保殖民地經濟在黑障期（如兩週的太陽合日中斷）仍能持續運轉。"],
+                    ["2027-2029 無人任務", "目標部署 5 艘無人版 Starship，在火星北極建立首個硬體節點網格，並整合星鏈 (Starlink) 軌道遙測數據。"]
+                ],
+                tokH: "V5.0 至高無上：代幣經濟學",
+                toks: [
+                    ["10,000,000 恆定總量", "供應量永久封頂。1 枚 ML1 代表 Jezero 網格千萬分之一的頻寬分配權。無通脹，價值純粹錨定火星基礎設施。"],
+                    ["創世股權認購權", "第一階段參與者獲得 1:1 兌換 Mars Ledger Corp. 優先股權利。超越代幣：你擁有的是火星公用事業的骨幹資產。"]
+                ],
+                verify: "* 所有提交均通過離線快照異步驗證，以確保星際賬本的完整性。",
+                dustH: '當前狀態：<span style="color: var(--lag-blue); font-weight: bold;">「創世塵播者」</span>招募中',
+                dustP: "每位播種者將被永久刻入 ML1 創世區塊 // 獲取第一級核心訪問權限",
+                syncH: "創世資金同步進度", syncP: "[ 目標: 1,000,000 USD 以觸發第一階段硬件製造 ]",
+                nodeH: "先鋒驗證節點 (錢包地址)", regH: "先鋒註冊入口 (VC 提交門戶)",
+                btn: "提交至星際賬本", foot: "耶澤羅撞擊坑 // 總架構師: JACK YIU // ALPHA 部署階段"
+            }
+        };
+
+        function setLang(lang) {
+            const d = content[lang];
+            document.getElementById('t-loc').innerText = d.loc;
+            document.getElementById('t-sys').innerText = d.sys;
+            document.getElementById('t-head').innerText = d.head;
+            document.getElementById('t-tag').innerText = d.tag;
+            document.getElementById('t-name').innerText = d.name;
+            document.getElementById('t-pos').innerText = d.pos;
+            document.getElementById('t-bio').innerText = d.bio;
+            document.getElementById('t-pill-h').innerText = d.pillH;
+            document.getElementById('t-tok-h').innerText = d.tokH;
+            document.getElementById('t-verify').innerText = d.verify;
+            document.getElementById('t-dust-h').innerHTML = d.dustH;
+            document.getElementById('t-dust-p').innerText = d.dustP;
+            document.getElementById('t-sync-h').innerText = d.syncH;
+            document.getElementById('t-sync-p').innerText = d.syncP;
+            document.getElementById('t-node-h').innerText = d.nodeH;
+            document.getElementById('t-reg-h').innerText = d.regH;
+            document.getElementById('t-btn').innerText = d.btn;
+            document.getElementById('t-foot').innerText = d.foot;
+
+            document.getElementById('pill-grid').innerHTML = d.pills.map(p => `
+                <div class="spec-card"><h4>${p[0]}</h4><p>${p[1]}</p></div>
+            `).join('');
+
+            document.getElementById('tok-grid').innerHTML = d.toks.map(t => `
+                <div class="spec-card" style="border-left-color: var(--lag-blue); background: rgba(0,0,0,0.4);">
+                    <h4>${t[0]}</h4><p>${t[1]}</p>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + lang).classList.add('active');
+        }
+
+        setInterval(() => {
+            const lag = (601.66 + Math.random() * 5).toFixed(2);
+            document.getElementById('lag-counter').innerText = `SIGNAL_LAG: ${lag}s`;
+        }, 1000);
+
+        async function updateProgress() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                let totalUSD = 0;
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        for (let key in item) {
+                            if (key.toUpperCase().includes('USD')) {
+                                let val = parseFloat(item[key]);
+                                if (!isNaN(val)) totalUSD += val;
+                            }
+                        }
+                    });
+                }
+                let percent = Math.min((totalUSD / GOAL) * 100, 100).toFixed(1);
+                document.getElementById('sync-bar').style.width = percent + '%';
+                document.getElementById('sync-percent').innerText = percent + '%';
+            } catch (e) { console.error('Telemetry Interrupted:', e); }
+        }
+
+        async function submitToLedger() {
+            const network = document.getElementById('reg-network').value;
+            const amount = document.getElementById('reg-amount').value;
+            const hash = document.getElementById('reg-hash').value;
+            if(!amount || !hash) { alert("DATA INCOMPLETE"); return; }
+            const payload = { data: [{
+                "TIMESTAMP (UTC)": new Date().toISOString(), 
+                "NETWORK": network, 
+                "ASSET_AMOUNT": amount, 
+                "PIONEER_ADDRESS": hash, 
+                "VALIDATION_STATUS": "PENDING"
+            }] };
+            try {
+                const response = await fetch(API_URL, { 
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify(payload) 
+                });
+                if(response.ok) { alert("DATA COMMITTED TO INTERSTELLAR LEDGER."); updateProgress(); }
+            } catch (e) { alert("SIGNAL LOSS"); }
+        }
+
+        function copy(t) { navigator.clipboard.writeText(t); alert("COPIED TO TERMINAL"); }
+        
+        // DEFAULT TO ENGLISH
+        setLang('en');
+        updateProgress();
+        setInterval(updateProgress, 30000); 
+    </script>
+</body>
+</html>            content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 999; background-size: 100% 3px, 3px 100%; pointer-events: none;
+        }
+
+        .telemetry-bar {
+            position: fixed; top: 0; width: 100%; height: 35px;
+            background: #000; border-bottom: 1px solid #333;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; font-size: 0.65rem; color: var(--tech-green); z-index: 1000;
+        }
+
         .container { max-width: 1100px; margin: 100px auto; padding: 40px; position: relative; z-index: 10; }
 
         .architect-profile {
