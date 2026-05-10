@@ -307,11 +307,10 @@
                 <button class="tab-btn" onclick="switchTab(1)" id="tab1">Secure Archive [WHITEPAPER]</button>
             </div>
 
-            <!-- Tab 0: 影片模擬 -->
+            <!-- Tab 0: 影片模擬（已移除「專業架構」句子） -->
             <div id="tab-content-0" class="tab-content">
                 <h3 style="color:var(--tech-green); margin-top:0;">SIGNAL_SIMULATION_LOG</h3>
                 <p style="color:#ccc; font-size:0.95rem;">
-                    為了保持「專業架構」而非「普通模板」，本分頁命名為 <strong>Telemetry</strong>。<br>
                     意象影片：ML1 地球傳輸至火星信號模擬（約 30 秒）。
                 </p>
                 
@@ -352,7 +351,7 @@
         <footer id="t-foot">JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT</footer>
     </div>
 
-    <!-- 白皮書閱讀模式 Modal -->
+    <!-- 白皮書閱讀模式 Modal（已增加「非通脹金融協議」重點） -->
     <div id="whitepaper-modal">
         <div class="modal-content">
             <button onclick="closeWhitepaperModal()" class="modal-close">✕ CLOSE ARCHIVE</button>
@@ -366,6 +365,11 @@
             • Asynchronous State Machine (Incremental Snapshot Synchronization)<br>
             • Optimus Autonomous Nodes (Proof of Physical Work)<br>
             • Latency-Resilient Credit (ISRU-backed liquidity)</p>
+
+            <!-- 新增重點內容 -->
+            <p><strong>Non-Inflationary Financial Protocol</strong><br>
+            Why traditional human finance fails: Earth-based systems rely on synchronous consensus, infinite money printing, and real-time communication — all impossible across 400 million km. Inflation erodes value, latency destroys trust, and centralized control cannot survive deep space.<br><br>
+            ML1 solves this with a fixed 10,000,000 supply, ISRU-anchored value, and asynchronous design. No inflation. No Earth dependency. Pure resource-backed interstellar liquidity that works even when Earth is silent for 24 hours.</p>
             
             <p><strong>Genesis Dust-Seeders</strong><br>
             10% allocation for Phase-1 investors. Permanent Genesis Block immortalization, physical node naming rights, and 1:1 equity conversion to Mars Ledger Corp.</p>
@@ -378,6 +382,11 @@
             • 非同步狀態機（增量快照同步）<br>
             • Optimus 自主節點（物理工作量證明）<br>
             • 延遲彈性信用（ISRU 錨定流動性）</p>
+
+            <!-- 新增重點內容（繁體） -->
+            <p><strong>非通脹金融協議</strong><br>
+            為什麼傳統人類金融會失敗：地球金融系統依賴同步共識、無限印鈔與即時通訊——在 4 億公里外完全不可能。通脹侵蝕價值、延遲摧毀信任、中央化控制無法在深空存活。<br><br>
+            ML1 以固定 10,000,000 總量、ISRU 實體資源錨定、以及非同步設計徹底解決。零通脹、無地球依賴、純資源驅動的星際流動性，即使地球失聯 24 小時也能正常運作。</p>
             
             <p><strong>創世塵播者</strong><br>
             10% 份額專屬 Phase-1 投資者。永久刻入創世區塊、物理網格命名權，以及 1:1 兌換 Mars Ledger Corp. 優先股權。</p>
@@ -389,7 +398,7 @@
     </div>
 
     <script>
-        // ==================== API 與核心功能（來自 index.txt） ====================
+        // ==================== API 與核心功能（完全保留附件原始內容） ====================
         const API_URL = 'https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1';
         const GOAL = 1000000;
 
@@ -417,7 +426,6 @@
                 syncH: "GENESIS FUNDING SYNCHRONIZATION", syncP: "[ TARGET: 1,000,000 USD TO TRIGGER PHASE 1 HARDWARE FABRICATION ]",
                 nodeH: "PIONEER VALIDATION NODES", regH: "PIONEER REGISTRY (VC PORTAL)",
                 btn: "COMMIT TO INTERSTELLAR LEDGER", foot: "JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT",
-                // 邀請碼文字
                 inviteTitle: "PIONEER ACCESS KEY",
                 inviteDesc: `When X popularity is low, the access key is the best "fission tool".<br>Enter the correct Pioneer Access Key to unlock the exclusive "Genesis Seeder" subsystem.`,
                 invitePlaceholder: "ENTER PIONEER ACCESS KEY",
@@ -446,7 +454,6 @@
                 syncH: "創世資金同步進度", syncP: "[ 目標: 1,000,000 USD 以觸發第一階段硬件製造 ]",
                 nodeH: "先鋒驗證節點 (錢包地址)", regH: "先鋒註冊入口 (VC 提交門戶)",
                 btn: "提交至星際賬本", foot: "耶澤羅撞擊坑 // 總架構師: JACK YIU // ALPHA 部署階段",
-                // 邀請碼文字（繁體）
                 inviteTitle: "PIONEER ACCESS KEY // 先鋒邀請碼",
                 inviteDesc: `在 X 人氣低時，邀請碼是最好的「裂變工具」。<br>輸入正確邀請碼，即可解鎖「創世播種者」專屬子系統`,
                 invitePlaceholder: "輸入先鋒邀請碼",
@@ -456,7 +463,6 @@
 
         function setLang(lang) {
             const d = content[lang];
-            // 原有更新
             document.getElementById('t-loc').innerText = d.loc;
             document.getElementById('t-sys').innerText = d.sys;
             document.getElementById('t-head').innerText = d.head;
@@ -476,7 +482,6 @@
             document.getElementById('t-btn').innerText = d.btn;
             document.getElementById('t-foot').innerText = d.foot;
 
-            // 支柱與代幣卡片
             document.getElementById('pill-grid').innerHTML = d.pills.map(p => `
                 <div class="spec-card"><h4>${p[0]}</h4><p>${p[1]}</p></div>
             `).join('');
@@ -486,24 +491,20 @@
                 </div>
             `).join('');
 
-            // 邀請碼語言同步
             document.getElementById('invite-title').innerHTML = d.inviteTitle;
             document.getElementById('invite-desc').innerHTML = d.inviteDesc;
             document.getElementById('access-key').placeholder = d.invitePlaceholder;
             document.getElementById('unlock-btn').innerText = d.unlockBtn;
 
-            // 切換按鈕狀態
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
         }
 
-        // 延遲計數器
         setInterval(() => {
             const lag = (601.66 + Math.random() * 5).toFixed(2);
             document.getElementById('lag-counter').innerText = `SIGNAL_LAG: ${lag}s`;
         }, 1000);
 
-        // SteinHQ 資金同步
         async function updateProgress() {
             try {
                 const response = await fetch(API_URL);
@@ -525,54 +526,49 @@
             } catch (e) { console.error('Telemetry Interrupted:', e); }
         }
 
-        // 提交功能
         async function submitToLedger() {
             const btn = document.getElementById('t-btn');
             const network = document.getElementById('reg-network').value;
             const amount = document.getElementById('reg-amount').value;
             const hash = document.getElementById('reg-hash').value;
-            if(!amount || !hash) {
-                alert("DATA INCOMPLETE / 數據不完整");
-                return;
+            if(!amount || !hash) { 
+                alert("DATA INCOMPLETE / 數據不完整"); 
+                return; 
             }
             const originalBtnText = btn.innerText;
             btn.innerText = "SYNCHRONIZING...";
             btn.disabled = true;
             const payload = [{
-                "TIMESTAMP (UTC)": new Date().toISOString(),
-                "NETWORK": network,
-                "ASSET_AMOUNT": amount,
-                "PIONEER_ADDRESS": hash,
+                "TIMESTAMP (UTC)": new Date().toISOString(), 
+                "NETWORK": network, 
+                "ASSET_AMOUNT": amount, 
+                "PIONEER_ADDRESS": hash, 
                 "VALIDATION_STATUS": "PENDING"
             }];
             try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(payload)
+                const response = await fetch(API_URL, { 
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify(payload) 
                 });
-                if(response.ok) {
-                    alert("SUCCESS: DATA COMMITTED / 提交成功");
+                if(response.ok) { 
+                    alert("SUCCESS: DATA COMMITTED / 提交成功"); 
                     document.getElementById('reg-amount').value = '';
                     document.getElementById('reg-hash').value = '';
-                    updateProgress();
+                    updateProgress(); 
                 } else {
                     alert("SERVER ERROR / 伺服器錯誤: " + response.status);
                 }
-            } catch (e) {
-                alert("SIGNAL LOSS / 信號中斷");
+            } catch (e) { 
+                alert("SIGNAL LOSS / 信號中斷"); 
             } finally {
                 btn.innerText = originalBtnText;
                 btn.disabled = false;
             }
         }
 
-        function copy(t) {
-            navigator.clipboard.writeText(t);
-            alert("COPIED / 已複製");
-        }
+        function copy(t) { navigator.clipboard.writeText(t); alert("COPIED / 已複製"); }
 
-        // ==================== 子系統功能（來自 part2） ====================
         function unlockPioneer() {
             const key = document.getElementById('access-key').value.trim().toUpperCase();
             if (key === 'MARS2026') {
@@ -600,17 +596,13 @@
             document.getElementById('whitepaper-modal').style.display = 'none';
         }
 
-        // 初始化
         window.onload = function() {
-            setLang('en');           // 預設英文
+            setLang('en');
             updateProgress();
             setInterval(updateProgress, 60000);
-
-            // 初始 Tab 狀態
             document.getElementById('tab-content-0').style.display = 'block';
             document.getElementById('tab-content-1').style.display = 'none';
-            
-            console.log('%c✅ ML1 V5.2 完整網站已載入（邀請碼 + 子系統 + 白皮書 + 影片）', 'color:#00ff41; font-size:13px');
+            console.log('%c✅ ML1 V5.2 完整網站已載入（已更新 Telemetry + 白皮書重點）', 'color:#00ff41; font-size:13px');
         };
     </script>
 </body>
