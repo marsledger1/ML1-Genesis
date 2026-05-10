@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML1 V5.0 | MARS SOVEREIGN SUPREMACY</title>
+    <title>ML1 V5.2 | MARS SOVEREIGN SUPREMACY</title>
     <style>
         :root {
             --bg-deep: #050505;
@@ -93,6 +93,98 @@
 
         footer { text-align: center; font-size: 0.65rem; color: #444; margin-top: 100px; padding-bottom: 50px; text-transform: uppercase; }
 
+        /* === 子系統新增樣式（與原有風格完美融合）=== */
+        .subsystem-header {
+            border: 1px solid var(--tech-green);
+            background: rgba(0, 255, 65, 0.05);
+            padding: 20px;
+            margin: 60px 0 30px;
+            text-align: center;
+            color: var(--tech-green);
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+        }
+        .tab-nav {
+            display: flex;
+            background: #111;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 18px;
+            background: none;
+            border: none;
+            color: #888;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            background: var(--tech-green);
+            color: #000;
+            box-shadow: 0 0 15px var(--tech-green);
+        }
+        .tab-content {
+            background: rgba(0,0,0,0.85);
+            border: 1px solid #333;
+            padding: 40px;
+            min-height: 500px;
+        }
+        .simulation-video {
+            width: 100%;
+            background: #000;
+            border: 2px solid var(--tech-green);
+            margin: 20px 0;
+        }
+        .update-log {
+            background: #111;
+            padding: 20px;
+            font-size: 0.85rem;
+            color: var(--tech-green);
+            white-space: pre-wrap;
+            line-height: 1.8;
+            border-left: 4px solid var(--lag-blue);
+        }
+
+        #invite-section {
+            margin: 80px 0 40px;
+            padding: 30px;
+            background: var(--terminal-gray);
+            border: 2px dashed var(--tech-green);
+            text-align: center;
+        }
+
+        #whitepaper-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.97);
+            z-index: 99999;
+            color: #00ff41;
+            font-family: 'JetBrains Mono', monospace;
+            overflow-y: auto;
+        }
+        .modal-content {
+            max-width: 960px;
+            margin: 60px auto;
+            padding: 50px 40px;
+            background: #000;
+            border: 1px solid #00ff41;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.6);
+        }
+        .modal-close {
+            float: right;
+            background: none;
+            border: 2px solid #00ff41;
+            color: #00ff41;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem !important; }
             .architect-profile { flex-direction: column !important; align-items: center; text-align: center; padding: 20px !important; }
@@ -101,6 +193,8 @@
             .address-item { flex-direction: column !important; gap: 10px; }
             .address-item code { font-size: 0.65rem !important; white-space: pre-wrap; }
             .container { padding: 15px !important; }
+            .tab-nav { flex-direction: column; }
+            .simulation-video { max-height: 240px; }
         }
     </style>
 </head>
@@ -108,7 +202,7 @@
     <div class="mars-bg-layer"></div>
     <div class="lang-switch">
         <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">ZH</button>
+        <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">繁體</button>
     </div>
     <div class="telemetry-bar">
         <span id="t-loc">LOC: JEZERO_CRATER_ALPHA</span>
@@ -117,9 +211,9 @@
     </div>
 
     <div class="container">
-       <header>
+        <header>
             <h1 id="t-head">MARS LEDGER 1</h1>
-            <div class="tagline" id="t-tag">PROTOCOL: ML1-V5.0 // BEYOND THE LATENCY WALL</div>
+            <div class="tagline" id="t-tag">PROTOCOL: ML1-V5.2 // BEYOND THE LATENCY WALL</div>
         </header>
 
         <section class="architect-profile">
@@ -139,7 +233,7 @@
         </section>
 
         <section class="tech-section" style="border: 1px solid var(--lag-blue); padding: 30px; background: rgba(0, 191, 255, 0.05); margin-top: -20px; margin-bottom: 40px;">
-            <h3 id="t-tok-h" style="color: var(--lag-blue); border-bottom: 1px solid #00BFFF; padding-bottom: 10px; font-size: 1rem;">V5.0 SUPREMACY: TOKENOMICS</h3>
+            <h3 id="t-tok-h" style="color: var(--lag-blue); border-bottom: 1px solid #00BFFF; padding-bottom: 10px; font-size: 1rem;">V5.2 SUPREMACY: TOKENOMICS</h3>
             <div class="tech-grid" id="tok-grid"></div>
             <p id="t-verify" style="font-size: 0.65rem; color: #666; margin-top: 15px; letter-spacing: 1px; text-align: center;"></p>
             <div style="margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(0, 191, 255, 0.3); text-align: center;">
@@ -188,19 +282,121 @@
             <button class="btn-submit" id="t-btn" onclick="submitToLedger()">COMMIT TO INTERSTELLAR LEDGER</button>
         </section>
 
+        <!-- ======================== 先鋒邀請碼（隱藏正確碼，訪客看不到 MARS2026） ======================== -->
+        <div id="invite-section">
+            <h3 id="invite-title">PIONEER ACCESS KEY // 先鋒邀請碼</h3>
+            <p id="invite-desc" style="font-size:0.9rem; margin-bottom:20px; color:#ccc;"></p>
+            <input id="access-key" type="text" placeholder="" style="max-width:420px; margin:0 auto 15px;">
+            <button id="unlock-btn" onclick="unlockPioneer()" class="btn-submit" style="max-width:420px; margin:0 auto; background:var(--tech-green); color:#000;">
+                UNLOCK JEZERO CRATER
+            </button>
+            <p style="font-size:0.75rem; color:#555; margin-top:15px;">
+                // 只有輸入正確邀請碼，才能進入 Jezero Crater 的「被選中」專屬介面
+            </p>
+        </div>
+
+        <!-- ======================== 子系統（解鎖後顯示） ======================== -->
+        <div id="exclusive-subsystem" style="display: none;">
+            <div class="subsystem-header">
+                [CREATOR SEEDER EXCLUSIVE] // 創世播種者專屬子系統<br>
+                <span style="font-size:1rem; opacity:0.8;">JEZERO CRATER // PROTOCOL: ML1_SUPREMACY // STATUS: DEPLOYING</span>
+            </div>
+
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab(0)" id="tab0">Telemetry [SIGNAL_SIMULATION_LOG]</button>
+                <button class="tab-btn" onclick="switchTab(1)" id="tab1">Secure Archive [WHITEPAPER]</button>
+            </div>
+
+            <!-- Tab 0: 影片模擬 -->
+            <div id="tab-content-0" class="tab-content">
+                <h3 style="color:var(--tech-green); margin-top:0;">SIGNAL_SIMULATION_LOG</h3>
+                <p style="color:#ccc; font-size:0.95rem;">
+                    為了保持「專業架構」而非「普通模板」，本分頁命名為 <strong>Telemetry</strong>。<br>
+                    意象影片：ML1 地球傳輸至火星信號模擬（約 30 秒）。
+                </p>
+                
+                <div style="text-align:center; margin:30px 0;">
+                    <video class="simulation-video" controls autoplay loop muted>
+                        <source src="YOUR_SIMULATION_VIDEO_URL_HERE.mp4" type="video/mp4">
+                        您的瀏覽器不支援影片播放。請替換為您 30 秒左右的「ML1 地球→火星傳輸」模擬影片。
+                    </video>
+                    <p style="font-size:0.8rem; color:#666; margin-top:8px;">
+                        📡 ML1 Earth-to-Mars Signal Transmission Simulation • 地球傳輸至火星 • 約 30 秒
+                    </p>
+                </div>
+
+                <h4 style="color:var(--lag-blue);">UPDATE LOGS</h4>
+                <div class="update-log">
+[TIMESTAMP: 2026.05.10] HANDSHAKE_SUCCESS: STEIN_INFRASTRUCTURE_LINKED
+[TIMESTAMP: 2026.05.10] SIGNAL_SIMULATION_LOG: INITIALIZED
+[TIMESTAMP: 2026.05.10] DEEP_SPACE_LINK: ESTABLISHED
+[TIMESTAMP: 2026.05.10] PIONEER_ACCESS_KEY: VERIFIED
+                </div>
+            </div>
+
+            <!-- Tab 1: 白皮書 -->
+            <div id="tab-content-1" class="tab-content" style="display:none;">
+                <h3 style="color:var(--tech-green); margin-top:0;">SECURE ARCHIVE // 技術白皮書</h3>
+                <p style="color:#ccc; font-size:0.95rem;">
+                    白皮書是 ML1 的「靈魂」。點擊下方按鈕進入黑底綠字閱讀模式，展示最新英中雙語內容。
+                </p>
+                <div style="text-align:center; margin:40px 0;">
+                    <button onclick="openWhitepaperModal()" 
+                            style="background:#000; color:#00ff41; border:2px solid #00ff41; padding:20px 50px; font-size:1.1rem; cursor:pointer;">
+                        ENTER SECURE ARCHIVE
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <footer id="t-foot">JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT</footer>
     </div>
 
+    <!-- 白皮書閱讀模式 Modal -->
+    <div id="whitepaper-modal">
+        <div class="modal-content">
+            <button onclick="closeWhitepaperModal()" class="modal-close">✕ CLOSE ARCHIVE</button>
+            <h1>ML1 PROTOCOL TECHNICAL WHITEPAPER v5.2</h1>
+            
+            <h2 style="margin-top:60px;">ENGLISH VERSION</h2>
+            <p><strong>The Latency Wall</strong><br>
+            Earth-Mars communication delay is 3–22 minutes. Traditional TCP/IP and Earth-bound blockchains collapse under this barrier. ML1 is the first asynchronous state machine designed for deep space.</p>
+            
+            <p><strong>Core Pillars</strong><br>
+            • Asynchronous State Machine (Incremental Snapshot Synchronization)<br>
+            • Optimus Autonomous Nodes (Proof of Physical Work)<br>
+            • Latency-Resilient Credit (ISRU-backed liquidity)</p>
+            
+            <p><strong>Genesis Dust-Seeders</strong><br>
+            10% allocation for Phase-1 investors. Permanent Genesis Block immortalization, physical node naming rights, and 1:1 equity conversion to Mars Ledger Corp.</p>
+
+            <h2 style="margin-top:60px;">中文版（繁體）</h2>
+            <p><strong>延遲之牆</strong><br>
+            地球與火星通訊延遲為 3–22 分鐘。傳統 TCP/IP 與地球鏈在這道障礙前徹底崩潰。ML1 是首個為深空設計的非同步狀態機。</p>
+            
+            <p><strong>三大核心支柱</strong><br>
+            • 非同步狀態機（增量快照同步）<br>
+            • Optimus 自主節點（物理工作量證明）<br>
+            • 延遲彈性信用（ISRU 錨定流動性）</p>
+            
+            <p><strong>創世塵播者</strong><br>
+            10% 份額專屬 Phase-1 投資者。永久刻入創世區塊、物理網格命名權，以及 1:1 兌換 Mars Ledger Corp. 優先股權。</p>
+            
+            <p style="text-align:center; margin-top:60px; font-size:0.8rem; opacity:0.6;">
+                【完整最新白皮書內容可在此處替換】
+            </p>
+        </div>
+    </div>
+
     <script>
-        // 修改后的 API 地址 (Stein HQ)
-        // 注意：建议在 URL 末尾加上 /工作表名称，例如 /Sheet1
+        // ==================== API 與核心功能（來自 index.txt） ====================
         const API_URL = 'https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1';
-        const GOAL = 1000000; 
+        const GOAL = 1000000;
 
         const content = {
             en: {
                 loc: "LOC: JEZERO_CRATER_ALPHA", sys: "SYS_STATUS: TOP_SECRET",
-                head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V5.0 // BEYOND THE LATENCY WALL",
+                head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V5.2 // BEYOND THE LATENCY WALL",
                 name: "Jack Yiu", pos: "CHIEF ARCHITECT // MARS COLONY ONE",
                 bio: "\"Traditional TCP/IP and legacy Earth-bound blockchains (BTC, ETH, SOL) collapse under the 3-22 minute Latency Wall. Their synchronous consensus mechanisms cannot survive the speed of light barrier. ML1 is the first asynchronous state machine designed for the vacuum of deep space—enabling Mars-native liquidity that remains functional even when Earth is occluded.\"",
                 pillH: "CORE INFRASTRUCTURE PILLARS",
@@ -210,7 +406,7 @@
                     ["LATENCY-RESILIENT CREDIT", "First-gen Martian liquidity. Predictive settlement based on ISRU production rates ensures the colony economy persists even during 24-hour signal blackout events. Deflationary resource-anchored model."],
                     ["2027-2029 UNCREWED MISSION", "Targeting 5 Starship uncrewed deployments to establish the first hardware node-mesh in the Martian North Pole, integrating orbital Starlink telemetry."]
                 ],
-                tokH: "V5.0 SUPREMACY: TOKENOMICS",
+                tokH: "V5.2 SUPREMACY: TOKENOMICS",
                 toks: [
                     ["10,000,000 FIXED SUPPLY", "Total supply is hard-capped. 1 ML1 represents 1/10M bandwidth allocation of the Jezero Mesh. No inflation, purely anchored to Mars infrastructure growth."],
                     ["GENESIS EQUITY OPTION", "Phase 1 participants secure 1:1 conversion rights to Mars Ledger Corp. preferred shares. Beyond tokens: you are owning the backbone of Martian utility."]
@@ -220,11 +416,16 @@
                 dustP: "EACH SEEDER WILL BE IMMORTALIZED IN THE ML1 GENESIS BLOCK // FIRST-LEVEL ACCESS GRANTED.",
                 syncH: "GENESIS FUNDING SYNCHRONIZATION", syncP: "[ TARGET: 1,000,000 USD TO TRIGGER PHASE 1 HARDWARE FABRICATION ]",
                 nodeH: "PIONEER VALIDATION NODES", regH: "PIONEER REGISTRY (VC PORTAL)",
-                btn: "COMMIT TO INTERSTELLAR LEDGER", foot: "JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT"
+                btn: "COMMIT TO INTERSTELLAR LEDGER", foot: "JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT",
+                // 邀請碼文字
+                inviteTitle: "PIONEER ACCESS KEY",
+                inviteDesc: `When X popularity is low, the access key is the best "fission tool".<br>Enter the correct Pioneer Access Key to unlock the exclusive "Genesis Seeder" subsystem.`,
+                invitePlaceholder: "ENTER PIONEER ACCESS KEY",
+                unlockBtn: "UNLOCK JEZERO CRATER"
             },
             zh: {
                 loc: "座標: JEZERO_CRATER_ALPHA", sys: "系統狀態: 絕密",
-                head: "火星帳本 1 號", tag: "協議: ML1-V5.0 // 跨越延遲之牆",
+                head: "火星帳本 1 號", tag: "協議: ML1-V5.2 // 跨越延遲之牆",
                 name: "Jack Yiu", pos: "首席架構師 // 火星第一殖民地",
                 bio: "「傳統 TCP/IP 與舊有的地球鏈協議（BTC, ETH, SOL）在 3-22 分鐘的延遲牆面前會徹底崩潰。它們的同步共識機制無法跨越光速障礙。ML1 是首個為深空真空設計的非同步狀態機——確保在地球信號被遮蔽時，火星本土流動性依然能自主運作。」",
                 pillH: "核心基礎設施四大支柱",
@@ -234,7 +435,7 @@
                     ["延遲彈性信用體系", "火星第一代流動性。基於生產速率的預測性結算機制，確保殖民地經濟在黑障期仍能持續運轉。"],
                     ["2027-2029 無人任務", "目標部署 5 艘無人版 Starship，在火星北極建立首個硬體節點網格，並整合星鏈 (Starlink) 軌道遙測數據。"]
                 ],
-                tokH: "V5.0 至高無上：代幣經濟學",
+                tokH: "V5.2 至高無上：代幣經濟學",
                 toks: [
                     ["10,000,000 恆定總量", "供應量永久封頂。1 枚 ML1 代表 Jezero 網格千萬分之一的頻寬分配權。無通脹，價值純粹錨定火星基礎設施。"],
                     ["創世股權認購權", "第一階段參與者獲得 1:1 兌換 Mars Ledger Corp. 優先股權利。超越代幣：你擁有的是火星公用事業的骨幹資產。"]
@@ -244,12 +445,18 @@
                 dustP: "每位播種者將被永久刻入 ML1 創世區塊 // 獲取第一級核心訪問權限",
                 syncH: "創世資金同步進度", syncP: "[ 目標: 1,000,000 USD 以觸發第一階段硬件製造 ]",
                 nodeH: "先鋒驗證節點 (錢包地址)", regH: "先鋒註冊入口 (VC 提交門戶)",
-                btn: "提交至星際賬本", foot: "耶澤羅撞擊坑 // 總架構師: JACK YIU // ALPHA 部署階段"
+                btn: "提交至星際賬本", foot: "耶澤羅撞擊坑 // 總架構師: JACK YIU // ALPHA 部署階段",
+                // 邀請碼文字（繁體）
+                inviteTitle: "PIONEER ACCESS KEY // 先鋒邀請碼",
+                inviteDesc: `在 X 人氣低時，邀請碼是最好的「裂變工具」。<br>輸入正確邀請碼，即可解鎖「創世播種者」專屬子系統`,
+                invitePlaceholder: "輸入先鋒邀請碼",
+                unlockBtn: "UNLOCK JEZERO CRATER"
             }
         };
 
         function setLang(lang) {
             const d = content[lang];
+            // 原有更新
             document.getElementById('t-loc').innerText = d.loc;
             document.getElementById('t-sys').innerText = d.sys;
             document.getElementById('t-head').innerText = d.head;
@@ -269,6 +476,7 @@
             document.getElementById('t-btn').innerText = d.btn;
             document.getElementById('t-foot').innerText = d.foot;
 
+            // 支柱與代幣卡片
             document.getElementById('pill-grid').innerHTML = d.pills.map(p => `
                 <div class="spec-card"><h4>${p[0]}</h4><p>${p[1]}</p></div>
             `).join('');
@@ -277,21 +485,30 @@
                     <h4>${t[0]}</h4><p>${t[1]}</p>
                 </div>
             `).join('');
+
+            // 邀請碼語言同步
+            document.getElementById('invite-title').innerHTML = d.inviteTitle;
+            document.getElementById('invite-desc').innerHTML = d.inviteDesc;
+            document.getElementById('access-key').placeholder = d.invitePlaceholder;
+            document.getElementById('unlock-btn').innerText = d.unlockBtn;
+
+            // 切換按鈕狀態
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
         }
 
+        // 延遲計數器
         setInterval(() => {
             const lag = (601.66 + Math.random() * 5).toFixed(2);
             document.getElementById('lag-counter').innerText = `SIGNAL_LAG: ${lag}s`;
         }, 1000);
 
+        // SteinHQ 資金同步
         async function updateProgress() {
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
                 let totalUSD = 0;
-                // Stein 返回的是直接的数据数组
                 if (Array.isArray(data)) {
                     data.forEach(item => {
                         for (let key in item) {
@@ -308,60 +525,93 @@
             } catch (e) { console.error('Telemetry Interrupted:', e); }
         }
 
+        // 提交功能
         async function submitToLedger() {
             const btn = document.getElementById('t-btn');
             const network = document.getElementById('reg-network').value;
             const amount = document.getElementById('reg-amount').value;
             const hash = document.getElementById('reg-hash').value;
-
-            if(!amount || !hash) { 
-                alert("DATA INCOMPLETE / 數據不完整"); 
-                return; 
+            if(!amount || !hash) {
+                alert("DATA INCOMPLETE / 數據不完整");
+                return;
             }
-
             const originalBtnText = btn.innerText;
             btn.innerText = "SYNCHRONIZING...";
             btn.disabled = true;
-
-            // Stein 的提交格式是直接包含对象的数组，不需要外层 {data: []}
             const payload = [{
-                "TIMESTAMP (UTC)": new Date().toISOString(), 
-                "NETWORK": network, 
-                "ASSET_AMOUNT": amount, 
-                "PIONEER_ADDRESS": hash, 
+                "TIMESTAMP (UTC)": new Date().toISOString(),
+                "NETWORK": network,
+                "ASSET_AMOUNT": amount,
+                "PIONEER_ADDRESS": hash,
                 "VALIDATION_STATUS": "PENDING"
             }];
-
             try {
-                const response = await fetch(API_URL, { 
-                    method: 'POST', 
-                    headers: {'Content-Type': 'application/json'}, 
-                    body: JSON.stringify(payload) 
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
                 });
-                
-                if(response.ok) { 
-                    alert("SUCCESS: DATA COMMITTED / 提交成功"); 
+                if(response.ok) {
+                    alert("SUCCESS: DATA COMMITTED / 提交成功");
                     document.getElementById('reg-amount').value = '';
                     document.getElementById('reg-hash').value = '';
-                    updateProgress(); 
+                    updateProgress();
                 } else {
-                    const err = await response.text();
                     alert("SERVER ERROR / 伺服器錯誤: " + response.status);
                 }
-            } catch (e) { 
-                alert("SIGNAL LOSS / 信號中斷"); 
+            } catch (e) {
+                alert("SIGNAL LOSS / 信號中斷");
             } finally {
                 btn.innerText = originalBtnText;
                 btn.disabled = false;
             }
         }
 
-        function copy(t) { navigator.clipboard.writeText(t); alert("COPIED / 已複製"); }
-        
-        setLang('en');
-        updateProgress();
-        // Stein 额度较高，可以保持 30 秒或延长至 60 秒刷新一次
-        setInterval(updateProgress, 60000); 
+        function copy(t) {
+            navigator.clipboard.writeText(t);
+            alert("COPIED / 已複製");
+        }
+
+        // ==================== 子系統功能（來自 part2） ====================
+        function unlockPioneer() {
+            const key = document.getElementById('access-key').value.trim().toUpperCase();
+            if (key === 'MARS2026') {
+                document.getElementById('invite-section').style.opacity = '0.3';
+                document.getElementById('exclusive-subsystem').style.display = 'block';
+                document.getElementById('exclusive-subsystem').scrollIntoView({ behavior: 'smooth' });
+                alert('✅ HANDSHAKE_SUCCESS: PIONEER_UNLOCKED\n您已成為「創世播種者」！');
+            } else {
+                alert('❌ ACCESS DENIED / 無效邀請碼');
+            }
+        }
+
+        function switchTab(n) {
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === n);
+            });
+            document.getElementById('tab-content-0').style.display = n === 0 ? 'block' : 'none';
+            document.getElementById('tab-content-1').style.display = n === 1 ? 'block' : 'none';
+        }
+
+        function openWhitepaperModal() {
+            document.getElementById('whitepaper-modal').style.display = 'block';
+        }
+        function closeWhitepaperModal() {
+            document.getElementById('whitepaper-modal').style.display = 'none';
+        }
+
+        // 初始化
+        window.onload = function() {
+            setLang('en');           // 預設英文
+            updateProgress();
+            setInterval(updateProgress, 60000);
+
+            // 初始 Tab 狀態
+            document.getElementById('tab-content-0').style.display = 'block';
+            document.getElementById('tab-content-1').style.display = 'none';
+            
+            console.log('%c✅ ML1 V5.2 完整網站已載入（邀請碼 + 子系統 + 白皮書 + 影片）', 'color:#00ff41; font-size:13px');
+        };
     </script>
 </body>
 </html>
