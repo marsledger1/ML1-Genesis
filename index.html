@@ -54,6 +54,13 @@
 
         .container { max-width: 1100px; margin: 100px auto; padding: 40px; position: relative; z-index: 10; }
 
+/* === 主分頁導航 CSS === */
+.main-tab-nav { display:flex; background:#111; border:1px solid #333; margin-bottom:30px; flex-wrap:wrap; }
+.main-tab-btn { flex:1; min-width:120px; padding:18px; background:none; border:none; color:#888; font-family:inherit; font-size:1rem; cursor:pointer; transition:all 0.3s; text-align:center; }
+.main-tab-btn.active { background:var(--tech-green); color:#000; box-shadow:0 0 15px var(--tech-green); }
+.tab-content { display:none; background:rgba(0,0,0,0.85); border:1px solid #333; padding:40px; min-height:600px; }
+.tab-content.active { display:block; }
+
         .architect-profile {
             display: flex; align-items: stretch; gap: 40px; margin-bottom: 80px;
             background: var(--terminal-gray); border: 1px solid #333; padding: 40px;
@@ -215,7 +222,14 @@
             <h1 id="t-head">MARS LEDGER 1</h1>
             <div class="tagline" id="t-tag">PROTOCOL: ML1-V5.2 // BEYOND THE LATENCY WALL</div>
         </header>
-
+<!-- === 主分頁導航 === -->
+<div class="main-tab-nav">
+    <button class="main-tab-btn active" onclick="switchMainTab(0)" id="main-tab-0">OVERVIEW</button>
+    <button class="main-tab-btn" onclick="switchMainTab(1)" id="main-tab-1">PIONEER HUB</button>
+    <button class="main-tab-btn" onclick="switchMainTab(2)" id="main-tab-2">SIMULATOR</button>
+</div>
+        <!-- Tab 0: OVERVIEW -->
+        <div id="main-content-0" class="tab-content active">
         <section class="architect-profile">
             <div class="architect-photo"></div>
             <div class="architect-bio">
@@ -241,6 +255,10 @@
                 <p id="t-dust-p" style="font-size: 0.65rem; color: var(--tech-green); margin-top: 8px; opacity: 0.8;"></p>
             </div>
         </section>
+        </div> <!-- 結束 Tab 0: OVERVIEW -->
+
+        <!-- Tab 1: PIONEER HUB -->
+        <div id="main-content-1" class="tab-content">
 
         <section class="sync-monitor">
             <div style="display: flex; justify-content: space-between; align-items: flex-end;">
@@ -294,7 +312,33 @@
                 // 只有輸入正確邀請碼，才能進入 Jezero Crater 的「被選中」專屬介面
             </p>
         </div>
+        </div> <!-- 結束 Tab 1: PIONEER HUB -->
+        <!-- Tab 2: SIMULATOR -->
+        <div id="main-content-2" class="tab-content">
+            <h3 style="color:var(--tech-green); margin-top:0;">ML1 ASYNCHRONOUS CONSENSUS SIMULATOR</h3>
+            <p style="color:#ccc; font-size:0.95rem;">Real-time demonstration of Mars-native liquidity under latency wall. Optimus nodes operate independently.</p>
+            
+            <div class="simulator">
+                <div class="sim-grid">
+                    <div class="node-card" id="earth-node"><strong>🌍 EARTH NODE</strong><br><span id="earth-status" style="color:#888;">CONNECTED</span></div>
+                    <div class="node-card active" id="mars-mesh"><strong>🔴 MARS MESH (3 OPTIMUS NODES)</strong><br><span id="mars-status" style="color:var(--tech-green);">LOCAL CONSENSUS ACTIVE</span></div>
+                    <div class="node-card" id="latency-wall"><strong>⏳ LATENCY WALL</strong><br><span id="delay-value" style="color:var(--lag-blue);font-size:1.4rem;">12.4 min</span></div>
+                </div>
+                <div style="text-align:center;margin:20px 0;">
+                    <button class="control-btn" onclick="simulateISRU()">🚀 Optimus ISRU Production</button>
+                    <button class="control-btn" onclick="sendSnapshot()">📡 Generate & Send Snapshot</button>
+                    <button class="control-btn" onclick="simulateBlackout()">🌑 Simulate 24h Blackout</button>
+                </div>
+                <h4 style="color:var(--lag-blue);">LIVE TELEMETRY LOG</h4>
+                <div id="sim-log" class="log">[2026.05.10] SYSTEM INITIALIZED</div>
+            </div>
+        </div> <!-- 結束 Tab 2 -->
 
+        <footer id="t-foot">JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT</footer>
+    </div>
+
+        <!-- Tab 2: SIMULATOR -->
+        <div id="main-content-2" class="tab-content">
         <!-- ======================== 子系統（解鎖後顯示） ======================== -->
         <div id="exclusive-subsystem" style="display: none;">
             <div class="subsystem-header">
@@ -398,6 +442,49 @@
     </div>
 
     <script>
+        // ==================== 新增：主分頁切換函數 ====================
+        function switchMainTab(n) {
+            document.querySelectorAll('.main-tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === n);
+            });
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('main-content-' + n).classList.add('active');
+        }
+
+        // ==================== Simulator 互動函數 ====================
+        let logCount = 0;
+        function addLog(message) {
+            const logEl = document.getElementById('sim-log');
+            const timestamp = new Date().toLocaleTimeString('en-US', {hour12: false});
+            logEl.innerHTML += `<br>[${timestamp}] ${message}`;
+            logEl.scrollTop = logEl.scrollHeight;
+            if (++logCount > 15) logEl.innerHTML = logEl.innerHTML.split('<br>').slice(-15).join('<br>');
+        }
+
+        function simulateISRU() {
+            const nodes = ['Optimus-01', 'Optimus-02', 'Optimus-03'];
+            const node = nodes[Math.floor(Math.random() * nodes.length)];
+            addLog(`🚀 ${node} detected 1.8kg water ice → Local ledger updated (Proof of Physical Work)`);
+            document.getElementById('mars-status').innerHTML = 'LOCAL CONSENSUS ACTIVE <span style="color:#0f0;">●</span>';
+            setTimeout(() => addLog('✅ Local snapshot generated (no Earth ACK required)'), 800);
+        }
+
+        function sendSnapshot() {
+            const delay = (3 + Math.random() * 19).toFixed(1);
+            addLog(`📡 Snapshot emitted to Earth (expected delay: ${delay} min)`);
+            document.getElementById('delay-value').textContent = `${delay} min`;
+            setTimeout(() => {
+                addLog('📨 Earth received snapshot (async sync complete)');
+                document.getElementById('earth-status').innerHTML = 'RECEIVED <span style="color:#0f0;">●</span>';
+            }, 1200);
+        }
+
+        function simulateBlackout() {
+            addLog('🌑 24h SIGNAL BLACKOUT SIMULATED');
+            document.getElementById('mars-status').innerHTML = '⚡ LOCAL MODE ONLY - STILL OPERATIONAL';
+            addLog('✅ Optimus nodes continue ISRU minting via asynchronous state machine');
+            setTimeout(() => addLog('📬 Blackout ended - Snapshot sync resumed successfully'), 2500);
+        }
         // ==================== API 與核心功能（完全保留附件原始內容） ====================
         const API_URL = 'https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1';
         const GOAL = 1000000;
@@ -596,13 +683,15 @@
             document.getElementById('whitepaper-modal').style.display = 'none';
         }
 
-        window.onload = function() {
+window.onload = function() {
             setLang('en');
             updateProgress();
             setInterval(updateProgress, 60000);
-            document.getElementById('tab-content-0').style.display = 'block';
-            document.getElementById('tab-content-1').style.display = 'none';
-            console.log('%c✅ ML1 V5.2 完整網站已載入（已更新 Telemetry + 白皮書重點）', 'color:#00ff41; font-size:13px');
+            
+            // 預設顯示 Tab 0
+            document.getElementById('main-content-0').classList.add('active');
+            
+            console.log('%c✅ ML1 V5.2 三分頁最終版已載入 - Tab 可點擊切換', 'color:#00ff41; font-size:13px');
         };
     </script>
 </body>
