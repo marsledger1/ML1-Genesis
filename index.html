@@ -299,52 +299,7 @@
             <input type="text" id="reg-hash" placeholder="Transaction Hash (TXID)">
             <button class="btn-submit" id="t-btn" onclick="submitToLedger()">COMMIT TO INTERSTELLAR LEDGER</button>
         </section>
-<!-- ======================== PHASE 1 GENESIS CALCULATOR v1.3 (支援中英切換) ======================== -->
-        <div style="background:#111; border:2px solid var(--lag-blue); padding:25px; margin-bottom:45px; max-width:860px; margin-left:auto; margin-right:auto;">
-            <h3 id="calc-title" style="color:#00BFFF; text-align:center; margin:0 0 6px 0; letter-spacing:2px; font-size:1.25rem;">
-                PHASE 1 GENESIS CALCULATOR v1.3
-            </h3>
-            <p id="calc-subtitle" style="color:#666; text-align:center; font-size:0.85rem; margin-bottom:22px;">
-                Mars Ledger 1 • Genesis Fund Tokenomics
-            </p>
-            
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:end;">
-                <div>
-                    <label id="calc-label-amount" style="color:#00ff41; font-size:0.82rem; display:block; margin-bottom:6px;">YOUR COMMITMENT (USD)</label>
-                    <input type="number" id="calc-amount" value="50000" 
-                           style="width:100%; background:#000; color:#fff; border:2px solid #00BFFF; padding:18px 16px; font-size:2rem; text-align:center;">
-                </div>
-                
-                <div>
-                    <label id="calc-label-tokens" style="color:#00ff41; font-size:0.82rem; display:block; margin-bottom:6px;">PROJECTED ML1 TOKENS</label>
-                    <div id="calc-tokens" 
-                         style="background:#000; color:var(--tech-green); border:2px solid var(--tech-green); padding:18px 16px; font-size:2.2rem; text-align:center; min-height:68px;">
-                        50,000
-                    </div>
-                </div>
-            </div>
 
-            <div style="margin-top:22px; text-align:center; font-size:0.9rem; color:#ccc; line-height:1.5;">
-                <span id="calc-share-text">Your share of Genesis Fund:</span> 
-                <span id="calc-percent" style="color:#00BFFF; font-weight:bold; font-size:1.05rem;">5.00%</span><br>
-                <span id="calc-tge-text" style="font-size:0.82rem; color:#888;">
-                    TGE unlock: <strong style="color:#ff0;">20%</strong> • Remaining vested with hardware milestones
-                </span>
-            </div>
-
-            <button onclick="runPhase1Calc()" id="calc-button"
-                    style="margin-top:25px; width:100%; background:var(--tech-green); color:#000; border:none; padding:16px; font-size:1.05rem; font-weight:bold; cursor:pointer;">
-                CALCULATE MY MARS LEGACY
-            </button>
-
-            <!-- Advantage -->
-            <div style="margin-top:22px; padding:16px; background:rgba(0,255,65,0.08); border:1px dashed var(--tech-green); font-size:0.85rem; color:#ccc; line-height:1.6;">
-                <strong id="calc-advantage-title">Genesis Dust-Seeders Advantage:</strong><br>
-                ✅ <span id="adv1">Permanent name on Jezero Crater hardware nodes</span><br>
-                ✅ <span id="adv2">1:1 equity conversion to Mars Ledger Corp.</span><br>
-                ✅ <span id="adv3">Priority ISRU resource allocation on Mars</span>
-            </div>
-        </div>
         <!-- ======================== 先鋒邀請碼（隱藏正確碼，訪客看不到 MARS2026） ======================== -->
         <div id="invite-section">
             <h3 id="invite-title">PIONEER ACCESS KEY // 先鋒邀請碼</h3>
@@ -391,39 +346,28 @@
                 </div>
             </div>
         </div> <!-- 結束 Tab 1: PIONEER HUB -->
-        <!-- Tab 2: SIMULATOR （乾淨版 - 地球火星 Canvas 模擬） -->
+        <!-- Tab 2: SIMULATOR -->
         <div id="main-content-2" class="tab-content">
-
-            <div style="text-align:center; margin-bottom:25px;">
-                <h2 style="color:var(--tech-green); letter-spacing:3px;">ML1 EDGE SIMULATOR // EARTH ↔ MARS</h2>
-                <p style="color:#666; font-size:0.9rem;">Asynchronous Consensus • Real-time Proof of Physical Work</p>
+            <h3 style="color:var(--tech-green); margin-top:0;">ML1 ASYNCHRONOUS CONSENSUS SIMULATOR</h3>
+            <p style="color:#ccc; font-size:0.95rem;">Real-time demonstration of Mars-native liquidity under latency wall. Optimus nodes operate independently.</p>
+            
+            <div class="simulator">
+                <div class="sim-grid">
+                    <div class="node-card" id="earth-node"><strong>🌍 EARTH NODE</strong><br><span id="earth-status" style="color:#888;">CONNECTED</span></div>
+                    <div class="node-card active" id="mars-mesh"><strong>🔴 MARS MESH (3 OPTIMUS NODES)</strong><br><span id="mars-status" style="color:var(--tech-green);">LOCAL CONSENSUS ACTIVE</span></div>
+                    <div class="node-card" id="latency-wall"><strong>⏳ LATENCY WALL</strong><br><span id="delay-value" style="color:var(--lag-blue);font-size:1.4rem;">12.4 min</span></div>
+                </div>
+                <div style="text-align:center;margin:20px 0;">
+                    <button class="control-btn" onclick="simulateISRU()">🚀 Optimus ISRU Production</button>
+                    <button class="control-btn" onclick="sendSnapshot()">📡 Generate & Send Snapshot</button>
+                    <button class="control-btn" onclick="simulateBlackout()">🌑 Simulate 24h Blackout</button>
+                </div>
+                <h4 style="color:var(--lag-blue);">LIVE TELEMETRY LOG</h4>
+                <div id="sim-log" class="log">[2026.05.10] SYSTEM INITIALIZED</div>
             </div>
+        </div> <!-- 結束 Tab 2 -->
 
-            <!-- 動態 Canvas 模擬器（解決黑屏 + 強烈閃燈感） -->
-            <div style="position:relative; background:#000; border:3px solid var(--tech-green); height:540px; margin:0 auto 30px; max-width:940px; overflow:hidden;">
-                <canvas id="marsCanvas" width="940" height="540" style="width:100%; height:100%; display:block;"></canvas>
-            </div>
-
-            <!-- 三個功能按鈕（與你原本函數完全相容） -->
-            <div style="display:flex; justify-content:center; gap:25px; flex-wrap:wrap; margin:30px 0 40px;">
-                <button onclick="simulateISRU()" style="background:#111; color:var(--tech-green); border:2px solid var(--tech-green); padding:18px 32px; font-size:1.1rem; cursor:pointer;">
-                    🚀 Optimus ISRU Production
-                </button>
-                <button onclick="sendSnapshot()" style="background:#111; color:#00BFFF; border:2px solid #00BFFF; padding:18px 32px; font-size:1.1rem; cursor:pointer;">
-                    📡 Generate & Send Snapshot
-                </button>
-                <button onclick="simulateBlackout()" style="background:#111; color:#ff4444; border:2px solid #ff4444; padding:18px 32px; font-size:1.1rem; cursor:pointer;">
-                    🌑 Simulate 24h Blackout
-                </button>
-            </div>
-
-            <!-- LIVE TELEMETRY LOG -->
-            <div style="background:#111; border:1px solid var(--tech-green); padding:25px;">
-                <div style="color:var(--tech-green); font-size:1rem; letter-spacing:2px; margin-bottom:12px;">LIVE TELEMETRY LOG</div>
-                <div id="sim-log" style="height:280px; overflow-y:auto; background:#0a0a0a; padding:18px; font-size:0.85rem; line-height:1.7; color:#0f0; white-space:pre-wrap; font-family:inherit;"></div>
-            </div>
-
-        </div> <!-- 結束 Tab 2: SIMULATOR -->
+        <footer id="t-foot">JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT</footer>
     </div>
 
         <!-- Tab 2: SIMULATOR -->
@@ -619,7 +563,7 @@
         const API_URL = 'https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1';
         const GOAL = 1000000;
 
-                const content = {
+        const content = {
             en: {
                 loc: "LOC: JEZERO_CRATER_ALPHA", sys: "SYS_STATUS: TOP_SECRET",
                 head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V5.2 // BEYOND THE LATENCY WALL",
@@ -646,20 +590,7 @@
                 inviteTitle: "PIONEER ACCESS KEY",
                 inviteDesc: `When X popularity is low, the access key is the best "fission tool".<br>Enter the correct Pioneer Access Key to unlock the exclusive "Genesis Seeder" subsystem.`,
                 invitePlaceholder: "ENTER PIONEER ACCESS KEY",
-                unlockBtn: "UNLOCK JEZERO CRATER",
-
-                // === Calculator 英文 ===
-                calcTitle: "PHASE 1 GENESIS CALCULATOR v1.3",
-                calcSubtitle: "Mars Ledger 1 • Genesis Fund Tokenomics",
-                calcLabelAmount: "YOUR COMMITMENT (USD)",
-                calcLabelTokens: "PROJECTED ML1 TOKENS",
-                calcShareText: "Your share of Genesis Fund:",
-                calcTgeText: "TGE unlock: <strong style='color:#ff0;'>20%</strong> • Remaining vested with hardware milestones",
-                calcButton: "CALCULATE MY MARS LEGACY",
-                calcAdvTitle: "Genesis Dust-Seeders Advantage:",
-                adv1: "Permanent name on Jezero Crater hardware nodes",
-                adv2: "1:1 equity conversion to Mars Ledger Corp.",
-                adv3: "Priority ISRU resource allocation on Mars"
+                unlockBtn: "UNLOCK JEZERO CRATER"
             },
             zh: {
                 loc: "座標: JEZERO_CRATER_ALPHA", sys: "系統狀態: 絕密",
@@ -687,20 +618,7 @@
                 inviteTitle: "PIONEER ACCESS KEY // 先鋒邀請碼",
                 inviteDesc: `在 X 人氣低時，邀請碼是最好的「裂變工具」。<br>輸入正確邀請碼，即可解鎖「創世播種者」專屬子系統`,
                 invitePlaceholder: "輸入先鋒邀請碼",
-                unlockBtn: "UNLOCK JEZERO CRATER",
-
-                // === Calculator 中文 ===
-                calcTitle: "第一階段創世計算器 v1.3",
-                calcSubtitle: "火星帳本 1 • 創世基金代幣經濟學",
-                calcLabelAmount: "您的承諾金額 (USD)",
-                calcLabelTokens: "預計獲得 ML1 代幣",
-                calcShareText: "您在創世基金的份額：",
-                calcTgeText: "TGE 解鎖： <strong style='color:#ff0;'>20%</strong> • 剩餘部分隨硬體部署里程碑逐步釋放",
-                calcButton: "計算我的火星遺產",
-                calcAdvTitle: "創世塵播者優勢：",
-                adv1: "Jezero Crater 硬體節點永久命名權",
-                adv2: "1:1 兌換 Mars Ledger Corp. 優先股權",
-                adv3: "火星 ISRU 資源優先分配權"
+                unlockBtn: "UNLOCK JEZERO CRATER"
             }
         };
 
@@ -842,167 +760,17 @@
         function closeWhitepaperModal() {
             document.getElementById('whitepaper-modal').style.display = 'none';
         }
-// ==================== ML1 Simulator Canvas - 超真實優化版（數據包流動） ====================
-        function initMarsCanvas() {
-            const canvas = document.getElementById('marsCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            let time = 0;
 
-            // 數據包粒子系統
-            let particles = [];
-
-            function createParticle(startX, startY, endX, endY) {
-                particles.push({
-                    x: startX,
-                    y: startY,
-                    progress: 0,
-                    speed: 0.018 + Math.random() * 0.012,
-                    startX, startY, endX, endY,
-                    color: '#00ff41'
-                });
-            }
-
-            function draw() {
-                time += 0.065;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // 網格背景
-                ctx.strokeStyle = 'rgba(0, 255, 65, 0.18)';
-                ctx.lineWidth = 1;
-                for (let x = 0; x < canvas.width; x += 40) {
-                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-                }
-                for (let y = 0; y < canvas.height; y += 40) {
-                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-                }
-
-                const nodes = [
-                    {x: 170, y: 270, label: 'EARTH', color: '#00BFFF', size: 34},
-                    {x: 410, y: 130, label: 'Optimus1', color: '#00ff41', size: 29},
-                    {x: 720, y: 170, label: 'Optimus3', color: '#00ff41', size: 29},
-                    {x: 590, y: 390, label: 'Optimus2', color: '#00ff41', size: 29}
-                ];
-
-                const pulse = Math.sin(time * 1.4) * 0.5 + 0.8;
-
-                // 發光連線
-                ctx.shadowBlur = 35;
-                ctx.shadowColor = '#00ff41';
-                ctx.strokeStyle = '#00ff41';
-                ctx.lineWidth = 4;
-                const conns = [[0,1], [0,3], [1,2], [2,3], [1,3]];
-                conns.forEach(([a, b]) => {
-                    ctx.globalAlpha = 0.7 + pulse * 0.3;
-                    ctx.beginPath();
-                    ctx.moveTo(nodes[a].x, nodes[a].y);
-                    ctx.lineTo(nodes[b].x, nodes[b].y);
-                    ctx.stroke();
-                });
-                ctx.globalAlpha = 1;
-
-                // 節點 + 強烈呼吸光暈
-                nodes.forEach(node => {
-                    const glow = node.size + 20 + Math.sin(time * 2.3) * 10;
-                    ctx.shadowBlur = 60;
-                    ctx.shadowColor = node.color;
-                    ctx.fillStyle = 'rgba(255,255,255,0.25)';
-                    ctx.beginPath(); ctx.arc(node.x, node.y, glow + 18, 0, Math.PI*2); ctx.fill();
-
-                    ctx.shadowBlur = 32;
-                    ctx.fillStyle = node.color;
-                    ctx.beginPath(); ctx.arc(node.x, node.y, glow, 0, Math.PI*2); ctx.fill();
-
-                    ctx.shadowBlur = 18;
-                    ctx.fillStyle = '#111';
-                    ctx.beginPath(); ctx.arc(node.x, node.y, node.size, 0, Math.PI*2); ctx.fill();
-                    ctx.fillStyle = node.color;
-                    ctx.beginPath(); ctx.arc(node.x, node.y, node.size - 10, 0, Math.PI*2); ctx.fill();
-
-                    ctx.shadowBlur = 0;
-                    ctx.fillStyle = '#fff';
-                    ctx.font = 'bold 16px JetBrains Mono';
-                    ctx.textAlign = 'center';
-                    ctx.fillText(node.label, node.x, node.y + node.size + 50);
-                });
-
-                // 數據包粒子（真實感核心）
-                if (Math.random() < 0.45) {
-                    const conn = conns[Math.floor(Math.random() * conns.length)];
-                    createParticle(nodes[conn[0]].x, nodes[conn[0]].y, nodes[conn[1]].x, nodes[conn[1]].y);
-                }
-
-                particles = particles.filter(p => {
-                    p.progress += p.speed;
-                    p.x = p.startX + (p.endX - p.startX) * p.progress;
-                    p.y = p.startY + (p.endY - p.startY) * p.progress;
-
-                    // 畫粒子
-                    ctx.shadowBlur = 12;
-                    ctx.shadowColor = p.color;
-                    ctx.fillStyle = p.color;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, 4.5, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    return p.progress < 1;
-                });
-
-                // 定期清理
-                if (particles.length > 25) particles.shift();
-            }
-
-            if (window.marsInterval) clearInterval(window.marsInterval);
-            window.marsInterval = setInterval(draw, 38);
-            draw();
-            console.log('%c✅ ML1 Canvas 已優化完成（真實數據包流動 + 強脈衝）', 'color:#00ff41; font-size:16px');
-        }
 window.onload = function() {
-    setLang('en');
-    updateProgress();
-    setInterval(updateProgress, 60000);
-    
-    // 預設顯示 Tab 0
-    document.getElementById('main-content-0').classList.add('active');
-    
-    initMarsCanvas();   // ← 關鍵：啟動 Canvas
-    
-    console.log('%c✅ ML1 V5.2 已完全還原 + Simulator Canvas 就緒', 'color:#00ff41; font-size:14px');
-};
-        function runPhase1Calc() {
-            const amount = parseFloat(document.getElementById('calc-amount').value) || 0;
-            const totalGoal = 1000000;
-            const percent = Math.min((amount / totalGoal) * 100, 100).toFixed(2);
-            const tokens = Math.floor((amount / totalGoal) * 1000000 * 0.25); // Phase 1 25% 代幣分配
-
-            document.getElementById('calc-percent').innerText = percent + '%';
-            document.getElementById('calc-tokens').innerText = tokens.toLocaleString();
+            setLang('en');
+            updateProgress();
+            setInterval(updateProgress, 60000);
             
-            // 小動畫
-            const tokensEl = document.getElementById('calc-tokens');
-            tokensEl.style.transition = 'all 0.4s';
-            tokensEl.style.transform = 'scale(1.08)';
-            setTimeout(() => tokensEl.style.transform = 'scale(1)', 300);
-        }
-        // ==================== Phase 1 Calculator - Tokenomics 精準版 ====================
-        function runPhase1Calc() {
-            const amount = parseFloat(document.getElementById('calc-amount').value) || 0;
-            const totalGoal = 1000000;                    // Phase 1 目標 100萬美金
-            const genesisTokens = 1000000;                // Genesis Fund 總量 100萬 ML1
-
-            const percent = Math.min((amount / totalGoal) * 100, 100).toFixed(2);
-            const tokens = Math.floor((amount / totalGoal) * genesisTokens);
-
-            // 更新畫面
-            document.getElementById('calc-percent').innerText = percent + '%';
-            document.getElementById('calc-tokens').innerText = tokens.toLocaleString();
-
-            // 小動畫
-            const tokensEl = document.getElementById('calc-tokens');
-            tokensEl.style.transition = 'transform 0.3s ease';
-            tokensEl.style.transform = 'scale(1.12)';
-            setTimeout(() => { tokensEl.style.transform = 'scale(1)'; }, 280);
-        }
+            // 預設顯示 Tab 0
+            document.getElementById('main-content-0').classList.add('active');
+            
+            console.log('%c✅ ML1 V5.2 三分頁最終版已載入 - Tab 可點擊切換', 'color:#00ff41; font-size:13px');
+        };
     </script>
 </body>
 </html>
