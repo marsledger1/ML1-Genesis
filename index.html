@@ -197,27 +197,24 @@
         max-width: 100% !important; 
     }
 
-    /* === 針對 Genesis Funding Synchronization 手機修正 === */
+    /* === 針對 Genesis Funding Synchronization 綠色百分比強力修正 === */
     .sync-monitor {
         flex-direction: column !important;
         align-items: flex-start !important;
         gap: 8px !important;
-        padding: 25px 20px !important;
+        padding: 28px 20px !important;
     }
     
     .percentage {
-        font-size: 2.1rem !important;     /* 從原本太大降到適合手機 */
-        line-height: 1.1 !important;
+        font-size: 1.75rem !important;     /* 再次調小，確保手機上完整顯示 */
+        line-height: 1 !important;
         white-space: nowrap !important;
-        margin: 0 !important;
-        padding: 0 4px !important;
+        margin: 4px 0 0 0 !important;
+        padding: 4px 8px !important;
+        letter-spacing: -1px;
     }
 
-    .sync-monitor > div:first-child {
-        width: 100% !important;
-    }
-
-    /* Pioneer Validation Nodes 地址 + COPY 按鈕（保持之前已修好的） */
+    /* Pioneer Validation Nodes 地址 + COPY 按鈕（保持已修好的） */
     .address-item {
         flex-wrap: wrap !important;
         gap: 8px !important;
@@ -226,15 +223,13 @@
     .address-item code {
         font-size: 0.73rem !important;
         word-break: break-all !important;
-        flex: 1 1 auto !important;
     }
     .address-item button {
         font-size: 0.68rem !important;
-        padding: 6px 10px !important;
-        white-space: nowrap !important;
+        padding: 6px 12px !important;
     }
 
-    /* 其他基本壓縮（保留） */
+    /* 其他基本壓縮（不影響其他部分） */
     .architect-profile {
         flex-direction: column !important;
         gap: 25px !important;
