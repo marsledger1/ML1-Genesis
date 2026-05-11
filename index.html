@@ -197,7 +197,7 @@
         max-width: 100% !important; 
     }
 
-    /* === 針對 Genesis Funding Synchronization 綠色百分比強力修正（再往左移） === */
+    /* === 針對 Genesis Funding Synchronization 綠色百分比最終修正（讓 0.0% 完整顯示） === */
     .sync-monitor {
         flex-direction: column !important;
         align-items: flex-start !important;
@@ -206,10 +206,10 @@
     }
     
     .percentage {
-        font-size: 1.65rem !important;
+        font-size: 1.58rem !important;           /* 再小一點 */
         line-height: 1 !important;
         white-space: nowrap !important;
-        margin: 4px 0 0 -38px !important;   /* ← 這次再往左移 13px（總共左移 38px） */
+        margin: 4px 0 0 -45px !important;       /* ← 這次往左移到 -45px，讓 % 露出來 */
         padding: 4px 8px !important;
         letter-spacing: -1px;
         align-self: flex-start !important;
