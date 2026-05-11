@@ -197,7 +197,7 @@
         max-width: 100% !important; 
     }
 
-    /* === 綠色百分比最終版（基於你現在能看到0.0的版本，再往左移讓%出來） === */
+    /* === 綠色百分比「大動作」最終修正（iPhone 14 專用） === */
     .sync-monitor {
         flex-direction: column !important;
         align-items: flex-start !important;
@@ -206,16 +206,16 @@
     }
     
     .percentage {
-        font-size: 1.55rem !important;           /* 比你現在的再小一點 */
+        font-size: 1.52rem !important;           /* 再小一點 */
         line-height: 1 !important;
         white-space: nowrap !important;
-        margin: 4px 0 0 -55px !important;       /* ← 關鍵：從 -25px 加大到 -55px，讓 0.0% 完整出來 */
+        margin: 4px 0 0 -68px !important;       /* ← 大動作左移 68px，讓 0.0% 完全露出 */
         padding: 4px 8px !important;
         letter-spacing: -1px;
         align-self: flex-start !important;
     }
 
-    /* 下面全部和你現在的一樣，保持不變 */
+    /* Pioneer Validation Nodes 地址 + COPY 按鈕（保持不變） */
     .address-item {
         flex-wrap: wrap !important;
         gap: 8px !important;
@@ -230,6 +230,7 @@
         padding: 6px 12px !important;
     }
 
+    /* 其他基本壓縮（完全不變） */
     .architect-profile { flex-direction: column !important; gap: 25px !important; padding: 25px !important; }
     .architect-photo { width: 100% !important; height: 320px !important; }
     .tech-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
@@ -238,6 +239,7 @@
     h1 { font-size: 2.3rem !important; }
     h3 { font-size: 1.15rem !important; }
 
+    /* 終極防溢出 */
     * {
         max-width: 100% !important;
         box-sizing: border-box !important;
