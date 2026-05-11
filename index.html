@@ -197,7 +197,7 @@
         max-width: 100% !important; 
     }
 
-    /* === 針對 Genesis Funding Synchronization 綠色百分比強力修正 === */
+    /* === 針對 Genesis Funding Synchronization 綠色百分比強力修正（往左移動） === */
     .sync-monitor {
         flex-direction: column !important;
         align-items: flex-start !important;
@@ -206,15 +206,16 @@
     }
     
     .percentage {
-        font-size: 1.75rem !important;     /* 再次調小，確保手機上完整顯示 */
+        font-size: 1.65rem !important;     /* 稍微再小一點 */
         line-height: 1 !important;
         white-space: nowrap !important;
-        margin: 4px 0 0 0 !important;
+        margin: 4px 0 0 -12px !important;  /* 關鍵：往左移動 12px */
         padding: 4px 8px !important;
         letter-spacing: -1px;
+        align-self: flex-start !important;
     }
 
-    /* Pioneer Validation Nodes 地址 + COPY 按鈕（保持已修好的） */
+    /* Pioneer Validation Nodes 地址 + COPY 按鈕（保持之前修好的） */
     .address-item {
         flex-wrap: wrap !important;
         gap: 8px !important;
@@ -229,29 +230,12 @@
         padding: 6px 12px !important;
     }
 
-    /* 其他基本壓縮（不影響其他部分） */
-    .architect-profile {
-        flex-direction: column !important;
-        gap: 25px !important;
-        padding: 25px !important;
-    }
-    .architect-photo {
-        width: 100% !important;
-        height: 320px !important;
-    }
-    .tech-grid {
-        grid-template-columns: 1fr !important;
-        gap: 16px !important;
-    }
-    #main-content-2 canvas {
-        max-height: 340px !important;
-        height: 340px !important;
-        width: 100% !important;
-    }
-    .main-tab-btn { 
-        padding: 12px 8px !important; 
-        font-size: 0.9rem !important; 
-    }
+    /* 其他基本壓縮（完全不變） */
+    .architect-profile { flex-direction: column !important; gap: 25px !important; padding: 25px !important; }
+    .architect-photo { width: 100% !important; height: 320px !important; }
+    .tech-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+    #main-content-2 canvas { max-height: 340px !important; height: 340px !important; width: 100% !important; }
+    .main-tab-btn { padding: 12px 8px !important; font-size: 0.9rem !important; }
     h1 { font-size: 2.3rem !important; }
     h3 { font-size: 1.15rem !important; }
 
