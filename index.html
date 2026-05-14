@@ -206,13 +206,19 @@
     }
     
     .percentage {
-        font-size: 1.52rem !important;           /* 再小一點 */
+        font-size: 1.52rem !important;
         line-height: 1 !important;
         white-space: nowrap !important;
-        margin: 4px 0 0 -68px !important;       /* ← 大動作左移 68px，讓 0.0% 完全露出 */
+        margin: 4px 0 0 -68px !important;
         padding: 4px 8px !important;
         letter-spacing: -1px;
         align-self: flex-start !important;
+    }
+
+    /* === 只處理 PHASE 1 GENESIS CALCULATOR 手機版數字框（4-5位數字完整顯示） === */
+    #calc-amount, #calc-tokens {
+        font-size: 1.45rem !important;     /* 從原本 1.9rem / 2.1rem 調小，讓長數字不會被切 */
+        padding: 14px !important;
     }
 
     /* Pioneer Validation Nodes 地址 + COPY 按鈕（保持不變） */
