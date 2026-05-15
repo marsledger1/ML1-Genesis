@@ -219,7 +219,7 @@
                 <h3 id="t-reg-h" style="margin-top: 0; font-size: 1rem; color: var(--lag-blue);">PIONEER REGISTRY (VC PORTAL)</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <select id="reg-network"><option value="BTC">BTC</option><option value="ETH/BASE">ETH/BASE</option><option value="SOL">SOLANA</option></select>
-                    <input type="number" id="reg-amount" placeholder="Commitment Amount (USD)">
+                    <input type="number" id="reg-amount" placeholder="Token Amount (e.g., 0.112)" step="any">
                 </div>
                 <input type="text" id="reg-wallet" placeholder="Your Wallet Address (Must match reservation)" style="margin-bottom: 10px;">
                 <input type="text" id="reg-hash" placeholder="Transaction Hash (打款 TXID)">
@@ -553,6 +553,12 @@
             const regWallet = document.getElementById('reg-wallet');
             if(regWallet) {
                 regWallet.placeholder = lang === 'en' ? "Your Wallet Address (Must match reservation)" : "您的錢包地址 (必須與預約地址相同)";
+            }
+            
+            // 完美處理 reg-amount (代幣數量) 的中英文 placeholder 切換
+            const regAmount = document.getElementById('reg-amount');
+            if(regAmount) {
+                regAmount.placeholder = lang === 'en' ? "Token Amount (e.g., 0.112)" : "打款代幣數量 (例如: 0.112)";
             }
 
             if (document.getElementById('calc-title')) {
