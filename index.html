@@ -221,7 +221,8 @@
                     <select id="reg-network"><option value="BTC">BTC</option><option value="ETH/BASE">ETH/BASE</option><option value="SOL">SOLANA</option></select>
                     <input type="number" id="reg-amount" placeholder="Commitment Amount (USD)">
                 </div>
-                <input type="text" id="reg-hash" placeholder="Transaction Hash (TXID)">
+                <input type="text" id="reg-wallet" placeholder="Your Wallet Address (Must match reservation)" style="margin-bottom: 10px;">
+                <input type="text" id="reg-hash" placeholder="Transaction Hash (打款 TXID)">
                 <button class="btn-submit" id="t-btn" onclick="submitToLedger()">COMMIT TO INTERSTELLAR LEDGER</button>
             </section>
 
@@ -548,6 +549,12 @@
             document.getElementById('access-key').placeholder = d.invitePlaceholder;
             document.getElementById('unlock-btn').innerText = d.unlockBtn;
 
+            // 完美處理 reg-wallet 的中英文 placeholder 切換
+            const regWallet = document.getElementById('reg-wallet');
+            if(regWallet) {
+                regWallet.placeholder = lang === 'en' ? "Your Wallet Address (Must match reservation)" : "您的錢包地址 (必須與預約地址相同)";
+            }
+
             if (document.getElementById('calc-title')) {
                 document.getElementById('calc-title').innerHTML = d.calcTitle;
                 document.getElementById('calc-subtitle').innerHTML = d.calcSubtitle;
@@ -591,19 +598,26 @@
             const btn = document.getElementById('t-btn');
             const network = document.getElementById('reg-network').value;
             const amount = document.getElementById('reg-amount').value;
-            const hash = document.getElementById('reg-hash').value;
-            if(!amount || !hash) { 
-                alert("DATA INCOMPLETE / 數據不完整"); 
+            const wallet = document.getElementById('reg-wallet').value.trim(); // 抓取錢包地址
+            const hash = document.getElementById('reg-hash').value.trim();     // 抓取 TXID
+            
+            // 確保三個欄位都有填
+            if(!amount || !hash || !wallet) { 
+                alert("DATA INCOMPLETE / 數據不完整，請填寫錢包與 TXID"); 
                 return; 
             }
+            
             const originalBtnText = btn.innerText;
             btn.innerText = "SYNCHRONIZING...";
             btn.disabled = true;
+            
+            // 完美的 Payload 結構
             const payload = [{
                 "TIMESTAMP (UTC)": new Date().toISOString(), 
                 "NETWORK": network, 
                 "ASSET_AMOUNT": amount, 
-                "PIONEER_ADDRESS": hash, 
+                "PIONEER_ADDRESS": wallet, // 這裡存錢包地址，用來跟 PortalNodes 自動配對！
+                "TXID": hash,              // 這裡存 TXID，方便你後台查賬確認！
                 "VALIDATION_STATUS": "PENDING"
             }];
             try {
@@ -613,8 +627,9 @@
                     body: JSON.stringify(payload) 
                 });
                 if(response.ok) { 
-                    alert("SUCCESS: DATA COMMITTED / 提交成功"); 
+                    alert("SUCCESS: DATA COMMITTED / 提交成功！裂變系統將自動核對您的地址。"); 
                     document.getElementById('reg-amount').value = '';
+                    document.getElementById('reg-wallet').value = '';
                     document.getElementById('reg-hash').value = '';
                     updateProgress(); 
                 } else {
