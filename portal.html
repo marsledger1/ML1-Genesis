@@ -331,8 +331,8 @@
                     <span lang-content="zh">[ 目標解鎖：BTC 空投池 ]</span>
                 </h3>
                 <p style="font-size: 11px; color: #aaa; margin-bottom: 5px;">
-                    <span lang-content="en">Unlocks at $500,000 USD (Calculated via USD_VALUATION). Higher Tiers get priority multipliers.</span>
-                    <span lang-content="zh">募資達 50萬美金時自動解鎖。僅計算實時入金價值。高階節點享有空投權重加成。</span>
+                    <span lang-content="en">Unlocks at $250,000 USD (Calculated via USD_VALUATION). Higher Tiers get priority multipliers.</span>
+                    <span lang-content="zh">募資達 25萬美金時自動解鎖。僅計算實時入金價值。高階節點享有空投權重加成。</span>
                 </p>
                 
                 <div class="progress-bar-bg">
@@ -481,7 +481,6 @@
         }
     }
 
-    // === 🚀 核心邏輯：雙代加權 + 向上穿透機制 (Roll-up Protocol) ===
     async function verifyActiveNodes(myCode) {
         document.getElementById('syncing-indicator').style.display = 'block';
         try {
@@ -617,10 +616,10 @@
                     }
                 });
             }
-            const btcGoal = 500000; 
+            const btcGoal = 250000; 
             let percent = Math.min((totalUSDValue / btcGoal) * 100, 100).toFixed(2);
             document.getElementById('btc-progress-fill').style.width = percent + '%';
-            document.getElementById('btc-progress-text').innerText = `CURRENT PROGRESS: ${percent}% (${totalUSDValue.toLocaleString()} / 500,000 USD)`;
+            document.getElementById('btc-progress-text').innerText = `CURRENT PROGRESS: ${percent}% (${totalUSDValue.toLocaleString()} / 250,000 USD)`;
             let actualNodes = eligibleWallets.size;
             if(document.getElementById('eligible-nodes')) document.getElementById('eligible-nodes').innerText = actualNodes;
             if(document.getElementById('eligible-nodes-zh')) document.getElementById('eligible-nodes-zh').innerText = actualNodes;
