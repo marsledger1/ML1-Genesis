@@ -234,11 +234,19 @@
                     Mars Ledger 1 • Genesis Fund Tokenomics
                 </p>
                 
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:end;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start;">
                     <div>
-                        <label id="calc-label-amount" style="color:#00ff41; font-size:0.8rem; display:block; margin-bottom:6px;">YOUR COMMITMENT (USD)</label>
-                        <input type="number" id="calc-amount" value="0" 
-                               style="width:100%; background:#000; color:#fff; border:2px solid #00BFFF; padding:18px; font-size:1.9rem; text-align:center;">
+                        <label id="calc-label-amount" style="color:#00ff41; font-size:0.8rem; display:block; margin-bottom:6px;">INPUT ASSET AMOUNT</label>
+                        <div style="display:flex; gap:5px;">
+                            <select id="calc-asset" onchange="runPhase1Calc()" style="background:#000; color:var(--lag-blue); border:2px solid #00BFFF; padding:18px 10px; font-size:1.2rem; font-weight:bold; outline:none; cursor:pointer;">
+                                <option value="SOL">SOL</option>
+                                <option value="ETH">ETH</option>
+                                <option value="BTC">BTC</option>
+                            </select>
+                            <input type="number" id="calc-amount" placeholder="0.112" step="any" oninput="runPhase1Calc()" 
+                                   style="width:100%; background:#000; color:#fff; border:2px solid #00BFFF; padding:18px; font-size:1.6rem; text-align:center; outline:none;">
+                        </div>
+                        <div id="calc-live-usd" style="color:var(--lag-blue); font-size:0.85rem; margin-top:8px; text-align:center; font-weight:bold;">≈ $0.00 USD (Live)</div>
                     </div>
                     <div>
                         <label id="calc-label-tokens" style="color:#00ff41; font-size:0.8rem; display:block; margin-bottom:6px;">PROJECTED ML1 TOKENS</label>
@@ -256,11 +264,6 @@
                         TGE unlock: <strong style="color:#ff0;">20%</strong> • Remaining vested with hardware milestones
                     </span>
                 </div>
-
-                <button onclick="runPhase1Calc()" id="calc-button"
-                        style="margin-top:22px; width:100%; background:var(--tech-green); color:#000; border:none; padding:18px; font-size:1.1rem; font-weight:bold;">
-                    CALCULATE MY MARS LEGACY
-                </button>
 
                 <div style="margin-top:20px; padding:14px; background:rgba(0,255,65,0.08); border:1px dashed var(--tech-green); font-size:0.82rem; color:#ccc;">
                     <strong id="calc-advantage-title">Genesis Dust-Seeders Advantage:</strong><br>
@@ -460,7 +463,7 @@
                 unlockBtn: "UNLOCK JEZERO CRATER",
                 calcTitle: "PHASE 1 GENESIS CALCULATOR v1.4",
                 calcSubtitle: "Mars Ledger 1 • Genesis Fund Tokenomics",
-                calcLabelAmount: "YOUR COMMITMENT (USD)",
+                calcLabelAmount: "INPUT ASSET AMOUNT",
                 calcLabelTokens: "PROJECTED ML1 TOKENS",
                 calcShareText: "Your share of Genesis Fund:",
                 calcTgeText: "TGE unlock: <strong style='color:#ff0;'>20%</strong> • Remaining vested with hardware milestones",
@@ -499,7 +502,7 @@
                 unlockBtn: "UNLOCK JEZERO CRATER",
                 calcTitle: "第一階段創世計算器 v1.4",
                 calcSubtitle: "火星帳本 1 • 創世基金代幣經濟學",
-                calcLabelAmount: "您的承諾金額 (USD)",
+                calcLabelAmount: "輸入代幣數量",
                 calcLabelTokens: "預計獲得 ML1 代幣",
                 calcShareText: "您在創世基金的份額：",
                 calcTgeText: "TGE 解鎖： <strong style='color:#ff0;'>20%</strong> • 剩餘部分隨硬體部署里程碑逐步釋放",
@@ -573,6 +576,11 @@
                 document.getElementById('adv1').innerHTML = d.adv1;
                 document.getElementById('adv2').innerHTML = d.adv2;
                 document.getElementById('adv3').innerHTML = d.adv3;
+            }
+            
+            // 重算一次以更新計算器內的語言字眼
+            if (typeof runPhase1Calc === "function") {
+                runPhase1Calc();
             }
 
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -663,17 +671,56 @@
         function openWhitepaperModal() { document.getElementById('whitepaper-modal').style.display = 'block'; }
         function closeWhitepaperModal() { document.getElementById('whitepaper-modal').style.display = 'none'; }
 
+        // ==================== 實時幣價抓取引擎 (Binance API) ====================
+        let livePrices = { BTC: 65000, ETH: 3000, SOL: 150 }; // 預設防呆價格
+        
+        async function fetchLivePrices() {
+            try {
+                // 實時抓取幣安最新成交價
+                const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbols=%5B%22BTCUSDT%22,%22ETHUSDT%22,%22SOLUSDT%22%5D');
+                const data = await res.json();
+                data.forEach(item => {
+                    if(item.symbol === 'BTCUSDT') livePrices.BTC = parseFloat(item.price);
+                    if(item.symbol === 'ETHUSDT') livePrices.ETH = parseFloat(item.price);
+                    if(item.symbol === 'SOLUSDT') livePrices.SOL = parseFloat(item.price);
+                });
+                runPhase1Calc(); // 更新價格後自動重算一次
+            } catch(e) { 
+                console.log('Live price fetch failed, using fallback prices.'); 
+            }
+        }
+
+        // 全新的計算邏輯
         function runPhase1Calc() {
-            const amount = parseFloat(document.getElementById('calc-amount').value) || 0;
+            const asset = document.getElementById('calc-asset');
+            const amountInput = document.getElementById('calc-amount');
+            
+            // 防呆，如果還沒載入可能找不到元素
+            if(!asset || !amountInput) return;
+
+            const assetType = asset.value;
+            const amount = parseFloat(amountInput.value) || 0;
+            
+            // 計算真實美金價值 (數量 x 實時幣價)
+            const usdValue = amount * livePrices[assetType];
+
             const totalGoal = 1000000;
             const genesisTokens = 1000000;
 
-            const percent = Math.min((amount / totalGoal) * 100, 100).toFixed(2);
-            const tokens = Math.floor((amount / totalGoal) * genesisTokens);
+            // 百分比顯示到小數點後四位
+            const percent = Math.min((usdValue / totalGoal) * 100, 100).toFixed(4);
+            const tokens = Math.floor((usdValue / totalGoal) * genesisTokens);
 
+            // 更新畫面
             document.getElementById('calc-percent').innerText = percent + '%';
             document.getElementById('calc-tokens').innerText = tokens.toLocaleString();
+            
+            // 顯示實時美金價值 (雙語支援)
+            const isZh = document.body.classList.contains('lang-zh');
+            const liveText = isZh ? "實時報價" : "Live";
+            document.getElementById('calc-live-usd').innerText = `≈ $${usdValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD (${liveText})`;
 
+            // 數字跳動特效
             const tokensEl = document.getElementById('calc-tokens');
             tokensEl.style.transition = 'transform 0.3s ease';
             tokensEl.style.transform = 'scale(1.12)';
@@ -774,6 +821,8 @@
         window.onload = function() {
             setLang('en');
             updateProgress();
+            fetchLivePrices(); // 啟動實時幣價引擎
+            setInterval(fetchLivePrices, 30000); // 每 30 秒自動刷新幣價
             setInterval(updateProgress, 60000);
             document.getElementById('main-content-0').classList.add('active');
             console.log('%c✅ ML1 V5.3 終極終端機就緒', 'color:#00ff41; font-size:14px');
