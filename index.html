@@ -687,11 +687,25 @@
         }
 
         function triggerISRU() {
+            // 螢幕閃爍特效
             const bg = document.getElementById('telemetry-bg');
             bg.style.filter = 'grayscale(0%) contrast(150%) brightness(1.2)';
             setTimeout(() => bg.style.filter = 'grayscale(50%) contrast(120%)', 500);
             
-            typeWriter("> [OPTIMUS_01] SENSOR TRIGGERED: 2.4KG METHANE DETECTED.", "> [OPTIMUS_01] 傳感器觸發: 檢測到 2.4KG 甲烷.", "#fff");
+            // 火星資源矩陣 (隨機抽取)
+            const resTypes = [
+                { en: "SUBSURFACE H2O (ICE)", zh: "地下水冰 (H2O)", min: 3.0, max: 8.5 },
+                { en: "LIQUID O2 SYNTHESIZED", zh: "液氧 (O2) 合成完畢", min: 1.0, max: 4.2 },
+                { en: "METHANE (CH4) FUEL", zh: "甲烷 (CH4) 燃料", min: 2.0, max: 5.5 },
+                { en: "REGOLITH RARE-EARTH", zh: "火星壤稀土礦物", min: 0.1, max: 1.8 }
+            ];
+            
+            // 隨機選一個資源，並隨機生成帶有小數點的重量
+            const rand = resTypes[Math.floor(Math.random() * resTypes.length)];
+            const amount = (Math.random() * (rand.max - rand.min) + rand.min).toFixed(2);
+
+            // 雙語打字輸出
+            typeWriter(`> [OPTIMUS_01] SENSOR: ${amount}KG ${rand.en} DETECTED.`, `> [OPTIMUS_01] 傳感器: 採集/合成 ${amount}KG ${rand.zh}.`, "#fff");
             setTimeout(() => typeWriter("> PROOF OF PHYSICAL WORK (PoPW) HASH GENERATED.", "> 物理工作量證明 (PoPW) 哈希已生成.", "var(--tech-green)"), 600);
             setTimeout(() => typeWriter("> ML1 LOCAL LEDGER UPDATED. AWAITING BATCH...", "> ML1 本地帳本已更新. 等待批次同步...", "var(--tech-green)"), 1200);
         }
