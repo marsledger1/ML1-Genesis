@@ -129,6 +129,17 @@
             h1 { font-size: 2.3rem !important; }
             h3 { font-size: 1.15rem !important; }
             * { max-width: 100% !important; box-sizing: border-box !important; overflow-x: hidden !important; }
+            
+            /* 修复手机端同步进度百分比错位问题 */
+            #sync-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+            
+            /* 修复手机端计算器输入框和代币数量超出边界问题（改为上下排列） */
+            #calc-grid-container { grid-template-columns: 1fr !important; gap: 20px !important; }
+            
+            /* 针对手机屏幕微调输入框和字号，防止溢出框外 */
+            #calc-asset { padding: 12px 8px !important; font-size: 1.1rem !important; }
+            #calc-amount { padding: 12px !important; font-size: 1.3rem !important; }
+            #calc-tokens { padding: 12px !important; font-size: 1.6rem !important; word-break: break-all !important; }
         }
     </style>
 </head>
@@ -186,7 +197,7 @@
         
         <div id="main-content-1" class="tab-content">
             <section class="sync-monitor">
-                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div id="sync-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
                     <div>
                         <h3 id="t-sync-h" style="font-size: 0.8rem; color: var(--lag-blue); margin: 0;">GENESIS FUNDING SYNCHRONIZATION</h3>
                         <p id="t-sync-p" style="font-size: 0.7rem; color: var(--mars-red); margin: 5px 0 0 0; letter-spacing: 1px;">[ TARGET: 1,000,000 USD TO TRIGGER PHASE 1 HARDWARE FABRICATION ]</p>
@@ -238,7 +249,7 @@
                     Mars Ledger 1 • Genesis Fund Tokenomics
                 </p>
                 
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start;">
+                <div id="calc-grid-container" style="display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start;">
                     <div>
                         <label id="calc-label-amount" style="color:#00ff41; font-size:0.8rem; display:block; margin-bottom:6px;">INPUT ASSET AMOUNT</label>
                         <div style="display:flex; gap:5px;">
