@@ -222,6 +222,10 @@
                     <input type="number" id="reg-amount" placeholder="Token Amount (e.g., 0.112)" step="any">
                 </div>
                 <input type="text" id="reg-wallet" placeholder="Your Wallet Address (Must match reservation)" style="margin-bottom: 10px;">
+<div style="background: rgba(255, 0, 0, 0.1); border-left: 3px solid #ff4444; padding: 10px; margin-bottom: 15px; font-size: 0.75rem; color: #ff4444; text-transform: uppercase;">
+    <span lang-content="en">⚠️ CRITICAL: DO NOT SEND FUNDS FROM EXCHANGES (BINANCE, OKX, COINBASE). USE ONLY SELF-CUSTODIAL WALLETS (PHANTOM, METAMASK, TRUST). YOU MUST CONTROL THE PRIVATE KEYS TO CLAIM ML1 AT TGE. EXCHANGES WILL CAUSE PERMANENT LOSS OF ALLOCATION.</span>
+    <span lang-content="zh">⚠️ 嚴重警告：絕對禁止從交易所（幣安、OKX等）直接提現打款！請務必使用個人錢包（Phantom, MetaMask 等）。您必須擁有私鑰才能在 TGE 時申領 ML1。從交易所打款將導致份額永久喪失！</span>
+</div>
                 <input type="text" id="reg-hash" placeholder="Transaction Hash (打款 TXID)">
                 <button class="btn-submit" id="t-btn" onclick="submitToLedger()">COMMIT TO INTERSTELLAR LEDGER</button>
             </section>
