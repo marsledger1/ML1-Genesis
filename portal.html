@@ -313,11 +313,23 @@
                     <span lang-content="en">GENESIS NODE RESERVATION</span>
                     <span lang-content="zh">創世節點預約</span>
                 </h3>
-                <p style="font-size: 11px; margin-bottom: 20px; color: #ddd;">
+                <p style="font-size: 11px; margin-bottom: 10px; color: #ddd;">
                     <span lang-content="en">Valid Web3 Wallets only. Sybil attacks will be blacklisted.</span>
                     <span lang-content="zh">為防範女巫攻擊，僅接受標準 Web3 錢包地址。填寫無效數據將被系統拉黑。</span>
                 </p>
-                <input type="text" id="node-wallet" placeholder="Wallet Address (ETH/SOL/BSC)">
+
+                <p style="font-size: 10px; color: #ffcc00; font-weight: bold; margin-bottom: 15px; border: 1px dashed #ffcc00; padding: 8px;">
+                    ⚠️ <span lang-content="en">MUST match your EXACT sending address. Do not use Exchange (CEX) directly!</span>
+                    <span lang-content="zh">極度重要：必須填寫你「實際打款」的個人錢包地址，嚴禁直接從交易所提現，否則無法派發 BTC！</span>
+                </p>
+
+                <select id="wallet-network" style="background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3); color: var(--tech-green); padding: 12px; width: 100%; max-width: 400px; text-align: center; margin-bottom: 10px; outline: none; font-family: inherit;">
+                    <option value="EVM">EVM 鏈 (ETH / BNB / Arbitrum - 0x開頭)</option>
+                    <option value="SOL">Solana 鏈 (Phantom / Backpack 等)</option>
+                    <option value="BTC">Bitcoin 原生鏈</option>
+                </select>
+
+                <input type="text" id="node-wallet" placeholder="Paste your SENDING Wallet Address Here">
                 <input type="text" id="inviter-code" placeholder="Inviter Code (邀請人代碼 - Optional)">
                 <button class="btn-commit" onclick="commitToMars()" id="commit-btn">
                     <span lang-content="en">CONFIRM EQUITY COMMITMENT</span>
