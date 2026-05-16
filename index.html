@@ -457,10 +457,15 @@
 
             scWidget.bind(SC.Widget.Events.READY, function() {
                 scWidget.setVolume(50); 
-                scWidget.play();
-                document.body.addEventListener('click', () => {
+                scWidget.play(); // 嘗試自動播放
+                
+                // 黑客級全域秒觸發機制：捕捉用戶任何微小的滑動或點擊
+                const forcePlay = () => {
                     if (!isPlaying) scWidget.play();
-                }, { once: true });
+                    ['touchstart', 'scroll', 'click'].forEach(evt => window.removeEventListener(evt, forcePlay));
+                };
+                
+                ['touchstart', 'scroll', 'click'].forEach(evt => window.addEventListener(evt, forcePlay, { once: true }));
             });
 
             scWidget.bind(SC.Widget.Events.PLAY, function() {
