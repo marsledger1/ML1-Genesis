@@ -106,7 +106,7 @@
     <div class="top-nav">
         <div style="font-size: 9px; color: #555; letter-spacing: 1px;">ML1_V5.3_CORE // ACCESS_RESTRICTED</div>
         <div style="display: flex; gap: 10px; align-items: center;">
-            <button class="lang-btn" id="bgm-toggle" onclick="toggleBGM()">🔇 BGM: AWAITING SYNC</button>
+            <button class="lang-btn" id="bgm-toggle" onclick="toggleBGM(event)">🔇 BGM: AWAITING SYNC</button>
             <div style="display: flex; border-left: 1px solid #333; padding-left: 10px; margin-left: 5px;">
                 <button class="lang-btn active" onclick="setLanguage('en')" id="btn-en" style="border-right: none;">EN</button>
                 <button class="lang-btn" onclick="setLanguage('zh')" id="btn-zh">繁中</button>
@@ -425,22 +425,58 @@
 <script>
     let tgeRate = 0.20; 
 
-    function toggleBGM() {
+    // ==================== 暴力強制音樂播放系統 ====================
+    let isBgmPlaying = false;
+
+    function initAggressiveBGM() {
         const bgm = document.getElementById('portal-bgm');
-        const btn = document.getElementById('bgm-toggle');
-        
-        if (bgm.paused) {
-            bgm.play();
+        bgm.volume = 0.4; // 預設音量 40%
+
+        // 監聽音樂實際播放狀態，同步更新右上角按鈕的 UI
+        bgm.addEventListener('play', () => {
+            isBgmPlaying = true;
+            const btn = document.getElementById('bgm-toggle');
             btn.innerText = "🔊 BGM: ON";
             btn.style.color = "var(--tech-green)";
             btn.style.borderColor = "var(--tech-green)";
-        } else {
-            bgm.pause();
+        });
+
+        bgm.addEventListener('pause', () => {
+            isBgmPlaying = false;
+            const btn = document.getElementById('bgm-toggle');
             btn.innerText = "🔇 BGM: OFF";
             btn.style.color = "#555";
             btn.style.borderColor = "#333";
+        });
+
+        // 1. 暴力輪詢破解：每 0.5 秒不斷嘗試播放，直到系統放行為止
+        const forcePlayInterval = setInterval(() => {
+            if (!isBgmPlaying) {
+                bgm.play().catch(() => {}); // 忽略瀏覽器報錯，繼續硬點
+            } else {
+                clearInterval(forcePlayInterval); // 成功播放後停止輪詢
+            }
+        }, 500);
+        
+        // 2. 像素級微動破解：綁定手機螢幕的「任何微小動作」，摸到就播！
+        const forcePlay = () => {
+            if (!isBgmPlaying) bgm.play().catch(() => {});
+            ['touchstart', 'touchend', 'touchmove', 'scroll', 'click'].forEach(evt => window.removeEventListener(evt, forcePlay));
+        };
+        
+        ['touchstart', 'touchend', 'touchmove', 'scroll', 'click'].forEach(evt => window.addEventListener(evt, forcePlay, { once: true, passive: true }));
+    }
+
+    function toggleBGM(e) {
+        if(e) e.stopPropagation();
+        const bgm = document.getElementById('portal-bgm');
+        if (bgm.paused) {
+            bgm.play();
+        } else {
+            bgm.pause();
         }
     }
+    // ==============================================================
 
     function setLanguage(lang) {
         document.body.className = 'lang-' + lang;
@@ -462,14 +498,9 @@
         if(!key) key = urlParams.get('auth');
         if (key !== 'mars2026' && key !== 'ml1-core-001' && !key.startsWith('ml1-')) return alert("ACCESS DENIED.");
 
+        // 嘗試在按下按鈕時播放 (雙重保險)
         const bgm = document.getElementById('portal-bgm');
-        bgm.volume = 0.4;
-        bgm.play().then(() => {
-            const btn = document.getElementById('bgm-toggle');
-            btn.innerText = "🔊 BGM: ON";
-            btn.style.color = "var(--tech-green)";
-            btn.style.borderColor = "var(--tech-green)";
-        }).catch(e => console.log("BGM autoplay prevented."));
+        bgm.play().catch(()=>{});
 
         const lagScreen = document.getElementById('lag-screen');
         const lBar = document.getElementById('l-bar');
@@ -708,6 +739,10 @@
     window.onload = () => {
         setLanguage('en');
         fetchLiveProgress();
+        
+        // 啟動暴力音樂機制！一進來就開始狂點播放
+        initAggressiveBGM();
+
         const urlParams = new URLSearchParams(window.location.search);
         let authParam = urlParams.get('auth');
         if (authParam) {
