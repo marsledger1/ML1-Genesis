@@ -283,8 +283,9 @@
                     <div>
                         <label id="calc-label-tokens" style="color:#00ff41; font-size:0.8rem; display:block; margin-bottom:6px;">PROJECTED ML1 TOKENS</label>
                         <div id="calc-tokens" 
-                             style="background:#000; color:var(--tech-green); border:2px solid var(--tech-green); padding:18px; font-size:2.1rem; text-align:center;">
+                             style="background:#000; color:var(--tech-green); border:2px solid var(--tech-green); padding:18px; font-size:2.1rem; text-align:center; line-height: 1.3;">
                             0
+                            <div style="font-size: 0.85rem; color: #ff0; margin-top: 5px; letter-spacing: 1px;">TGE (20%): 0</div>
                         </div>
                     </div>
                 </div>
@@ -454,41 +455,30 @@
             const iframeElement = document.getElementById('sc-widget');
             scWidget = SC.Widget(iframeElement);
 
-            // 當播放器準備好時
             scWidget.bind(SC.Widget.Events.READY, function() {
-                scWidget.setVolume(50); // 設定音量為 50%
-                
-                // 嘗試自動播放
+                scWidget.setVolume(50); 
                 scWidget.play();
-                
-                // 用戶第一次在網頁上的任意點擊，強制觸發音樂（破解瀏覽器限制）
                 document.body.addEventListener('click', () => {
                     if (!isPlaying) scWidget.play();
                 }, { once: true });
             });
 
-            // 綁定播放事件，同步按鈕狀態
             scWidget.bind(SC.Widget.Events.PLAY, function() {
                 isPlaying = true;
                 updateBgmUI();
             });
 
-            // 綁定暫停事件，同步按鈕狀態
             scWidget.bind(SC.Widget.Events.PAUSE, function() {
                 isPlaying = false;
                 updateBgmUI();
             });
         }
 
-        // 開關音樂按鈕邏輯
         function toggleBGM(e) {
-            if(e) e.stopPropagation(); // 防止點擊按鈕時觸發 body 點擊事件
-            if (scWidget) {
-                scWidget.toggle();
-            }
+            if(e) e.stopPropagation(); 
+            if (scWidget) scWidget.toggle();
         }
 
-        // 更新音樂按鈕文字與樣式
         function updateBgmUI() {
             const btn = document.getElementById('bgm-toggle');
             const isZh = document.body.classList.contains('lang-zh');
@@ -604,7 +594,6 @@
         };
 
         function setLang(lang) {
-            // 切換 body 的 lang class 以觸發 CSS 中的中英顯示/隱藏
             document.body.className = 'lang-' + lang; 
 
             const d = content[lang];
@@ -672,7 +661,6 @@
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
 
-            // 更新 BGM 按鈕的語言文字
             updateBgmUI();
         }
 
@@ -749,9 +737,7 @@
         function unlockPioneer() {
             const key = document.getElementById('access-key').value.trim().toUpperCase();
             
-            // 放寬驗證：允許 MARS2026, ML1-CORE-001, 以及所有 ML1- 開頭的裂變邀請碼
             if (key === 'MARS2026' || key === 'ML1-CORE-001' || key.startsWith('ML1-')) {
-                // 將使用者輸入的 key 傳遞到 portal.html
                 window.location.href = 'portal.html?auth=' + encodeURIComponent(key.toLowerCase());
             } else {
                 alert('❌ ACCESS DENIED / 無效邀請碼');
@@ -761,22 +747,38 @@
         function openWhitepaperModal() { document.getElementById('whitepaper-modal').style.display = 'block'; }
         function closeWhitepaperModal() { document.getElementById('whitepaper-modal').style.display = 'none'; }
 
-        let livePrices = { BTC: 65000, ETH: 3000, SOL: 150 };
+        // ==================== 實時幣價雙重抓取引擎 (高可用性升級版) ====================
+        let livePrices = { BTC: 78226.70, ETH: 2175.83, SOL: 86.69 }; // 更新防呆底線價格為您的最新行情
         
         async function fetchLivePrices() {
             try {
-                const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbols=%5B%22BTCUSDT%22,%22ETHUSDT%22,%22SOLUSDT%22%5D');
-                const data = await res.json();
-                data.forEach(item => {
-                    if(item.symbol === 'BTCUSDT') livePrices.BTC = parseFloat(item.price);
-                    if(item.symbol === 'ETHUSDT') livePrices.ETH = parseFloat(item.price);
-                    if(item.symbol === 'SOLUSDT') livePrices.SOL = parseFloat(item.price);
+                // 方案一：CoinCap API (無 CORS 限制，前端抓取最穩定)
+                const res = await fetch('https://api.coincap.io/v2/assets?ids=bitcoin,ethereum,solana');
+                if (!res.ok) throw new Error("CoinCap failed");
+                const json = await res.json();
+                json.data.forEach(coin => {
+                    if(coin.symbol === 'BTC') livePrices.BTC = parseFloat(coin.priceUsd);
+                    if(coin.symbol === 'ETH') livePrices.ETH = parseFloat(coin.priceUsd);
+                    if(coin.symbol === 'SOL') livePrices.SOL = parseFloat(coin.priceUsd);
                 });
-                runPhase1Calc(); 
             } catch(e) { 
-                console.log('Live price fetch failed, using fallback prices.'); 
+                console.log('CoinCap API failed, switching to CoinGecko...', e); 
+                try {
+                    // 方案二：CoinGecko API (備用高品質 API)
+                    const res2 = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd');
+                    if (!res2.ok) throw new Error("CoinGecko failed");
+                    const data = await res2.json();
+                    if(data.bitcoin) livePrices.BTC = data.bitcoin.usd;
+                    if(data.ethereum) livePrices.ETH = data.ethereum.usd;
+                    if(data.solana) livePrices.SOL = data.solana.usd;
+                } catch(fallbackErr) {
+                    console.log('Live APIs offline or blocked. Using local fallback prices.');
+                }
+            } finally {
+                runPhase1Calc(); // 無論成功或失敗，都強制刷新一次計算器畫面
             }
         }
+        // =========================================================================
 
         function runPhase1Calc() {
             const asset = document.getElementById('calc-asset');
@@ -793,12 +795,22 @@
             const genesisTokens = 1000000;
 
             const percent = Math.min((usdValue / totalGoal) * 100, 100).toFixed(4);
-            const tokens = Math.floor((usdValue / totalGoal) * genesisTokens);
+            const tokens = (usdValue / totalGoal) * genesisTokens;
+            const tgeTokens = tokens * 0.20; // 精準計算 20% TGE
 
             document.getElementById('calc-percent').innerText = percent + '%';
-            document.getElementById('calc-tokens').innerText = tokens.toLocaleString();
             
+            // 讓主框顯示總量，下方小黃字直接顯示 TGE 20% 的實際可領取數量 (滿足您的計算預期)
             const isZh = document.body.classList.contains('lang-zh');
+            const tgeText = isZh ? "TGE 首發解鎖 (20%)" : "TGE Release (20%)";
+            
+            document.getElementById('calc-tokens').innerHTML = `
+                ${Math.floor(tokens).toLocaleString()}
+                <div style="font-size: 0.85rem; color: #ff0; margin-top: 8px; letter-spacing: 1px;">
+                    ${tgeText}: ${tgeTokens.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 2})}
+                </div>
+            `;
+            
             const liveText = isZh ? "實時報價" : "Live";
             document.getElementById('calc-live-usd').innerText = `≈ $${usdValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD (${liveText})`;
 
@@ -902,7 +914,6 @@
             setInterval(updateProgress, 60000);
             document.getElementById('main-content-0').classList.add('active');
             
-            // 啟動 SoundCloud 系統
             initSoundCloud();
             
             console.log('%c✅ ML1 V5.3 終極終端機就緒', 'color:#00ff41; font-size:14px');
