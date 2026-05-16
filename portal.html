@@ -20,8 +20,9 @@
         .container { width: 92%; max-width: 1000px; margin: 0 auto; padding: 20px 0; position: relative; z-index: 1; }
         
         .top-nav { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 20px; }
-        .lang-btn { background: transparent; border: 1px solid #333; color: #555; padding: 4px 10px; font-size: 10px; cursor: pointer; }
+        .lang-btn { background: transparent; border: 1px solid #333; color: #555; padding: 4px 10px; font-size: 10px; cursor: pointer; transition: 0.3s; }
         .lang-btn.active { color: var(--tech-green); border-color: var(--tech-green); }
+        .lang-btn:hover { background: rgba(0, 255, 65, 0.1); }
 
         header { border-left: 4px solid var(--mars-red); padding-left: 15px; margin-bottom: 30px; }
         .title { color: var(--tech-green); font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; }
@@ -97,12 +98,19 @@
 </head>
 <body class="lang-en">
 
+<audio id="portal-bgm" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
+</audio>
+
 <div class="container">
     <div class="top-nav">
         <div style="font-size: 9px; color: #555; letter-spacing: 1px;">ML1_V5.3_CORE // ACCESS_RESTRICTED</div>
-        <div>
-            <button class="lang-btn active" onclick="setLanguage('en')" id="btn-en">EN</button>
-            <button class="lang-btn" onclick="setLanguage('zh')" id="btn-zh">繁中</button>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="lang-btn" id="bgm-toggle" onclick="toggleBGM()">🔇 BGM: AWAITING SYNC</button>
+            <div style="display: flex; border-left: 1px solid #333; padding-left: 10px; margin-left: 5px;">
+                <button class="lang-btn active" onclick="setLanguage('en')" id="btn-en" style="border-right: none;">EN</button>
+                <button class="lang-btn" onclick="setLanguage('zh')" id="btn-zh">繁中</button>
+            </div>
         </div>
     </div>
 
@@ -417,6 +425,23 @@
 <script>
     let tgeRate = 0.20; 
 
+    function toggleBGM() {
+        const bgm = document.getElementById('portal-bgm');
+        const btn = document.getElementById('bgm-toggle');
+        
+        if (bgm.paused) {
+            bgm.play();
+            btn.innerText = "🔊 BGM: ON";
+            btn.style.color = "var(--tech-green)";
+            btn.style.borderColor = "var(--tech-green)";
+        } else {
+            bgm.pause();
+            btn.innerText = "🔇 BGM: OFF";
+            btn.style.color = "#555";
+            btn.style.borderColor = "#333";
+        }
+    }
+
     function setLanguage(lang) {
         document.body.className = 'lang-' + lang;
         document.getElementById('btn-en').classList.toggle('active', lang === 'en');
@@ -436,6 +461,15 @@
         let key = document.getElementById('pioneer-key').value.trim().toLowerCase();
         if(!key) key = urlParams.get('auth');
         if (key !== 'mars2026' && key !== 'ml1-core-001' && !key.startsWith('ml1-')) return alert("ACCESS DENIED.");
+
+        const bgm = document.getElementById('portal-bgm');
+        bgm.volume = 0.4;
+        bgm.play().then(() => {
+            const btn = document.getElementById('bgm-toggle');
+            btn.innerText = "🔊 BGM: ON";
+            btn.style.color = "var(--tech-green)";
+            btn.style.borderColor = "var(--tech-green)";
+        }).catch(e => console.log("BGM autoplay prevented."));
 
         const lagScreen = document.getElementById('lag-screen');
         const lBar = document.getElementById('l-bar');
@@ -670,6 +704,7 @@
         });
     }
 
+    // ==== 核心修復：讀取參數並自動啟動 ====
     window.onload = () => {
         setLanguage('en');
         fetchLiveProgress();
@@ -677,6 +712,7 @@
         let authParam = urlParams.get('auth');
         if (authParam) {
             document.getElementById('pioneer-key').value = authParam;
+            // 只要帶有 auth 參數跳轉過來，就直接自動執行登入序列，不讓用戶再點一次！
             startSyncSequence();
         }
     };
