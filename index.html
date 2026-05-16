@@ -144,10 +144,10 @@
             /* --- 以下為本次新增：修復先鋒註冊入口輸入框提示字顯示不全 --- */
             /* 1. 將打款代幣與幣種選單改為上下排列，爭取 100% 寬度 */
             .node-allocation div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
-            /* 2. 減少輸入框內邊距，並微調基礎字號 */
-            #reg-amount, #reg-wallet, #reg-hash { padding: 12px 10px !important; font-size: 0.8rem !important; }
-            /* 3. 針對 Placeholder (提示字) 再縮小一點，確保中英文長字串都能完整塞入 */
-            #reg-amount::placeholder, #reg-wallet::placeholder, #reg-hash::placeholder { font-size: 0.7rem !important; }
+            /* 2. 減少輸入框內邊距，並微調基礎字號，騰出更多空間 */
+            #reg-amount, #reg-wallet, #reg-hash { padding: 12px 6px !important; font-size: 0.8rem !important; }
+            /* 3. 針對 Placeholder (提示字) 進一步縮小字號與字距，確保括號能完整顯示！ */
+            #reg-amount::placeholder, #reg-wallet::placeholder, #reg-hash::placeholder { font-size: 0.6rem !important; letter-spacing: -0.5px !important; }
         }
     </style>
 </head>
