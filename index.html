@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ML1 V5.3 | MARS SOVEREIGN SUPREMACY</title>
+    <script src="https://w.soundcloud.com/player/api.js"></script>
     <style>
         :root {
             --bg-deep: #050505;
@@ -51,6 +52,12 @@
         .lang-switch { position: fixed; top: 45px; right: 20px; z-index: 1100; }
         .lang-btn { background: rgba(0,0,0,0.7); border: 1px solid var(--lag-blue); color: var(--lag-blue); padding: 4px 10px; font-size: 0.6rem; cursor: pointer; font-family: inherit; }
         .lang-btn.active { background: var(--lag-blue); color: #000; }
+
+        /* BGM 音樂控制按鈕樣式 (對齊右上角的語言切換) */
+        .bgm-control { position: fixed; top: 45px; left: 20px; z-index: 1100; }
+        .bgm-btn { background: rgba(0,0,0,0.7); border: 1px solid #888; color: #888; padding: 4px 10px; font-size: 0.6rem; cursor: pointer; font-family: inherit; transition: 0.3s; }
+        .bgm-btn:hover { background: rgba(0, 255, 65, 0.1); }
+        .bgm-btn.playing { border-color: var(--tech-green); color: var(--tech-green); text-shadow: 0 0 5px var(--tech-green); }
 
         .container { max-width: 1100px; margin: 100px auto; padding: 40px; position: relative; z-index: 10; }
 
@@ -130,33 +137,35 @@
             h3 { font-size: 1.15rem !important; }
             * { max-width: 100% !important; box-sizing: border-box !important; overflow-x: hidden !important; }
             
-            /* 修复手机端同步进度百分比错位问题 */
             #sync-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
-            
-            /* 修复手机端计算器输入框和代币数量超出边界问题（改为上下排列） */
             #calc-grid-container { grid-template-columns: 1fr !important; gap: 20px !important; }
-            
-            /* 针对手机屏幕微调输入框和字号，防止溢出框外 */
             #calc-asset { padding: 12px 8px !important; font-size: 1.1rem !important; }
             #calc-amount { padding: 12px !important; font-size: 1.3rem !important; }
             #calc-tokens { padding: 12px !important; font-size: 1.6rem !important; word-break: break-all !important; }
 
-            /* --- 極致修復先鋒註冊入口輸入框提示字顯示不全 --- */
-            /* 1. 將打款代幣與幣種選單改為上下排列，爭取 100% 寬度 */
             .node-allocation div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
-            /* 2. 極限減少輸入框左右邊距為 4px，爭取最大顯示空間 */
             #reg-amount, #reg-wallet, #reg-hash { padding: 12px 4px !important; font-size: 0.8rem !important; }
-            /* 3. Placeholder 字號縮小至 0.58rem，並緊縮字距 */
             #reg-amount::placeholder, #reg-wallet::placeholder, #reg-hash::placeholder { font-size: 0.58rem !important; letter-spacing: -0.5px !important; }
         }
     </style>
 </head>
 <body class="lang-en">
+    
+    <iframe id="sc-widget" allow="autoplay" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;" 
+            src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/user-902835287/martin-garrix-live-1&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false">
+    </iframe>
+
     <div class="mars-bg-layer"></div>
+    
+    <div class="bgm-control">
+        <button class="bgm-btn" id="bgm-toggle" onclick="toggleBGM(event)">🔇 BGM: AWAITING SYNC</button>
+    </div>
+
     <div class="lang-switch">
         <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
         <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">繁體</button>
     </div>
+    
     <div class="telemetry-bar">
         <span id="t-loc">LOC: JEZERO_CRATER_ALPHA</span>
         <span id="lag-counter">SIGNAL_LAG: 624.00s</span>
@@ -437,6 +446,63 @@
     </div>
 
     <script>
+        // ==================== SoundCloud 背景音樂系統 ====================
+        let scWidget;
+        let isPlaying = false;
+
+        function initSoundCloud() {
+            const iframeElement = document.getElementById('sc-widget');
+            scWidget = SC.Widget(iframeElement);
+
+            // 當播放器準備好時
+            scWidget.bind(SC.Widget.Events.READY, function() {
+                scWidget.setVolume(50); // 設定音量為 50%
+                
+                // 嘗試自動播放
+                scWidget.play();
+                
+                // 用戶第一次在網頁上的任意點擊，強制觸發音樂（破解瀏覽器限制）
+                document.body.addEventListener('click', () => {
+                    if (!isPlaying) scWidget.play();
+                }, { once: true });
+            });
+
+            // 綁定播放事件，同步按鈕狀態
+            scWidget.bind(SC.Widget.Events.PLAY, function() {
+                isPlaying = true;
+                updateBgmUI();
+            });
+
+            // 綁定暫停事件，同步按鈕狀態
+            scWidget.bind(SC.Widget.Events.PAUSE, function() {
+                isPlaying = false;
+                updateBgmUI();
+            });
+        }
+
+        // 開關音樂按鈕邏輯
+        function toggleBGM(e) {
+            if(e) e.stopPropagation(); // 防止點擊按鈕時觸發 body 點擊事件
+            if (scWidget) {
+                scWidget.toggle();
+            }
+        }
+
+        // 更新音樂按鈕文字與樣式
+        function updateBgmUI() {
+            const btn = document.getElementById('bgm-toggle');
+            const isZh = document.body.classList.contains('lang-zh');
+            
+            if (!isPlaying) {
+                btn.innerText = isZh ? "🔇 系統音樂: 關閉" : "🔇 BGM: OFF";
+                btn.classList.remove('playing');
+            } else {
+                btn.innerText = isZh ? "🔊 系統音樂: 啟動" : "🔊 BGM: ON";
+                btn.classList.add('playing');
+            }
+        }
+        // ==============================================================
+
         function switchMainTab(n) {
             document.querySelectorAll('.main-tab-btn').forEach((btn, i) => {
                 btn.classList.toggle('active', i === n);
@@ -575,13 +641,11 @@
             document.getElementById('access-key').placeholder = d.invitePlaceholder;
             document.getElementById('unlock-btn').innerText = d.unlockBtn;
 
-            // 完美處理 reg-wallet 的中英文 placeholder 切換（已精簡字數以騰出空間）
             const regWallet = document.getElementById('reg-wallet');
             if(regWallet) {
                 regWallet.placeholder = lang === 'en' ? "Wallet Address (Must match reservation)" : "錢包地址 (必須與預約地址相同)";
             }
             
-            // 完美處理 reg-amount (代幣數量) 的中英文 placeholder 切換
             const regAmount = document.getElementById('reg-amount');
             if(regAmount) {
                 regAmount.placeholder = lang === 'en' ? "Token Amount (e.g., 0.112)" : "打款代幣數量 (例如: 0.112)";
@@ -601,13 +665,15 @@
                 document.getElementById('adv3').innerHTML = d.adv3;
             }
             
-            // 重算一次以更新計算器內的語言字眼
             if (typeof runPhase1Calc === "function") {
                 runPhase1Calc();
             }
 
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
+
+            // 更新 BGM 按鈕的語言文字
+            updateBgmUI();
         }
 
         async function updateProgress() {
@@ -635,10 +701,9 @@
             const btn = document.getElementById('t-btn');
             const network = document.getElementById('reg-network').value;
             const amount = document.getElementById('reg-amount').value;
-            const wallet = document.getElementById('reg-wallet').value.trim(); // 抓取錢包地址
-            const hash = document.getElementById('reg-hash').value.trim();     // 抓取 TXID
+            const wallet = document.getElementById('reg-wallet').value.trim();
+            const hash = document.getElementById('reg-hash').value.trim();
             
-            // 確保三個欄位都有填
             if(!amount || !hash || !wallet) { 
                 alert("DATA INCOMPLETE / 數據不完整，請填寫錢包與 TXID"); 
                 return; 
@@ -648,13 +713,12 @@
             btn.innerText = "SYNCHRONIZING...";
             btn.disabled = true;
             
-            // 完美的 Payload 結構
             const payload = [{
                 "TIMESTAMP (UTC)": new Date().toISOString(), 
                 "NETWORK": network, 
                 "ASSET_AMOUNT": amount, 
-                "PIONEER_ADDRESS": wallet, // 這裡存錢包地址，用來跟 PortalNodes 自動配對！
-                "TXID": hash,              // 這裡存 TXID，方便你後台查賬確認！
+                "PIONEER_ADDRESS": wallet,
+                "TXID": hash,
                 "VALIDATION_STATUS": "PENDING"
             }];
             try {
@@ -684,8 +748,11 @@
 
         function unlockPioneer() {
             const key = document.getElementById('access-key').value.trim().toUpperCase();
-            if (key === 'MARS2026') {
-                window.location.href = 'portal.html?auth=mars2026';
+            
+            // 放寬驗證：允許 MARS2026, ML1-CORE-001, 以及所有 ML1- 開頭的裂變邀請碼
+            if (key === 'MARS2026' || key === 'ML1-CORE-001' || key.startsWith('ML1-')) {
+                // 將使用者輸入的 key 傳遞到 portal.html
+                window.location.href = 'portal.html?auth=' + encodeURIComponent(key.toLowerCase());
             } else {
                 alert('❌ ACCESS DENIED / 無效邀請碼');
             }
@@ -694,12 +761,10 @@
         function openWhitepaperModal() { document.getElementById('whitepaper-modal').style.display = 'block'; }
         function closeWhitepaperModal() { document.getElementById('whitepaper-modal').style.display = 'none'; }
 
-        // ==================== 實時幣價抓取引擎 (Binance API) ====================
-        let livePrices = { BTC: 65000, ETH: 3000, SOL: 150 }; // 預設防呆價格
+        let livePrices = { BTC: 65000, ETH: 3000, SOL: 150 };
         
         async function fetchLivePrices() {
             try {
-                // 實時抓取幣安最新成交價
                 const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbols=%5B%22BTCUSDT%22,%22ETHUSDT%22,%22SOLUSDT%22%5D');
                 const data = await res.json();
                 data.forEach(item => {
@@ -707,50 +772,42 @@
                     if(item.symbol === 'ETHUSDT') livePrices.ETH = parseFloat(item.price);
                     if(item.symbol === 'SOLUSDT') livePrices.SOL = parseFloat(item.price);
                 });
-                runPhase1Calc(); // 更新價格後自動重算一次
+                runPhase1Calc(); 
             } catch(e) { 
                 console.log('Live price fetch failed, using fallback prices.'); 
             }
         }
 
-        // 全新的計算邏輯
         function runPhase1Calc() {
             const asset = document.getElementById('calc-asset');
             const amountInput = document.getElementById('calc-amount');
             
-            // 防呆，如果還沒載入可能找不到元素
             if(!asset || !amountInput) return;
 
             const assetType = asset.value;
             const amount = parseFloat(amountInput.value) || 0;
             
-            // 計算真實美金價值 (數量 x 實時幣價)
             const usdValue = amount * livePrices[assetType];
 
             const totalGoal = 1000000;
             const genesisTokens = 1000000;
 
-            // 百分比顯示到小數點後四位
             const percent = Math.min((usdValue / totalGoal) * 100, 100).toFixed(4);
             const tokens = Math.floor((usdValue / totalGoal) * genesisTokens);
 
-            // 更新畫面
             document.getElementById('calc-percent').innerText = percent + '%';
             document.getElementById('calc-tokens').innerText = tokens.toLocaleString();
             
-            // 顯示實時美金價值 (雙語支援)
             const isZh = document.body.classList.contains('lang-zh');
             const liveText = isZh ? "實時報價" : "Live";
             document.getElementById('calc-live-usd').innerText = `≈ $${usdValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD (${liveText})`;
 
-            // 數字跳動特效
             const tokensEl = document.getElementById('calc-tokens');
             tokensEl.style.transition = 'transform 0.3s ease';
             tokensEl.style.transform = 'scale(1.12)';
             setTimeout(() => { tokensEl.style.transform = 'scale(1)'; }, 280);
         }
 
-        // ==================== 終極硬核終端機邏輯 (雙語版) ====================
         function typeWriter(textEn, textZh, color = 'var(--tech-green)') {
             const terminal = document.getElementById('terminal-output');
             const isZh = document.body.classList.contains('lang-zh');
@@ -778,12 +835,10 @@
         }
 
         function triggerISRU() {
-            // 螢幕閃爍特效
             const bg = document.getElementById('telemetry-bg');
             bg.style.filter = 'grayscale(0%) contrast(150%) brightness(1.2)';
             setTimeout(() => bg.style.filter = 'grayscale(50%) contrast(120%)', 500);
             
-            // 火星資源矩陣 (隨機抽取)
             const resTypes = [
                 { en: "SUBSURFACE H2O (ICE)", zh: "地下水冰 (H2O)", min: 3.0, max: 8.5 },
                 { en: "LIQUID O2 SYNTHESIZED", zh: "液氧 (O2) 合成完畢", min: 1.0, max: 4.2 },
@@ -791,11 +846,9 @@
                 { en: "REGOLITH RARE-EARTH", zh: "火星壤稀土礦物", min: 0.1, max: 1.8 }
             ];
             
-            // 隨機選一個資源，並隨機生成帶有小數點的重量
             const rand = resTypes[Math.floor(Math.random() * resTypes.length)];
             const amount = (Math.random() * (rand.max - rand.min) + rand.min).toFixed(2);
 
-            // 雙語打字輸出
             typeWriter(`> [OPTIMUS_01] SENSOR: ${amount}KG ${rand.en} DETECTED.`, `> [OPTIMUS_01] 傳感器: 採集/合成 ${amount}KG ${rand.zh}.`, "#fff");
             setTimeout(() => typeWriter("> PROOF OF PHYSICAL WORK (PoPW) HASH GENERATED.", "> 物理工作量證明 (PoPW) 哈希已生成.", "var(--tech-green)"), 600);
             setTimeout(() => typeWriter("> ML1 LOCAL LEDGER UPDATED. AWAITING BATCH...", "> ML1 本地帳本已更新. 等待批次同步...", "var(--tech-green)"), 1200);
@@ -844,10 +897,14 @@
         window.onload = function() {
             setLang('en');
             updateProgress();
-            fetchLivePrices(); // 啟動實時幣價引擎
-            setInterval(fetchLivePrices, 30000); // 每 30 秒自動刷新幣價
+            fetchLivePrices(); 
+            setInterval(fetchLivePrices, 30000); 
             setInterval(updateProgress, 60000);
             document.getElementById('main-content-0').classList.add('active');
+            
+            // 啟動 SoundCloud 系統
+            initSoundCloud();
+            
             console.log('%c✅ ML1 V5.3 終極終端機就緒', 'color:#00ff41; font-size:14px');
         };
     </script>
