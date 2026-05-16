@@ -116,7 +116,7 @@
         body.lang-en [lang-content="zh"] { display: none !important; }
         body.lang-zh [lang-content="en"] { display: none !important; }
 
-@media (max-width: 768px) {
+        @media (max-width: 768px) {
             .container { padding: 15px !important; max-width: 100% !important; }
             .sync-monitor { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; padding: 28px 20px !important; }
             .percentage { font-size: 1.52rem !important; line-height: 1 !important; margin: 4px 0 0 0 !important; padding: 4px 8px !important; align-self: flex-start !important; }
@@ -141,13 +141,13 @@
             #calc-amount { padding: 12px !important; font-size: 1.3rem !important; }
             #calc-tokens { padding: 12px !important; font-size: 1.6rem !important; word-break: break-all !important; }
 
-            /* --- 以下為本次新增：修復先鋒註冊入口輸入框提示字顯示不全 --- */
+            /* --- 極致修復先鋒註冊入口輸入框提示字顯示不全 --- */
             /* 1. 將打款代幣與幣種選單改為上下排列，爭取 100% 寬度 */
             .node-allocation div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
-            /* 2. 減少輸入框內邊距，並微調基礎字號，騰出更多空間 */
-            #reg-amount, #reg-wallet, #reg-hash { padding: 12px 6px !important; font-size: 0.8rem !important; }
-            /* 3. 針對 Placeholder (提示字) 進一步縮小字號與字距，確保括號能完整顯示！ */
-            #reg-amount::placeholder, #reg-wallet::placeholder, #reg-hash::placeholder { font-size: 0.6rem !important; letter-spacing: -0.5px !important; }
+            /* 2. 極限減少輸入框左右邊距為 4px，爭取最大顯示空間 */
+            #reg-amount, #reg-wallet, #reg-hash { padding: 12px 4px !important; font-size: 0.8rem !important; }
+            /* 3. Placeholder 字號縮小至 0.58rem，並緊縮字距 */
+            #reg-amount::placeholder, #reg-wallet::placeholder, #reg-hash::placeholder { font-size: 0.58rem !important; letter-spacing: -0.5px !important; }
         }
     </style>
 </head>
@@ -240,7 +240,7 @@
                     <select id="reg-network"><option value="BTC">BTC</option><option value="ETH/BASE">ETH/BASE</option><option value="SOL">SOLANA</option></select>
                     <input type="number" id="reg-amount" placeholder="Token Amount (e.g., 0.112)" step="any">
                 </div>
-                <input type="text" id="reg-wallet" placeholder="Your Wallet Address (Must match reservation)" style="margin-bottom: 10px;">
+                <input type="text" id="reg-wallet" placeholder="Wallet Address (Must match reservation)" style="margin-bottom: 10px;">
 <div style="background: rgba(255, 0, 0, 0.1); border-left: 3px solid #ff4444; padding: 10px; margin-bottom: 15px; font-size: 0.75rem; color: #ff4444; text-transform: uppercase;">
     <span lang-content="en">⚠️ CRITICAL: DO NOT SEND FUNDS FROM EXCHANGES (BINANCE, OKX, COINBASE). USE ONLY SELF-CUSTODIAL WALLETS (PHANTOM, METAMASK, TRUST). YOU MUST CONTROL THE PRIVATE KEYS TO CLAIM ML1 AT TGE. EXCHANGES WILL CAUSE PERMANENT LOSS OF ALLOCATION.</span>
     <span lang-content="zh">⚠️ 嚴重警告：絕對禁止從交易所（幣安、OKX等）直接提現打款！請務必使用個人錢包（Phantom, MetaMask 等）。您必須擁有私鑰才能在 TGE 時申領 ML1。從交易所打款將導致份額永久喪失！</span>
@@ -575,10 +575,10 @@
             document.getElementById('access-key').placeholder = d.invitePlaceholder;
             document.getElementById('unlock-btn').innerText = d.unlockBtn;
 
-            // 完美處理 reg-wallet 的中英文 placeholder 切換
+            // 完美處理 reg-wallet 的中英文 placeholder 切換（已精簡字數以騰出空間）
             const regWallet = document.getElementById('reg-wallet');
             if(regWallet) {
-                regWallet.placeholder = lang === 'en' ? "Your Wallet Address (Must match reservation)" : "您的錢包地址 (必須與預約地址相同)";
+                regWallet.placeholder = lang === 'en' ? "Wallet Address (Must match reservation)" : "錢包地址 (必須與預約地址相同)";
             }
             
             // 完美處理 reg-amount (代幣數量) 的中英文 placeholder 切換
