@@ -447,7 +447,7 @@
     </div>
 
     <script>
-        // ==================== SoundCloud 背景音樂系統 ====================
+        // ==================== 手機端終極破解：頂層捕獲音樂自動播放系統 ====================
         let scWidget;
         let isPlaying = false;
 
@@ -457,15 +457,30 @@
 
             scWidget.bind(SC.Widget.Events.READY, function() {
                 scWidget.setVolume(50); 
-                scWidget.play(); // 嘗試自動播放
+                scWidget.play(); // 嘗試直接播放 (電腦版通常會成功)
                 
-                // 黑客級全域秒觸發機制：捕捉用戶任何微小的滑動或點擊
+                // 【手機版終極破解：全局捕獲觸控】
+                // 使用 capture: true 在事件最頂層攔截，確保 100% 滿足手機瀏覽器的「用戶互動」條件
                 const forcePlay = () => {
                     if (!isPlaying) scWidget.play();
-                    ['touchstart', 'scroll', 'click'].forEach(evt => window.removeEventListener(evt, forcePlay));
+                    // 成功觸發後移除所有監聽器，不消耗效能
+                    ['touchstart', 'touchend', 'click', 'scroll'].forEach(evt => {
+                        document.removeEventListener(evt, forcePlay, true);
+                    });
                 };
                 
-                ['touchstart', 'scroll', 'click'].forEach(evt => window.addEventListener(evt, forcePlay, { once: true }));
+                ['touchstart', 'touchend', 'click', 'scroll'].forEach(evt => {
+                    document.addEventListener(evt, forcePlay, true); 
+                });
+
+                // 備用暴力輪詢
+                const forcePlayInterval = setInterval(() => {
+                    if (!isPlaying) {
+                        scWidget.play();
+                    } else {
+                        clearInterval(forcePlayInterval);
+                    }
+                }, 1000);
             });
 
             scWidget.bind(SC.Widget.Events.PLAY, function() {
@@ -496,7 +511,7 @@
                 btn.classList.add('playing');
             }
         }
-        // ==============================================================
+        // =================================================================================
 
         function switchMainTab(n) {
             document.querySelectorAll('.main-tab-btn').forEach((btn, i) => {
@@ -757,7 +772,6 @@
         
         async function fetchLivePrices() {
             try {
-                // 方案一：CoinCap API (無 CORS 限制，前端抓取最穩定)
                 const res = await fetch('https://api.coincap.io/v2/assets?ids=bitcoin,ethereum,solana');
                 if (!res.ok) throw new Error("CoinCap failed");
                 const json = await res.json();
@@ -769,7 +783,6 @@
             } catch(e) { 
                 console.log('CoinCap API failed, switching to CoinGecko...', e); 
                 try {
-                    // 方案二：CoinGecko API (備用高品質 API)
                     const res2 = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd');
                     if (!res2.ok) throw new Error("CoinGecko failed");
                     const data = await res2.json();
@@ -780,7 +793,7 @@
                     console.log('Live APIs offline or blocked. Using local fallback prices.');
                 }
             } finally {
-                runPhase1Calc(); // 無論成功或失敗，都強制刷新一次計算器畫面
+                runPhase1Calc(); 
             }
         }
         // =========================================================================
@@ -805,7 +818,6 @@
 
             document.getElementById('calc-percent').innerText = percent + '%';
             
-            // 讓主框顯示總量，下方小黃字直接顯示 TGE 20% 的實際可領取數量 (滿足您的計算預期)
             const isZh = document.body.classList.contains('lang-zh');
             const tgeText = isZh ? "TGE 首發解鎖 (20%)" : "TGE Release (20%)";
             
