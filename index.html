@@ -152,7 +152,7 @@
 <body class="lang-en">
     
     <iframe id="sc-widget" allow="autoplay" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;" 
-            src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/user-902835287/martin-garrix-live-1&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false">
+            src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/user-902835287/martin-garrix-live&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false">
     </iframe>
 
     <div class="mars-bg-layer"></div>
@@ -447,7 +447,7 @@
     </div>
 
     <script>
-        // ==================== 手機端終極破解：頂層捕獲音樂自動播放系統 ====================
+        // ==================== 手机端终极破解：顶层捕获音乐自动播放系统 ====================
         let scWidget;
         let isPlaying = false;
 
@@ -573,7 +573,7 @@
                 adv3: "Priority ISRU resource allocation on Mars"
             },
             zh: {
-                loc: "座標: JEZERO_CRATER_ALPHA", sys: "系統狀態: 絕密",
+                loc: "座標: JEZERO_CRATER_ALPHA", sys: "系統狀態: 绝密",
                 head: "火星帳本 1 號", tag: "協議: ML1-V5.3 // 跨越延遲之牆",
                 name: "Jack Yiu", pos: "首席架構師 // 火星第一殖民地",
                 bio: "「傳統 TCP/IP 與舊有的地球鏈協議（BTC, ETH, SOL）在 3-22 分鐘的延遲牆面前會徹底崩潰。它們的同步共識機制無法跨越光速障礙。ML1 是首個為深空真空設計的非同步狀態機——確保在地球信號被遮蔽時，火星本土流動性依然能自主運作。」",
@@ -772,6 +772,7 @@
         
         async function fetchLivePrices() {
             try {
+                // 方案一：CoinCap API (無 CORS 限制，前端抓取最穩定)
                 const res = await fetch('https://api.coincap.io/v2/assets?ids=bitcoin,ethereum,solana');
                 if (!res.ok) throw new Error("CoinCap failed");
                 const json = await res.json();
@@ -783,6 +784,7 @@
             } catch(e) { 
                 console.log('CoinCap API failed, switching to CoinGecko...', e); 
                 try {
+                    // 方案二：CoinGecko API (備用高品質 API)
                     const res2 = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd');
                     if (!res2.ok) throw new Error("CoinGecko failed");
                     const data = await res2.json();
@@ -793,7 +795,7 @@
                     console.log('Live APIs offline or blocked. Using local fallback prices.');
                 }
             } finally {
-                runPhase1Calc(); 
+                runPhase1Calc(); // 無論成功或失敗，都強制刷新一次計算器畫面
             }
         }
         // =========================================================================
@@ -818,6 +820,7 @@
 
             document.getElementById('calc-percent').innerText = percent + '%';
             
+            // 讓主框顯示總量，下方小黃字直接顯示 TGE 20% 的實際可領取數量 (滿足您的計算預期)
             const isZh = document.body.classList.contains('lang-zh');
             const tgeText = isZh ? "TGE 首發解鎖 (20%)" : "TGE Release (20%)";
             
