@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML1 V5.3 | MARS SOVEREIGN SUPREMACY</title>
+    <title>ML1 V5.6 | MARS SOVEREIGN SUPREMACY</title>
     <script src="https://w.soundcloud.com/player/api.js"></script>
     <style>
         :root {
@@ -53,7 +53,6 @@
         .lang-btn { background: rgba(0,0,0,0.7); border: 1px solid var(--lag-blue); color: var(--lag-blue); padding: 4px 10px; font-size: 0.6rem; cursor: pointer; font-family: inherit; }
         .lang-btn.active { background: var(--lag-blue); color: #000; }
 
-        /* BGM 音樂控制按鈕樣式 (對齊右上角的語言切換) */
         .bgm-control { position: fixed; top: 45px; left: 20px; z-index: 1100; }
         .bgm-btn { background: rgba(0,0,0,0.7); border: 1px solid #888; color: #888; padding: 4px 10px; font-size: 0.6rem; cursor: pointer; font-family: inherit; transition: 0.3s; }
         .bgm-btn:hover { background: rgba(0, 255, 65, 0.1); }
@@ -119,7 +118,6 @@
         .modal-content { max-width: 960px; margin: 60px auto; padding: 50px 40px; background: #000; border: 1px solid #00ff41; box-shadow: 0 0 40px rgba(0, 255, 65, 0.6); }
         .modal-close { float: right; background: none; border: 2px solid #00ff41; color: #00ff41; padding: 8px 16px; cursor: pointer; font-size: 1.1rem; }
 
-        /* 中英雙語切換核心 CSS */
         body.lang-en [lang-content="zh"] { display: none !important; }
         body.lang-zh [lang-content="en"] { display: none !important; }
 
@@ -127,6 +125,7 @@
             .container { padding: 15px !important; max-width: 100% !important; }
             .sync-monitor { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; padding: 28px 20px !important; }
             .percentage { font-size: 1.52rem !important; line-height: 1 !important; margin: 4px 0 0 0 !important; padding: 4px 8px !important; align-self: flex-start !important; }
+            #t-sync-p { font-size: 0.6rem !important; line-height: 1.4 !important; margin-top: 8px !important; } /* 手機端字體適配 */
             .address-item { flex-wrap: wrap !important; gap: 8px !important; padding: 12px !important; }
             .address-item code { font-size: 0.73rem !important; word-break: break-all !important; }
             .architect-profile { flex-direction: column !important; gap: 25px !important; padding: 25px !important; }
@@ -175,7 +174,7 @@
     <div class="container">
         <header>
             <h1 id="t-head">MARS LEDGER 1</h1>
-            <div class="tagline" id="t-tag">PROTOCOL: ML1-V5.3 // BEYOND THE LATENCY WALL</div>
+            <div class="tagline" id="t-tag">PROTOCOL: ML1-V5.6 // THE DUAL-TOKEN EPOCH</div>
         </header>
 
         <div class="main-tab-nav">
@@ -202,10 +201,16 @@
             </section>
 
             <section class="tech-section" style="border: 1px solid var(--lag-blue); padding: 30px; background: rgba(0, 191, 255, 0.05); margin-top: -20px; margin-bottom: 40px;">
-                <h3 id="t-tok-h" style="color: var(--lag-blue); border-bottom: 1px solid #00BFFF; padding-bottom: 10px; font-size: 1rem;">V5.3 SUPREMACY: TOKENOMICS</h3>
+                <h3 id="t-tok-h" style="color: var(--lag-blue); border-bottom: 1px solid #00BFFF; padding-bottom: 10px; font-size: 1rem;">V5.6 SUPREMACY: TOKENOMICS & PRICING TIER</h3>
                 <div class="tech-grid" id="tok-grid"></div>
-                <p id="t-verify" style="font-size: 0.65rem; color: #666; margin-top: 15px; letter-spacing: 1px; text-align: center;"></p>
-                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(0, 191, 255, 0.3); text-align: center;">
+                
+                <div style="margin-top: 25px; padding: 15px; border: 1px dashed var(--mars-red); background: rgba(140, 59, 35, 0.1); text-align: center;">
+                    <span lang-content="en" style="color: #fff; font-size: 0.9rem;">🔒 <strong>[CLASSIFIED] CRYO-SLEEP STAKING & $O2 PROTOCOL</strong><br><span style="font-size:0.75rem; color:#aaa; margin-top:5px; display:inline-block;">Genesis Nodes will gain exclusive clearance to the Dual-Token Staking Matrix post-TGE. Secure your $ML1 allocation to mine $O2 (Liquid Oxygen).</span></span>
+                    <span lang-content="zh" style="color: #fff; font-size: 0.9rem;">🔒 <strong>[機密] 冷凍休眠質押與 $O2 液氧協議</strong><br><span style="font-size:0.75rem; color:#aaa; margin-top:5px; display:inline-block;">創世節點將在 TGE 後解鎖雙幣質押矩陣的專屬權限。搶佔 $ML1 份額以獲取未來的製氧權。</span></span>
+                </div>
+
+                <p id="t-verify" style="font-size: 0.65rem; color: #666; margin-top: 25px; letter-spacing: 1px; text-align: center;"></p>
+                <div style="margin-top: 15px; padding-top: 20px; border-top: 1px dashed rgba(0, 191, 255, 0.3); text-align: center;">
                     <p id="t-dust-h" style="font-size: 0.85rem; color: #fff; letter-spacing: 2px; margin: 0; text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);"></p>
                     <p id="t-dust-p" style="font-size: 0.65rem; color: var(--tech-green); margin-top: 8px; opacity: 0.8;"></p>
                 </div>
@@ -217,11 +222,19 @@
                 <div id="sync-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
                     <div>
                         <h3 id="t-sync-h" style="font-size: 0.8rem; color: var(--lag-blue); margin: 0;">GENESIS FUNDING SYNCHRONIZATION</h3>
-                        <p id="t-sync-p" style="font-size: 0.7rem; color: var(--mars-red); margin: 5px 0 0 0; letter-spacing: 1px;">[ TARGET: 1,000,000 USD TO TRIGGER PHASE 1 HARDWARE FABRICATION ]</p>
+                        <p id="t-sync-p" style="font-size: 0.7rem; color: var(--mars-red); margin: 5px 0 0 0; letter-spacing: 1px;">[ TARGET: 1,000,000 USD // SECURE PHASE 1 HARDWARE & MINT 10M $ML1 (THE ANCHOR OF FAITH) ]</p>
                     </div>
                     <div class="percentage" id="sync-percent">0%</div>
                 </div>
                 <div class="bar-outer"><div class="bar-inner" id="sync-bar"></div></div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 8px;">
+                    <span id="sync-progress-text" style="font-size: 0.65rem; color: var(--tech-green); font-weight: bold; letter-spacing: 1px;">SYNCING LIVE USD DATA...</span>
+                    <div style="text-align: right; font-size: 0.65rem; color: #ccc;">
+                        <span lang-content="en">Eligible Nodes: <b id="sync-nodes" style="color:var(--lag-blue);">0</b> (Shared)</span>
+                        <span lang-content="zh">符合資格節點: <b id="sync-nodes-zh" style="color:var(--lag-blue);">0</b> (共同分配)</span>
+                    </div>
+                </div>
             </section>
 
             <section class="node-allocation">
@@ -260,11 +273,12 @@
 
             <div style="background:#111; border:2px solid var(--lag-blue); padding:20px; margin-bottom:40px; max-width:860px; margin-left:auto; margin-right:auto;">
                 <h3 id="calc-title" style="color:#00BFFF; text-align:center; margin:0 0 8px 0; letter-spacing:2px; font-size:1.2rem;">
-                    PHASE 1 GENESIS CALCULATOR v1.4
+                    PHASE 1 GENESIS CALCULATOR v1.6
                 </h3>
-                <p id="calc-subtitle" style="color:#666; text-align:center; font-size:0.82rem; margin-bottom:20px;">
+                <p id="calc-subtitle" style="color:#666; text-align:center; font-size:0.82rem; margin-bottom:10px;">
                     Mars Ledger 1 • Genesis Fund Tokenomics
                 </p>
+                <div id="calc-tier-warning" style="text-align:center; font-size:0.75rem; color:#ff4444; font-weight:bold; margin-bottom:20px;"></div>
                 
                 <div id="calc-grid-container" style="display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start;">
                     <div>
@@ -307,14 +321,17 @@
             </div>
 
             <div id="invite-section">
-                <h3 id="invite-title">PIONEER ACCESS KEY // 先鋒邀請碼</h3>
+                <h3 id="invite-title">PIONEER UNIVERSAL KEY // 先鋒通用金鑰</h3>
                 <p id="invite-desc" style="font-size:0.9rem; margin-bottom:20px; color:#ccc;"></p>
                 <input id="access-key" type="text" placeholder="" style="max-width:420px; margin:0 auto 15px;">
                 <button id="unlock-btn" onclick="unlockPioneer()" class="btn-submit" style="max-width:420px; margin:0 auto; background:var(--tech-green); color:#000;">
                     UNLOCK JEZERO CRATER
                 </button>
-                <p style="font-size:0.75rem; color:#555; margin-top:15px;">
-                    // 只有輸入正確邀請碼，才能進入 Jezero Crater 的「被選中」專屬介面
+                <p style="font-size:0.75rem; color:#555; margin-top:15px;" lang-content="zh">
+                    // 輸入您的專屬邀請碼 (例: ML1-XXXX) 即可無縫登入，免連錢包同步資產進度。
+                </p>
+                <p style="font-size:0.75rem; color:#555; margin-top:15px;" lang-content="en">
+                    // Enter your unique invite code (e.g., ML1-XXXX) to seamlessly login and sync asset progress without connecting a wallet.
                 </p>
             </div>
 
@@ -410,7 +427,7 @@
     <div id="whitepaper-modal">
         <div class="modal-content">
             <button onclick="closeWhitepaperModal()" class="modal-close">✕ CLOSE ARCHIVE</button>
-            <h1>ML1 PROTOCOL TECHNICAL WHITEPAPER v5.3</h1>
+            <h1>ML1 PROTOCOL TECHNICAL WHITEPAPER v5.6</h1>
             
             <h2 style="margin-top:60px;">ENGLISH VERSION</h2>
             <p><strong>The Latency Wall</strong><br>
@@ -418,15 +435,14 @@
             
             <p><strong>Core Pillars</strong><br>
             • Asynchronous State Machine (Incremental Snapshot Synchronization)<br>
-            • Optimus Autonomous Nodes (Proof of Physical Work)<br>
-            • Latency-Resilient Credit (ISRU-backed liquidity)</p>
+            • Permissionless PoPW (Proof of Physical Work for Edge-Compute Robots)<br>
+            • The Dual-Token Economy ($ML1 Deed & $O2 Liquid Oxygen Mining)</p>
 
-            <p><strong>Non-Inflationary Financial Protocol</strong><br>
-            Why traditional human finance fails: Earth-based systems rely on synchronous consensus, infinite money printing, and real-time communication — all impossible across 400 million km. Inflation erodes value, latency destroys trust, and centralized control cannot survive deep space.<br><br>
-            ML1 solves this with a fixed 10,000,000 supply, ISRU-anchored value, and asynchronous design. No inflation. No Earth dependency. Pure resource-backed interstellar liquidity that works even when Earth is silent for 24 hours.</p>
+            <p><strong>Non-Inflationary Financial Protocol & ISRU Economy</strong><br>
+            Earth-based systems rely on synchronous consensus and infinite money printing. ML1 solves this with a fixed 10,000,000 supply ($ML1). Post-TGE, Genesis Nodes can stake their $ML1 into "Cryo-Sleep" to mine $O2, the utility token used for Martian API calls and Degen casino features. Pure resource-backed interstellar liquidity.</p>
             
             <p><strong>Genesis Dust-Seeders</strong><br>
-            10% allocation for Phase-1 investors. Permanent Genesis Block immortalization, physical node naming rights, and 1:1 equity conversion to Mars Ledger Corp.</p>
+            First-mover advantage in the Phase 1 Tiered Bonding Curve. Permanent Genesis Block immortalization, physical node naming rights, and 1:1 equity conversion to Mars Ledger Corp.</p>
 
             <h2 style="margin-top:60px;">中文版（繁體）</h2>
             <p><strong>延遲之牆</strong><br>
@@ -434,20 +450,18 @@
             
             <p><strong>三大核心支柱</strong><br>
             • 非同步狀態機（增量快照同步）<br>
-            • Optimus 自主節點（物理工作量證明）<br>
-            • 延遲彈性信用（ISRU 錨定流動性）</p>
+            • 無需許可的實體工作證明（PoPW）<br>
+            • 雙幣生態系統（$ML1 地契與 $O2 液氧挖礦）</p>
 
-            <p><strong>非通脹金融協議</strong><br>
-            為什麼傳統人類金融會失敗：地球金融系統依賴同步共識、無限印鈔與即時通訊——在 4 億公里外完全不可能。通脹侵蝕價值、延遲摧毀信任、中央化控制無法在深空存活。<br><br>
-            ML1 以固定 10,000,000 總量、ISRU 實體資源錨定、以及非同步設計徹底解決。零通脹、無地球依賴、純資源驅動的星際流動性，即使地球失聯 24 小時也能正常運作。</p>
+            <p><strong>非通脹金融協議與 ISRU 經濟</strong><br>
+            地球金融系統依賴同步共識與無限印鈔。ML1 以固定 10,000,000 總量 ($ML1) 徹底解決。在 TGE 後，創世節點可將 $ML1 放入「冷凍休眠質押」以挖掘 $O2（火星 API 調用與賭場燃料）。這是純資源驅動的星際流動性。</p>
             
             <p><strong>創世塵播者</strong><br>
-            10% 份額專屬 Phase-1 投資者。永久刻入創世區塊、物理網格命名權，以及 1:1 兌換 Mars Ledger Corp. 優先股權。</p>
+            在 Phase 1 階梯式聯合曲線中享有絕對的先發優勢。永久刻入創世區塊、物理網格命名權，以及 1:1 兌換 Mars Ledger Corp. 優先股權。</p>
         </div>
     </div>
 
     <script>
-        // ==================== 手机端终极破解：顶层捕获音乐自动播放系统 ====================
         let scWidget;
         let isPlaying = false;
 
@@ -457,13 +471,10 @@
 
             scWidget.bind(SC.Widget.Events.READY, function() {
                 scWidget.setVolume(50); 
-                scWidget.play(); // 嘗試直接播放 (電腦版通常會成功)
+                scWidget.play(); 
                 
-                // 【手機版終極破解：全局捕獲觸控】
-                // 使用 capture: true 在事件最頂層攔截，確保 100% 滿足手機瀏覽器的「用戶互動」條件
                 const forcePlay = () => {
                     if (!isPlaying) scWidget.play();
-                    // 成功觸發後移除所有監聽器，不消耗效能
                     ['touchstart', 'touchend', 'click', 'scroll'].forEach(evt => {
                         document.removeEventListener(evt, forcePlay, true);
                     });
@@ -473,7 +484,6 @@
                     document.addEventListener(evt, forcePlay, true); 
                 });
 
-                // 備用暴力輪詢
                 const forcePlayInterval = setInterval(() => {
                     if (!isPlaying) {
                         scWidget.play();
@@ -511,7 +521,6 @@
                 btn.classList.add('playing');
             }
         }
-        // =================================================================================
 
         function switchMainTab(n) {
             document.querySelectorAll('.main-tab-btn').forEach((btn, i) => {
@@ -535,32 +544,32 @@
         const content = {
             en: {
                 loc: "LOC: JEZERO_CRATER_ALPHA", sys: "SYS_STATUS: TOP_SECRET",
-                head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V5.3 // BEYOND THE LATENCY WALL",
+                head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V5.6 // THE DUAL-TOKEN EPOCH",
                 name: "Jack Yiu", pos: "CHIEF ARCHITECT // MARS COLONY ONE",
                 bio: "\"Traditional TCP/IP and legacy Earth-bound blockchains (BTC, ETH, SOL) collapse under the 3-22 minute Latency Wall. Their synchronous consensus mechanisms cannot survive the speed of light barrier. ML1 is the first asynchronous state machine designed for the vacuum of deep space—enabling Mars-native liquidity that remains functional even when Earth is occluded.\"",
                 pillH: "CORE INFRASTRUCTURE PILLARS",
                 pills: [
                     ["ASYNCHRONOUS STATE MACHINE", "Abandoning synchronous confirmation for \"Incremental Snapshot Synchronization.\" Mars nodes process local ledgers and emit encrypted state-diffs, eliminating the requirement for Earth-side real-time ACKs."],
-                    ["OPTIMUS AUTONOMOUS NODES", "Every Tesla Optimus unit acts as a mobile validator. Utilizing FSD edge-compute, Optimus fleets verify ISRU production directly on the Jezero Mesh."],
-                    ["LATENCY-RESILIENT CREDIT", "First-gen Martian liquidity. Predictive settlement based on ISRU production rates ensures the colony economy persists even during 24-hour signal blackout events. Deflationary resource-anchored model."],
-                    ["2027-2029 UNCREWED MISSION", "Targeting 5 Starship uncrewed deployments to establish the first hardware node-mesh in the Martian North Pole, integrating orbital Starlink telemetry."]
+                    ["PERMISSIONLESS PoPW", "Any autonomous rover or edge-computing unit on Mars can plug into the ML1 API, anchoring the ledger's value to actual physical ISRU extraction."],
+                    ["PROTOCOL 433", "Sub-Ghz frequency bridges ensuring ledger persistence and peer-to-peer survival even during global Martian dust storms."],
+                    ["THE DUAL-TOKEN ECONOMY", "$ML1 (Fixed 10M supply) acts as the Mars land deed. Post-TGE, nodes can lock $ML1 into 'Cryo-Sleep Staking' to mine $O2 (Liquid Oxygen)."]
                 ],
-                tokH: "V5.3 SUPREMACY: TOKENOMICS",
+                tokH: "V5.6 SUPREMACY: TOKENOMICS & PRICING TIER",
                 toks: [
-                    ["10,000,000 FIXED SUPPLY", "Total supply is hard-capped. 1 ML1 represents 1/10M bandwidth allocation of the Jezero Mesh. No inflation, purely anchored to Mars infrastructure growth."],
-                    ["GENESIS EQUITY OPTION", "Phase 1 participants secure 1:1 conversion rights to Mars Ledger Corp. preferred shares. Beyond tokens: you are owning the backbone of Martian utility."]
+                    ["10,000,000 FIXED SUPPLY ($ML1)", "Total supply is hard-capped. Zero inflation. Pure resource-backed interstellar liquidity."],
+                    ["TIERED BONDING CURVE (FOMO)", "Phase 1 early birds get 1:1 allocation. Cost increases to 1:1.2 at $500k, 1:1.5 at $750k, and doubles (1:2) in Phase 2. The earlier you deploy, the more equity you secure."]
                 ],
                 verify: "* ALL COMMITS ARE MANUALLY VERIFIED VIA AIR-GAPPED SNAPSHOT SYNC TO ENSURE INTERSTELLAR LEDGER INTEGRITY.",
                 dustH: 'CURRENT STATUS: RECRUITMENT OF <span style="color: var(--lag-blue); font-weight: bold;">"GENESIS DUST-SEEDERS"</span> IS ACTIVE.',
                 dustP: "EACH SEEDER WILL BE IMMORTALIZED IN THE ML1 GENESIS BLOCK // FIRST-LEVEL ACCESS GRANTED.",
-                syncH: "GENESIS FUNDING SYNCHRONIZATION", syncP: "[ TARGET: 1,000,000 USD TO TRIGGER PHASE 1 HARDWARE FABRICATION ]",
+                syncH: "GENESIS FUNDING SYNCHRONIZATION", syncP: "[ TARGET: 1,000,000 USD // SECURE PHASE 1 HARDWARE & MINT 10M $ML1 (THE ANCHOR OF FAITH) ]",
                 nodeH: "PIONEER VALIDATION NODES", regH: "PIONEER REGISTRY (VC PORTAL)",
                 btn: "COMMIT TO INTERSTELLAR LEDGER", foot: "JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT",
-                inviteTitle: "PIONEER ACCESS KEY",
-                inviteDesc: `When X popularity is low, the access key is the best "fission tool".<br>Enter the correct Pioneer Access Key to unlock the exclusive "Genesis Seeder" subsystem.`,
-                invitePlaceholder: "ENTER PIONEER ACCESS KEY",
+                inviteTitle: "PIONEER UNIVERSAL KEY",
+                inviteDesc: `Once secured, your Pioneer Key acts as your <strong>Universal Login Key</strong>. Enter it across any device to instantly sync your node equity, team fission progress, and future $O2 mining rights. No wallet-connect needed.`,
+                invitePlaceholder: "ENTER PIONEER KEY (e.g. ML1-XXXX)",
                 unlockBtn: "UNLOCK JEZERO CRATER",
-                calcTitle: "PHASE 1 GENESIS CALCULATOR v1.4",
+                calcTitle: "PHASE 1 GENESIS CALCULATOR v1.6",
                 calcSubtitle: "Mars Ledger 1 • Genesis Fund Tokenomics",
                 calcLabelAmount: "INPUT ASSET AMOUNT",
                 calcLabelTokens: "PROJECTED ML1 TOKENS",
@@ -570,36 +579,37 @@
                 calcAdvTitle: "Genesis Dust-Seeders Advantage:",
                 adv1: "Permanent name on Jezero Crater hardware nodes",
                 adv2: "1:1 equity conversion to Mars Ledger Corp.",
-                adv3: "Priority ISRU resource allocation on Mars"
+                adv3: "Priority ISRU resource allocation on Mars",
+                calcTierWarn: "⚠️ CURRENT TIER: 1:1 ALLOCATION. COST INCREASES BY 20% AT $500K."
             },
             zh: {
-                loc: "座標: JEZERO_CRATER_ALPHA", sys: "系統狀態: 绝密",
-                head: "火星帳本 1 號", tag: "協議: ML1-V5.3 // 跨越延遲之牆",
+                loc: "座標: JEZERO_CRATER_ALPHA", sys: "系統狀態: 防彈紀元",
+                head: "火星帳本 1 號", tag: "協議: ML1-V5.6 // 雙幣與防彈紀元",
                 name: "Jack Yiu", pos: "首席架構師 // 火星第一殖民地",
                 bio: "「傳統 TCP/IP 與舊有的地球鏈協議（BTC, ETH, SOL）在 3-22 分鐘的延遲牆面前會徹底崩潰。它們的同步共識機制無法跨越光速障礙。ML1 是首個為深空真空設計的非同步狀態機——確保在地球信號被遮蔽時，火星本土流動性依然能自主運作。」",
                 pillH: "核心基礎設施四大支柱",
                 pills: [
                     ["非同步狀態機", "捨棄同步確認機制，採用「增量快照同步」。火星節點處理本地賬本並發射加密狀態差異，徹底消除對地球端實時回應的依賴。"],
-                    ["Optimus 自主驗證節點", "每一台 Tesla Optimus 單位皆作為移動驗證者。利用 FSD 邊緣計算能力，Optimus 集群直接在 Jezero 網格上驗證原位資源 (ISRU) 生產。"],
-                    ["延遲彈性信用體系", "火星第一代流動性。基於生產速率的預測性結算機制，確保殖民地經濟在黑障期仍能持續運轉。"],
-                    ["2027-2029 無人任務", "目標部署 5 艘無人版 Starship，在火星北極建立首個硬體節點網格，並整合星鏈 (Starlink) 軌道遙測數據。"]
+                    ["無需許可的 PoPW", "火星上任何自主探測車或邊緣計算單元均可接入 ML1 API，將帳本價值錨定於真實的實體 ISRU 資源開採。"],
+                    ["協議 433 (PROTOCOL 433)", "Sub-Ghz 無線橋接技術，確保即使在全球性火星沙塵暴期間，帳本數據仍能點對點存續。"],
+                    ["雙幣生態系統", "$ML1 (恆定1000萬) 作為火星地契。TGE 後，節點可將 $ML1 投入「冷凍休眠質押 (Cryo-Sleep)」以挖掘 $O2 (液氧) 燃料。"]
                 ],
-                tokH: "V5.3 至高無上：代幣經濟學",
+                tokH: "V5.6 至高無上：代幣定價階梯",
                 toks: [
-                    ["10,000,000 恆定總量", "供應量永久封頂。1 枚 ML1 代表 Jezero 網格千萬分之一的頻寬分配權。無通脹，價值純粹錨定火星基礎設施。"],
-                    ["創世股權認購權", "第一階段參與者獲得 1:1 兌換 Mars Ledger Corp. 優先股權利。超越代幣：你擁有的是火星公用事業的骨幹資產。"]
+                    ["10,000,000 恆定總量 ($ML1)", "供應量永久封頂，零通脹。純粹由資源驅動的星際流動性。"],
+                    ["階梯式聯合曲線 (Bonding Curve)", "Phase 1 早期參與者享有 1:1 兌換。資金池達 50萬美金後成本上升至 1:1.2，75萬上升至 1:1.5，Phase 2 正式翻倍 (1:2)。越早入金，暴利空間越大。"]
                 ],
                 verify: "* 所有提交均通過離線快照異步驗證，以確保星際賬本的完整性。",
                 dustH: '當前狀態：<span style="color: var(--lag-blue); font-weight: bold;">「創世塵播者」</span>招募中',
                 dustP: "每位播種者將被永久刻入 ML1 創世區塊 // 獲取第一級核心訪問權限",
-                syncH: "創世資金同步進度", syncP: "[ 目標: 1,000,000 USD 以觸發第一階段硬件製造 ]",
+                syncH: "創世資金同步進度", syncP: "[ 戰略目標: 1,000,000 USD // 觸發第一階段硬體製造與 1000 萬 $ML1 創世鑄造 (信仰之錨) ]",
                 nodeH: "先鋒驗證節點 (錢包地址)", regH: "先鋒註冊入口 (VC 提交門戶)",
                 btn: "提交至星際賬本", foot: "耶澤羅撞擊坑 // 總架構師: JACK YIU // ALPHA 部署階段",
-                inviteTitle: "PIONEER ACCESS KEY // 先鋒邀請碼",
-                inviteDesc: `在 X 人氣低時，邀請碼是最好的「裂變工具」。<br>輸入正確邀請碼，即可解鎖「創世播種者」專屬子系統`,
-                invitePlaceholder: "輸入先鋒邀請碼",
+                inviteTitle: "PIONEER UNIVERSAL KEY // 先鋒通用金鑰",
+                inviteDesc: `獲取先鋒邀請碼後，它將成為您的<strong>通用登入金鑰</strong>。跨裝置輸入即可無縫同步您的節點資產、裂變進度與未來的 $O2 挖礦權限，無需頻繁連接錢包。`,
+                invitePlaceholder: "輸入通用金鑰 (例: ML1-XXXX)",
                 unlockBtn: "UNLOCK JEZERO CRATER",
-                calcTitle: "第一階段創世計算器 v1.4",
+                calcTitle: "第一階段創世計算器 v1.6",
                 calcSubtitle: "火星帳本 1 • 創世基金代幣經濟學",
                 calcLabelAmount: "輸入代幣數量",
                 calcLabelTokens: "預計獲得 ML1 代幣",
@@ -609,7 +619,8 @@
                 calcAdvTitle: "創世塵播者優勢：",
                 adv1: "Jezero Crater 硬體節點永久命名權",
                 adv2: "1:1 兌換 Mars Ledger Corp. 優先股權",
-                adv3: "火星 ISRU 資源優先分配權"
+                adv3: "火星 ISRU 資源優先分配權",
+                calcTierWarn: "⚠️ 當前階梯：1:1 頂級額度。資金池達 50萬 USD 後成本將增加 20%。"
             }
         };
 
@@ -671,6 +682,7 @@
                 document.getElementById('adv1').innerHTML = d.adv1;
                 document.getElementById('adv2').innerHTML = d.adv2;
                 document.getElementById('adv3').innerHTML = d.adv3;
+                document.getElementById('calc-tier-warning').innerHTML = d.calcTierWarn;
             }
             
             if (typeof runPhase1Calc === "function") {
@@ -688,19 +700,37 @@
                 const response = await fetch(API_URL);
                 const data = await response.json();
                 let totalUSD = 0;
+                let eligibleWallets = new Set();
+                
                 if (Array.isArray(data)) {
                     data.forEach(item => {
+                        let amount = 0;
+                        let wallet = '';
                         for (let key in item) {
                             if (key.toUpperCase().includes('USD') || key.toUpperCase().includes('AMOUNT')) {
                                 let val = parseFloat(item[key]);
-                                if (!isNaN(val)) totalUSD += val;
+                                if (!isNaN(val)) amount = val;
                             }
+                            if (key.toUpperCase().includes('ADDRESS') || key.toUpperCase().includes('WALLET')) {
+                                wallet = item[key];
+                            }
+                        }
+                        if (amount > 0) {
+                            totalUSD += amount;
+                            if (wallet) eligibleWallets.add(wallet.trim().toLowerCase());
                         }
                     });
                 }
+                
                 let percent = Math.min((totalUSD / GOAL) * 100, 100).toFixed(1);
                 document.getElementById('sync-bar').style.width = percent + '%';
                 document.getElementById('sync-percent').innerText = percent + '%';
+                
+                let actualNodes = eligibleWallets.size;
+                document.getElementById('sync-progress-text').innerText = `CURRENT PROGRESS: (${totalUSD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} / 1,000,000 USD)`;
+                if(document.getElementById('sync-nodes')) document.getElementById('sync-nodes').innerText = actualNodes;
+                if(document.getElementById('sync-nodes-zh')) document.getElementById('sync-nodes-zh').innerText = actualNodes;
+
             } catch (e) { console.error('Telemetry Interrupted:', e); }
         }
 
@@ -759,7 +789,7 @@
             if (key === 'MARS2026' || key === 'ML1-CORE-001' || key.startsWith('ML1-')) {
                 window.location.href = 'portal.html?auth=' + encodeURIComponent(key.toLowerCase());
             } else {
-                alert('❌ ACCESS DENIED / 無效邀請碼');
+                alert('❌ ACCESS DENIED / 無效通用金鑰');
             }
         }
 
@@ -767,17 +797,15 @@
         function closeWhitepaperModal() { document.getElementById('whitepaper-modal').style.display = 'none'; }
 
         // ==================== 實時幣價引擎 (終極防彈版 CryptoCompare) ====================
-        let livePrices = { BTC: 78226.70, ETH: 2175.83, SOL: 86.69 }; // 備用底線價格
+        let livePrices = { BTC: 78226.70, ETH: 2175.83, SOL: 86.69 }; 
         
         async function fetchLivePrices() {
             try {
-                // 單一請求同時獲取三個幣種，無 CORS 限制，全球節點可用
                 const response = await fetch('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH,SOL&tsyms=USD');
                 if (!response.ok) throw new Error("API fetch failed");
 
                 const data = await response.json();
 
-                // 更新實時價格
                 if (data.BTC && data.BTC.USD) livePrices.BTC = data.BTC.USD;
                 if (data.ETH && data.ETH.USD) livePrices.ETH = data.ETH.USD;
                 if (data.SOL && data.SOL.USD) livePrices.SOL = data.SOL.USD;
@@ -787,7 +815,9 @@
             } catch(e) { 
                 console.log('❌ API 連線失敗，啟用本地緩存價格', e); 
             } finally {
-                runPhase1Calc(); // 強制刷新計算器畫面
+                if (typeof runPhase1Calc === "function") {
+                    runPhase1Calc(); 
+                }
             }
         }
         // =========================================================================
@@ -808,17 +838,16 @@
 
             const percent = Math.min((usdValue / totalGoal) * 100, 100).toFixed(4);
             const tokens = (usdValue / totalGoal) * genesisTokens;
-            const tgeTokens = tokens * 0.20; // 精準計算 20% TGE
+            const tgeTokens = tokens * 0.20; 
 
             document.getElementById('calc-percent').innerText = percent + '%';
             
-            // 讓主框顯示總量，下方小黃字直接顯示 TGE 20% 的實際可領取數量 (滿足您的計算預期)
             const isZh = document.body.classList.contains('lang-zh');
             const tgeText = isZh ? "TGE 首發解鎖 (20%)" : "TGE Release (20%)";
             
             document.getElementById('calc-tokens').innerHTML = `
                 ${Math.floor(tokens).toLocaleString()}
-                <div style="font-size: 0.85rem; color: #ff0; margin-top: 8px; letter-spacing: 1px;">
+                <div style="font-size: 0.85rem; color: #ff0; margin-top: 5px; letter-spacing: 1px;">
                     ${tgeText}: ${tgeTokens.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 2})}
                 </div>
             `;
@@ -924,11 +953,10 @@
             fetchLivePrices(); 
             setInterval(fetchLivePrices, 30000); 
             setInterval(updateProgress, 60000);
-            document.getElementById('main-content-0').classList.add('active');
             
             initSoundCloud();
             
-            console.log('%c✅ ML1 V5.3 終極終端機就緒', 'color:#00ff41; font-size:14px');
+            console.log('%c✅ ML1 V5.6 終極終端機就緒 (Hotfix Applied)', 'color:#00ff41; font-size:14px');
         };
     </script>
 </body>
