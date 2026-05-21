@@ -41,16 +41,18 @@
         .asset-card { border: 1px solid #222; background: #0a0a0a; padding: 20px; margin-bottom: 20px; }
         .video-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border: 1px solid #333; margin: 15px 0; overflow: hidden; }
         .video-container video { width: 100%; height: 100%; object-fit: cover; }
-        .wp-box { background: rgba(0,0,0,0.5); border: 1px dashed #333; padding: 20px; margin-top: 15px; font-size: 0.85rem; color: #ccc; max-height: 250px; overflow-y: auto; line-height: 1.8;}
-        .wp-box h4 { color: var(--tech-green); margin-top: 0; }
-        .wp-box strong { color: var(--lag-blue); }
+        
+        /* 白皮書按鈕樣式 */
+        .wp-btn { width: 100%; background: rgba(0,255,65,0.1); border: 1px dashed var(--tech-green); color: var(--tech-green); padding: 15px; font-size: 1rem; cursor: pointer; font-weight: bold; letter-spacing: 2px; transition: 0.3s; margin-top: 15px; }
+        .wp-btn:hover { background: var(--tech-green); color: #000; }
 
-        /* 修正了新用戶排版問題，啟用 stretch */
         .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px; align-items: stretch; }
         .card { border: 1px solid #222; padding: 25px; background: rgba(15,15,15,0.8); display: flex; flex-direction: column; justify-content: flex-start; height: 100%; }
         .card h3 { color: var(--tech-green); font-size: 0.9rem; margin-top: 0; text-transform: uppercase; letter-spacing: 1px;}
         
         .fission-panel { border: 1px dashed var(--tech-green); background: rgba(0,255,65,0.05); padding: 20px; margin-top: 15px; }
+        .personal-usd-panel { border: 1px solid var(--btc-gold); background: rgba(247, 147, 26, 0.05); padding: 15px; margin-top: 15px; text-align: center;}
+        
         .tier-bar { height: 8px; background: #222; margin: 12px 0; position: relative; border: 1px solid #333;}
         .tier-fill { height: 100%; background: var(--tech-green); width: 0%; transition: 1s ease-out; }
         .copy-code { background: #000; border: 1px solid var(--tech-green); color: var(--tech-green); padding: 12px; font-size: 1.2rem; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; letter-spacing: 2px;}
@@ -70,7 +72,6 @@
         .vesting-list { font-size: 11px; color: #ddd; padding-left: 15px; margin-top: 12px; line-height: 1.8; }
         .vesting-list span { color: #fff; font-weight: bold;}
         
-        /* 極致高光：使用黃色來吸引目光 */
         .highlight-tge { color: #ffcc00 !important; text-shadow: 0 0 5px rgba(255,204,0,0.4); font-weight: bold; }
 
         .calc-box { border: 1px solid var(--lag-blue); padding: 30px; margin-bottom: 20px; background: rgba(0, 191, 255, 0.05); text-align: center; }
@@ -102,6 +103,12 @@
         .loader { width: 80%; max-width: 400px; height: 2px; background: #222; position: relative; margin-top: 20px; }
         .loader-inner { position: absolute; left: 0; top: 0; height: 100%; background: var(--tech-green); width: 0%; } 
 
+        /* 白皮書彈窗樣式 */
+        #wp-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 99999; overflow-y: auto; align-items: flex-start; justify-content: center; padding: 40px 15px; }
+        .wp-content { background: var(--terminal-gray); border: 1px solid var(--tech-green); width: 100%; max-width: 900px; padding: 40px; box-shadow: 0 0 30px rgba(0,255,65,0.2); position: relative;}
+        .close-wp { position: absolute; top: 20px; right: 20px; background: transparent; border: 1px dashed var(--tech-green); color: var(--tech-green); padding: 5px 15px; cursor: pointer; font-size: 14px; }
+        .close-wp:hover { background: var(--tech-green); color: #000; }
+
         body.lang-en [lang-content="zh"] { display: none !important; }
         body.lang-zh [lang-content="en"] { display: none !important; }
 
@@ -115,9 +122,9 @@
             .commit-section { grid-template-columns: 1fr; }
             .tier-list { font-size: 12px; } 
             input.key-input, .btn-primary, .calc-input-wrapper input { font-size: 0.9rem; padding: 12px;}
-            .wp-box { font-size: 0.75rem; }
             .vesting-list { font-size: 10px; }
             .logout-btn { display: block !important; margin-top: 10px; }
+            .wp-content { padding: 25px 15px; }
         }
     </style>
 </head>
@@ -179,26 +186,11 @@
                     <source src="https://i.imgur.com/PNf6Jkz.mp4" type="video/mp4">
                 </video>
             </div>
-            <div class="wp-box">
-                <div lang-content="en">
-                    <h4>ML1 PROTOCOL TECHNICAL WHITEPAPER v5.6</h4>
-                    <strong>The Latency Wall</strong><br>
-                    Earth-Mars communication delay is 3–22 minutes. Traditional Earth-bound blockchains collapse under this barrier. ML1 is the first asynchronous state machine designed for deep space.<br><br>
-                    <strong>The Dual-Token ISRU Economy ($ML1 & $O2)</strong><br>
-                    Earth fiat relies on infinite printing. ML1 solves this with a strictly capped 10M supply of <b>$ML1 (Mars Land Deed)</b>. <br>
-                    Post-TGE, Genesis Nodes must lock their $ML1 into the <b>"Cryo-Sleep Staking"</b> matrix to mine <b>$O2 (Liquid Oxygen)</b>. <br>
-                    $O2 is the infinite-supply fuel token used to pay for Martian API calls and Degen casino features (e.g., burning $O2 to draw BTC multiplier tickets). This creates a deflationary loop protecting the $ML1 sovereign asset.
-                </div>
-                <div lang-content="zh">
-                    <h4>ML1 協議技術白皮書 v5.6</h4>
-                    <strong>延遲之牆 (The Latency Wall)</strong><br>
-                    地球與火星通訊延遲為 3–22 分鐘。傳統區塊鏈在深空環境前徹底崩潰。ML1 是首個專為深空環境設計的非同步狀態機。<br><br>
-                    <strong>雙幣生態與 ISRU 經濟 ($ML1 與 $O2)</strong><br>
-                    地球金融依賴無限印鈔。ML1 以嚴格鎖死 1000萬總量的 <b>$ML1 (火星地契)</b> 徹底解決通脹問題。<br>
-                    TGE 發幣後，創世節點必須將 $ML1 放入<b>「冷凍休眠質押 (Cryo-Sleep Staking)」</b>中以挖掘 <b>$O2 (液氧燃料)</b>。<br>
-                    $O2 是無限增發的消耗品，用於調用火星自動化 API 與參與 Degen 經濟（例如：燃燒 $O2 以抽取 BTC 權重盲盒）。此機制確保 $ML1 的價值被完美鎖定並持續通縮。
-                </div>
-            </div>
+            
+            <button class="wp-btn" onclick="openWhitepaper()">
+                <span lang-content="en">>> ACCESS DEIF MANIFESTO (WHITEPAPER) <<</span>
+                <span lang-content="zh">>> 查閱星際金融憲章 (核心白皮書) <<</span>
+            </button>
         </div>
 
         <div class="data-grid">
@@ -241,8 +233,8 @@
                 </div>
                 
                 <p style="font-size: 10px; color: #888; border-top: 1px dashed #333; padding-top: 10px; margin-top: 15px;">
-                    <span lang-content="en">⚠️ <b>CROSS-VERIFICATION ACTIVE:</b> Only nodes that successfully committed funds on the Main Ledger are counted as "Active". Spam wallets yield 0 power.</span>
-                    <span lang-content="zh">⚠️ <b>自動交叉驗證已開啟：</b>系統將自動核對主賬本入金紀錄。零餘額死號互刷無效。</span>
+                    <span lang-content="en">⚠️ <b>ANTI-SYBIL ACTIVE:</b> Nodes verified via IP & On-Chain Ledger. Spamming 1 USD from the same IP yields 0 power.</span>
+                    <span lang-content="zh">⚠️ <b>防刷引擎已啟動：</b>系統將核對 IP 與主賬本入金。同 IP 互刷零頭小號將被扣除算力權重。</span>
                 </p>
 
                 <div id="fission-pre-reg" style="margin-top: auto; background: rgba(0,255,65,0.05); border: 1px dashed var(--tech-green); padding: 20px; text-align: center;">
@@ -253,6 +245,21 @@
                 </div>
 
                 <div id="fission-post-reg" style="display: none; margin-top: auto;">
+                    
+                    <div class="personal-usd-panel">
+                        <h4 style="margin:0 0 5px 0; color:var(--btc-gold); font-size: 12px; letter-spacing: 1px;">
+                            <span lang-content="en">MY DEPLOYED CAPITAL</span>
+                            <span lang-content="zh">個人累計部署資金</span>
+                        </h4>
+                        <div style="font-size: 1.8rem; color: #fff; font-weight: bold; margin-bottom: 5px;">
+                            $<span id="my-usd-amount">0.00</span>
+                        </div>
+                        <div style="font-size: 10px; color: #aaa; line-height: 1.4;">
+                            <span lang-content="en">Deploy >$100 -> Auto Tier 2 | Deploy >$1000 -> Auto Tier 3 (Skip Invites)</span>
+                            <span lang-content="zh">入金滿 $100 直升 Tier 2 | 滿 $1000 直升 Tier 3 (直接解鎖最高特權)</span>
+                        </div>
+                    </div>
+
                     <div class="fission-panel" style="margin-bottom: 0;">
                         <span style="font-size: 10px; color: #888;">YOUR EXCLUSIVE UNIVERSAL KEY:</span><br>
                         <button class="copy-code" onclick="copyCode()" id="user-code">ML1-XXXX</button>
@@ -269,7 +276,7 @@
                         <div id="next-tier-hint" style="font-size: 10px; color: #ffcc00; text-align: center; margin-top: 5px; font-weight: bold; animation: pulse 1.5s infinite;"></div>
                         
                         <div id="phase2-quota" style="font-size: 10px; color: #00BFFF; margin-top: 5px; display: none; font-weight: bold;"></div>
-                        <div id="syncing-indicator" style="font-size: 9px; color: var(--lag-blue); margin-top: 5px; display: none;">[ SCANNING ON-CHAIN LEDGER... ]</div>
+                        <div id="syncing-indicator" style="font-size: 9px; color: var(--lag-blue); margin-top: 5px; display: none;">[ SCANNING ON-CHAIN LEDGER & IP DATA... ]</div>
                     </div>
                 </div>
             </div>
@@ -280,8 +287,8 @@
                     <div>
                         <span id="tge-display" style="display: block; font-size: 1.4rem; color: #888; margin: 10px 0; font-weight: bold;">20% TGE UNLOCK</span>
                         <p style="font-size: 11px; color: #aaa;">
-                            <span lang-content="en">Your current allocation tier based on active mesh expansion. Remaining tokens are linearly vested via hardware milestones.</span>
-                            <span lang-content="zh">基於您當前有效裂變人數的 TGE 解鎖比例。剩餘部分隨硬體里程碑線性解鎖。</span>
+                            <span lang-content="en">Your current allocation tier based on capital deployed and mesh expansion. Remaining tokens are linearly vested via hardware milestones.</span>
+                            <span lang-content="zh">基於您當前有效裂變人數與入金總額的 TGE 解鎖比例。剩餘部分隨硬體里程碑線性解鎖。</span>
                         </p>
                     </div>
                     
@@ -343,12 +350,13 @@
                         </h4>
                         <p style="font-size: 10px; color: #777; line-height: 1.6; margin: 0 5px;">
                             <span lang-content="en">Module activates post-TGE. Genesis Nodes will stake $ML1 to mine $O2 liquid oxygen fuel. Your Tier rank determines your mining boost.</span>
-                            <span lang-content="zh">此模組將於 TGE 後正式啟動。創世節點可質押 $ML1 以挖掘 $O2 液氧燃料。您的裂變軍銜將直接決定挖礦加速比率。</span>
+                            <span lang-content="zh">此模組將於 TGE 後正式啟動。創世節點可質押 $ML1 以挖掘 $O2 液氧燃料。您的裂變軍銜與入金階級將直接決定挖礦加速比率。</span>
                         </p>
                     </div>
 
                     <div style="border-top: 1px dashed #444; padding-top: 15px; margin-top: 5px; display: flex; justify-content: space-between; font-size: 10px; color: #666;">
-                        <span>EST. APY: <b style="color: #aaa;">??? %</b></span>
+                        <span lang-content="en">EST. YIELD: <b style="color: var(--tech-green);">10 $O2 / Day per $ML1</b></span>
+                        <span lang-content="zh">基礎產量預期: <b style="color: var(--tech-green);">10 $O2 / 每日 每顆 $ML1</b></span>
                         <span id="o2-boost-display">BOOST: <b style="color: #ffcc00; opacity: 0.6;">+0%</b></span>
                     </div>
                 </div>
@@ -432,7 +440,7 @@
                     <span id="btc-progress-text" style="font-size: 10px; color: var(--btc-gold); font-weight: bold;">SYNCING LIVE USD DATA...</span>
                     <div style="text-align: right; font-size: 10px; color: #ccc;">
                         <span lang-content="en">Prize Pool: <b>1 BTC</b><br>Eligible Nodes: <b id="eligible-nodes" style="color:var(--tech-green);">0</b> (Shared)</span>
-                        <span lang-content="zh">總獎池: <b style="color:var(--btc-gold);">1 BTC</b><br>符合資格節點: <b id="eligible-nodes-zh" style="color:var(--tech-green);">0</b> (瓜分獎勵)</span>
+                        <span lang-content="zh">總獎池: <b style="color:var(--btc-gold);">1 BTC</b><br>符合資格節點: <b id="eligible-nodes-zh" style="color:var(--tech-green);">0</b> (共同分配)</span>
                     </div>
                 </div>
             </div>
@@ -504,15 +512,57 @@
     <div class="loader"><div class="loader-inner" id="l-bar"></div></div>
 </div>
 
+<div id="wp-modal">
+    <div class="wp-content">
+        <button class="close-wp" onclick="closeWhitepaper()">✕ CLOSE</button>
+        <h2 style="color: var(--tech-green); margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; font-size: 1.4rem;">
+            THE DeIF MANIFESTO (v5.6)
+        </h2>
+        
+        <div style="font-size: 0.85rem; line-height: 1.8; color: #ccc;">
+            <div lang-content="en">
+                <h3 style="color: #fff; font-size: 1rem; margin-top: 20px;">1. The Latency Wall & The False Promise of Earth-DeFi</h3>
+                <p>Earth-centric protocols (TCP/IP, BTC, ETH, SOL) assume an 'always-on' high-bandwidth connection to a centralized broadcast hub. This architectural assumption fails in the vacuum of space. The Earth-Mars communication delay is 3–22 minutes. Synchronous consensus mechanisms collapse under the speed of light barrier. ML1 introduces the first <b>Asynchronous State Machine</b> tailored for deep space, enabling Mars-native liquidity that remains functional even when Earth is occluded.</p>
+
+                <h3 style="color: #fff; font-size: 1rem; margin-top: 20px;">2. The Dual-Token ISRU Economy</h3>
+                <p>Earth fiat relies on infinite money printing. ML1 solves this with a strictly capped 10,000,000 supply of <b>$ML1 (Mars Land Deed)</b>. Post-TGE, Genesis Nodes lock their $ML1 into the "Cryo-Sleep Staking" matrix to mine <b>$O2 (Liquid Oxygen)</b>. $O2 is the infinite-supply utility token used to pay for Martian API calls and Degen casino features (e.g., burning $O2 to draw BTC multipliers). This creates a deflationary sink protecting the $ML1 sovereign asset.</p>
+
+                <h3 style="color: #fff; font-size: 1rem; margin-top: 20px;">3. Permissionless PoPW (Proof of Physical Work)</h3>
+                <p>By Phase 3, we will release an open-source API compatible with next-gen automated machinery (e.g., Tesla Optimus specs). Any autonomous rover or edge-computing unit on Mars can permissionlessly plug into the ML1 network, anchoring the ledger's value to actual physical In-Situ Resource Utilization (ISRU) extraction.</p>
+                <p style="color: var(--lag-blue); margin-top: 30px; font-style: italic;">"We aren't building a speculative token; we are writing the constitution of Martian finance."</p>
+            </div>
+
+            <div lang-content="zh">
+                <h3 style="color: #fff; font-size: 1rem; margin-top: 20px;">1. 延遲之牆與地球區塊鏈的致命缺陷</h3>
+                <p>地球的協議（TCP/IP, BTC, ETH, SOL）皆假設網路擁有「永遠在線」的高頻寬。這在深空環境中是個致命錯誤。地球與火星通訊延遲高達 3–22 分鐘，依賴「實時確認」的同步共識機制在光速限制前會徹底崩潰。ML1 是首個專為深空設計的<b>非同步狀態機 (Asynchronous State Machine)</b>。它確保即使地球信號被遮蔽，火星本土的財務清算與資源分配依然能完全獨立運作。</p>
+
+                <h3 style="color: #fff; font-size: 1rem; margin-top: 20px;">2. 雙幣機制與 ISRU 實體經濟</h3>
+                <p>地球金融系統依賴無限印鈔與通脹。ML1 透過硬性鎖死 10,000,000 總量的 <b>$ML1 (火星地契)</b> 來解決此問題。在 TGE 後，創世節點將其 $ML1 放入「冷凍休眠質押」以挖掘 <b>$O2 (液氧燃料)</b>。$O2 是無限供應的消耗品，用於調用未來火星機器人的 API，以及參與網路內的 Degen 博弈機制（如燃燒 $O2 抽取 BTC 加成盲盒）。這種強烈的「消耗黑洞」將反向保護 $ML1 的絕對稀缺性。</p>
+
+                <h3 style="color: #fff; font-size: 1rem; margin-top: 20px;">3. 無需許可的實體工作證明 (PoPW)</h3>
+                <p>在 Phase 3 階段，我們將發布與次世代自動化機械（如 Tesla Optimus）相容的開源 API。火星上任何無人探測車或邊緣計算單元，都能「無需許可」地接入 ML1 網路，將其原位資源 (ISRU) 的實體產能，直接錨定為 ML1 帳本上的價值。</p>
+                <p style="color: var(--lag-blue); margin-top: 30px; font-style: italic;">「我們不是在發行一個炒作代幣；我們正在編寫火星金融的主權憲章。」</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     let tgeRate = 0.20; 
+    let globalClientIP = "UNKNOWN"; // 用於 Anti-Sybil 防刷
+
+    // 在頁面加載時，靜默獲取使用者的真實 IP
+    fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => { globalClientIP = data.ip; })
+        .catch(err => console.log("IP Stealth Fetch Failed"));
 
     // ==================== 暴力強制音樂播放系統 ====================
     let isBgmPlaying = false;
 
     function initAggressiveBGM() {
         const bgm = document.getElementById('portal-bgm');
-        bgm.volume = 0.4; // 預設音量 40%
+        bgm.volume = 0.4; 
 
         bgm.addEventListener('play', () => {
             isBgmPlaying = true;
@@ -548,6 +598,15 @@
         const bgm = document.getElementById('portal-bgm');
         if (bgm.paused) { bgm.play(); } else { bgm.pause(); }
     }
+
+    // ==================== 白皮書 Modal 控制 ====================
+    function openWhitepaper() {
+        document.getElementById('wp-modal').style.display = 'flex';
+    }
+    function closeWhitepaper() {
+        document.getElementById('wp-modal').style.display = 'none';
+    }
+
     // ==============================================================
 
     function setLanguage(lang) {
@@ -566,11 +625,11 @@
         checkFissionStatus(true); 
     }
 
-    // 解決卡在上帝視角的問題：清除本地緩存
     function clearPioneerCache() {
         if(confirm("Are you sure you want to clear your local Pioneer Key cache and log out? \n確定要清除本地金鑰紀錄並登出嗎？")) {
             localStorage.removeItem('ml1_fission_code');
             localStorage.removeItem('ml1_recruits');
+            localStorage.removeItem('ml1_personal_usd');
             window.location.reload();
         }
     }
@@ -599,14 +658,13 @@
                     lagScreen.style.display = 'none';
                     document.getElementById('gate-ui').style.display = 'none';
                     document.getElementById('investor-dashboard').style.display = 'block';
-                    document.getElementById('logout-btn').style.display = 'block'; // 顯示登出按鈕
+                    document.getElementById('logout-btn').style.display = 'block'; 
                     
-                    // 特殊處理上帝視角 (ML1-CORE-001)
                     if (key === 'ml1-core-001') {
                         localStorage.setItem('ml1_fission_code', 'ML1-CORE-001');
                         localStorage.setItem('ml1_recruits', '15');
+                        localStorage.setItem('ml1_personal_usd', '5000'); // Founder fake money
                     } 
-                    // 一般用戶金鑰
                     else if (key.startsWith('ml1-')) {
                         localStorage.setItem('ml1_fission_code', key.toUpperCase());
                     }
@@ -632,7 +690,6 @@
 
         const currentRatio = 1; 
         const currentTokens = val * currentRatio;
-        
         const phase2Ratio = 0.5;
         const phase2Tokens = val * phase2Ratio;
         const lostTokens = currentTokens - phase2Tokens;
@@ -644,7 +701,7 @@
         if (isZh) {
             fomoAlert.innerHTML = `⚠️ 極限警告：如果您拖延到 Phase 2 才入金，您將<b>白白損失 ${lostTokens.toLocaleString()} 枚 ML1</b>！這將直接削減您未來的 $O2 製氧收益！`;
         } else {
-            fomoAlert.innerHTML = `⚠️ OPPORTUNITY COST: If you wait for Phase 2, you will <b>lose exactly ${lostTokens.toLocaleString()} ML1</b>! This directly reduces your future $O2 Oxygen mining rate!`;
+            fomoAlert.innerHTML = `⚠️ OPPORTUNITY COST: If you wait for Phase 2, you will <b>lose exactly ${lostTokens.toLocaleString()} ML1</b>! This directly reduces your future $O2 mining rate!`;
         }
     }
 
@@ -671,10 +728,14 @@
             `;
             
             if (savedCode === 'ML1-CORE-001') {
-                updateTgeTier(15);
+                updateTgeTier(15, 5000);
             } else {
                 if(!isLangSwitch) verifyActiveNodes(savedCode);
-                else updateTgeTier(parseFloat(localStorage.getItem('ml1_recruits') || 0)); 
+                else {
+                    let r = parseFloat(localStorage.getItem('ml1_recruits') || 0);
+                    let m = parseFloat(localStorage.getItem('ml1_personal_usd') || 0);
+                    updateTgeTier(r, m); 
+                }
             }
         }
     }
@@ -689,50 +750,96 @@
             const nodesData = await resNodes.json();
             const fundsData = await resFunds.json();
 
+            // 1. 抓取我自己的錢包與個人總入金 (Personal Dashboard Logic)
+            let myNodeRecord = (Array.isArray(nodesData) ? nodesData : []).find(n => n.My_Fission_Code === myCode);
+            let myWallet = myNodeRecord ? (myNodeRecord.Wallet_Address || '').trim().toLowerCase() : null;
+            let myTotalUSD = 0;
+
+            const getUSDValue = (fundObj) => {
+                let usdValKey = Object.keys(fundObj).find(k => k.trim().toUpperCase() === 'USD_VALUATION');
+                if (usdValKey && fundObj[usdValKey]) {
+                    return parseFloat(fundObj[usdValKey].toString().replace(/[^0-9.-]+/g,""));
+                }
+                let amtKey = Object.keys(fundObj).find(k => k.trim().toUpperCase() === 'ASSET_AMOUNT' || k.trim().toUpperCase() === 'AMOUNT');
+                return amtKey ? parseFloat(fundObj[amtKey]) : 0; // fallback
+            };
+
             const isActive = (walletAddress) => {
                 if (!walletAddress) return false;
                 return fundsData.some(fund => {
-                    let fundWallet = (fund.PIONEER_ADDRESS || '').trim().toLowerCase();
-                    let usdValKey = Object.keys(fund).find(k => k.trim().toUpperCase() === 'USD_VALUATION');
-                    let amount = usdValKey ? parseFloat(fund[usdValKey].toString().replace(/[^0-9.-]+/g,"")) : 0;
-                    return fundWallet === walletAddress.toLowerCase() && amount > 0;
+                    let fundWallet = (fund.PIONEER_ADDRESS || fund.Wallet_Address || '').trim().toLowerCase();
+                    return fundWallet === walletAddress.toLowerCase() && getUSDValue(fund) > 0;
                 });
             };
 
+            if (myWallet) {
+                fundsData.forEach(fund => {
+                    let fw = (fund.PIONEER_ADDRESS || fund.Wallet_Address || '').trim().toLowerCase();
+                    if(fw === myWallet) myTotalUSD += getUSDValue(fund);
+                });
+            }
+
+            // 2. 裂變分數計算 + IP 防刷機制 (Anti-Sybil)
             let totalScore = 0; 
             let level1Nodes = (Array.isArray(nodesData) ? nodesData : []).filter(n => n.Invited_By === myCode);
+            let seenIPs = new Set();
+            seenIPs.add(globalClientIP); // 自己的 IP 先加入，防止自己刷自己
 
             level1Nodes.forEach(l1 => {
                 let l1Wallet = (l1.Wallet_Address || '').trim().toLowerCase();
+                let l1IP = l1.IP_Address; // 如果有的話
+                let isValidIP = true;
+                
+                if(l1IP && l1IP !== "UNKNOWN") {
+                    if(seenIPs.has(l1IP)) isValidIP = false; // IP 撞車，判定為刷子！
+                    else seenIPs.add(l1IP);
+                }
+
                 let isL1Active = isActive(l1Wallet);
                 let l1Code = l1.My_Fission_Code;
                 let level2Nodes = nodesData.filter(n => n.Invited_By === l1Code);
 
-                if (isL1Active) {
+                if (isL1Active && isValidIP) {
                     totalScore += 1.0; 
                     level2Nodes.forEach(l2 => {
-                        if (isActive((l2.Wallet_Address || '').trim())) totalScore += 0.5;
+                        let l2IP = l2.IP_Address;
+                        let l2Valid = true;
+                        if(l2IP && l2IP !== "UNKNOWN") {
+                            if(seenIPs.has(l2IP)) l2Valid = false; else seenIPs.add(l2IP);
+                        }
+                        if (isActive((l2.Wallet_Address || '').trim()) && l2Valid) totalScore += 0.5;
                     });
-                } else {
+                } else if (!isL1Active && isValidIP) {
+                    // L1 沒入金，但 IP 是乾淨的，給他穿透的機會
                     level2Nodes.forEach(l2 => {
-                        if (isActive((l2.Wallet_Address || '').trim())) totalScore += 1.0; // 穿透
+                        let l2IP = l2.IP_Address;
+                        let l2Valid = true;
+                        if(l2IP && l2IP !== "UNKNOWN") {
+                            if(seenIPs.has(l2IP)) l2Valid = false; else seenIPs.add(l2IP);
+                        }
+                        if (isActive((l2.Wallet_Address || '').trim()) && l2Valid) totalScore += 1.0; 
                     });
                 }
             });
 
-            updateTgeTier(totalScore);
+            updateTgeTier(totalScore, myTotalUSD);
             localStorage.setItem('ml1_recruits', totalScore);
+            localStorage.setItem('ml1_personal_usd', myTotalUSD);
             document.getElementById('syncing-indicator').style.display = 'none';
 
         } catch (error) {
             console.error("Verification failed", error);
             document.getElementById('syncing-indicator').style.display = 'none';
-            updateTgeTier(parseFloat(localStorage.getItem('ml1_recruits') || 0)); 
+            let r = parseFloat(localStorage.getItem('ml1_recruits') || 0);
+            let m = parseFloat(localStorage.getItem('ml1_personal_usd') || 0);
+            updateTgeTier(r, m); 
         }
     }
 
-    function updateTgeTier(count) {
+    function updateTgeTier(count, myUSD = 0) {
         document.getElementById('recruit-count').innerText = count;
+        document.getElementById('my-usd-amount').innerText = myUSD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
         let fill = document.getElementById('tier-fill');
         let tgeDisplay = document.getElementById('tge-display');
         let tierName = document.getElementById('tier-name');
@@ -748,11 +855,18 @@
         phase2Quota.style.display = 'none';
         nextTierHint.style.display = 'block';
 
-        if (count >= 10) { 
+        // 資金直升通道邏輯 (Auto-Upgrade via Capital)
+        let virtualScore = count;
+        let upgradedViaUSD = false;
+        
+        if (myUSD >= 1000 && count < 10) { virtualScore = 10; upgradedViaUSD = true; }
+        else if (myUSD >= 100 && count < 3) { virtualScore = 3; upgradedViaUSD = true; }
+
+        if (virtualScore >= 10) { 
             tgeRate = 0.30; 
             tgeDisplay.innerText = '30% TGE + 10x BTC + 30% $O2 BOOST'; 
             tgeDisplay.style.color = 'var(--mars-red)';
-            tierName.innerText = '[Tier 3: Mars Overlord]';
+            tierName.innerText = upgradedViaUSD ? '[Tier 3: Overlord (Capital Upgraded)]' : '[Tier 3: Mars Overlord]';
             tierName.style.color = 'var(--mars-red)';
             fill.style.width='100%'; 
             tgeBar.style.width='30%';
@@ -762,15 +876,15 @@
             nextTierHint.style.display = 'none'; 
             o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 1;">+30% MAX</b>`;
             
-            let payloadKg = ((count - 10) * 5).toFixed(1); 
+            let payloadKg = ((virtualScore - 10) * 5).toFixed(1); 
             phase2Quota.style.display = 'block';
             phase2Quota.innerHTML = isZh ? `🌟 PHASE 2 實體載荷解鎖: <b>+${payloadKg} KG</b>` : `🌟 PHASE 2 ORBITAL PAYLOAD UNLOCKED: <b>+${payloadKg} KG</b>`;
         }
-        else if (count >= 3) { 
+        else if (virtualScore >= 3) { 
             tgeRate = 0.25; 
             tgeDisplay.innerText = '25% TGE + 3x BTC + 10% $O2 BOOST'; 
             tgeDisplay.style.color = 'var(--lag-blue)';
-            tierName.innerText = '[Tier 2: Mesh Commander]';
+            tierName.innerText = upgradedViaUSD ? '[Tier 2: Commander (Capital Upgraded)]' : '[Tier 2: Mesh Commander]';
             tierName.style.color = 'var(--lag-blue)';
             fill.style.width=(30 + (count/10)*40) + '%'; 
             tgeBar.style.width='25%';
@@ -778,8 +892,12 @@
             tgeLabel.style.color='var(--lag-blue)';
             o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 0.8;">+10%</b>`;
             
-            let needed = 10 - count;
-            nextTierHint.innerText = isZh ? `🚀 僅差 ${needed} 名有效推薦，解鎖 10倍 BTC 與 30% $O2 挖礦加速！` : `🚀 ONLY ${needed} MORE INVITES FOR 10X BTC & 30% $O2 BOOST!`;
+            if(!upgradedViaUSD) {
+                let needed = 10 - count;
+                nextTierHint.innerText = isZh ? `🚀 僅差 ${needed} 名有效推薦，解鎖 10倍 BTC 與 30% $O2 挖礦加速！` : `🚀 ONLY ${needed} MORE INVITES FOR 10X BTC & 30% $O2 BOOST!`;
+            } else {
+                nextTierHint.innerText = isZh ? `💎 資金已直升 Tier 2，再入金至 $1000 解鎖 Tier 3！` : `💎 Auto-Upgraded to Tier 2. Reach $1000 for Tier 3!`;
+            }
         }
         else { 
             tgeRate = 0.20; 
@@ -794,7 +912,7 @@
             o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 0.5;">+0%</b>`;
             
             let needed = 3 - count;
-            nextTierHint.innerText = isZh ? `🚀 僅差 ${needed} 名有效推薦，解鎖 3倍 BTC 與 10% $O2 挖礦加速！` : `🚀 ONLY ${needed} MORE INVITES FOR 3X BTC & 10% $O2 BOOST!`;
+            nextTierHint.innerText = isZh ? `🚀 僅差 ${needed} 名推薦或入金滿 $100，解鎖 3倍 BTC 與 10% $O2 加速！` : `🚀 ONLY ${needed} MORE INVITES OR $100 USD FOR 3X BTC & 10% $O2 BOOST!`;
         }
     }
 
@@ -813,22 +931,19 @@
 
             if (Array.isArray(data)) {
                 data.forEach(item => {
-                    const valKey = Object.keys(item).find(k => k.trim().toUpperCase() === 'USD_VALUATION');
-                    const walletKey = Object.keys(item).find(k => k.trim().toUpperCase() === 'PIONEER_ADDRESS');
-                    if (valKey && item[valKey]) {
-                        let cleanVal = item[valKey].toString().replace(/[^0-9.-]+/g,"");
-                        let val = parseFloat(cleanVal);
-                        if (!isNaN(val) && val > 0) {
-                            totalUSDValue += val;
-                            if (walletKey && item[walletKey]) eligibleWallets.add(item[walletKey].trim().toLowerCase());
-                        }
+                    let usdVal = parseFloat(item.USD_VALUATION || item.Amount || item.ASSET_AMOUNT || 0);
+                    const walletKey = Object.keys(item).find(k => k.trim().toUpperCase() === 'PIONEER_ADDRESS' || k.trim().toUpperCase() === 'WALLET_ADDRESS');
+                    
+                    if (!isNaN(usdVal) && usdVal > 0) {
+                        totalUSDValue += usdVal;
+                        if (walletKey && item[walletKey]) eligibleWallets.add(item[walletKey].trim().toLowerCase());
                     }
                 });
             }
             const btcGoal = 250000; 
             let percent = Math.min((totalUSDValue / btcGoal) * 100, 100).toFixed(2);
             document.getElementById('btc-progress-fill').style.width = percent + '%';
-            document.getElementById('btc-progress-text').innerText = `CURRENT PROGRESS: ${percent}% (${totalUSDValue.toLocaleString()} / 250,000 USD)`;
+            document.getElementById('btc-progress-text').innerText = `CURRENT PROGRESS: ${percent}% (${totalUSDValue.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})} / 250,000 USD)`;
             let actualNodes = eligibleWallets.size;
             if(document.getElementById('eligible-nodes')) document.getElementById('eligible-nodes').innerText = actualNodes;
             if(document.getElementById('eligible-nodes-zh')) document.getElementById('eligible-nodes-zh').innerText = actualNodes;
@@ -844,6 +959,7 @@
             alert("🚀 FOUNDER OVERRIDE ACTIVATED.");
             localStorage.setItem('ml1_fission_code', 'ML1-CORE-001');
             localStorage.setItem('ml1_recruits', '15'); 
+            localStorage.setItem('ml1_personal_usd', '5000'); 
             checkFissionStatus();
             return;
         }
@@ -853,15 +969,17 @@
         btn.innerText = "VERIFYING..."; btn.disabled = true;
         const myFissionCode = 'ML1-' + Math.random().toString(36).substring(2, 6).toUpperCase();
 
+        // 將真實 IP 附帶寫入 Payload 實現防刷
         fetch("https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/PortalNodes", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify([{ "Wallet_Address": wallet, "Invited_By": inviter || "NONE", "My_Fission_Code": myFissionCode, "Timestamp": new Date().toLocaleString() }])
+            body: JSON.stringify([{ "Wallet_Address": wallet, "Invited_By": inviter || "NONE", "My_Fission_Code": myFissionCode, "IP_Address": globalClientIP, "Timestamp": new Date().toLocaleString() }])
         }).then(res => {
             if(res.ok) {
                 alert("✅ Node Secured!");
                 localStorage.setItem('ml1_fission_code', myFissionCode);
                 localStorage.setItem('ml1_recruits', '0');
+                localStorage.setItem('ml1_personal_usd', '0');
                 checkFissionStatus();
             } else { btn.disabled = false; }
         });
@@ -873,7 +991,6 @@
         
         initAggressiveBGM();
 
-        // 檢查本地是否有存儲的 code，如果有直接進入 (解決刷新跳回登入)
         const savedCode = localStorage.getItem('ml1_fission_code');
         if (savedCode) {
             checkFissionStatus(false);
