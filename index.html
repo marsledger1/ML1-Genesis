@@ -125,7 +125,7 @@
             .container { padding: 15px !important; max-width: 100% !important; }
             .sync-monitor { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; padding: 28px 20px !important; }
             .percentage { font-size: 1.52rem !important; line-height: 1 !important; margin: 4px 0 0 0 !important; padding: 4px 8px !important; align-self: flex-start !important; }
-            #t-sync-p { font-size: 0.6rem !important; line-height: 1.4 !important; margin-top: 8px !important; } /* 手機端字體適配 */
+            #t-sync-p { font-size: 0.6rem !important; line-height: 1.4 !important; margin-top: 8px !important; } 
             .address-item { flex-wrap: wrap !important; gap: 8px !important; padding: 12px !important; }
             .address-item code { font-size: 0.73rem !important; word-break: break-all !important; }
             .architect-profile { flex-direction: column !important; gap: 25px !important; padding: 25px !important; }
@@ -265,9 +265,9 @@
                 <input type="text" id="reg-wallet" placeholder="Wallet Address (Must match reservation)" style="margin-bottom: 10px;">
 <div style="background: rgba(255, 0, 0, 0.1); border-left: 3px solid #ff4444; padding: 10px; margin-bottom: 15px; font-size: 0.75rem; color: #ff4444; text-transform: uppercase;">
     <span lang-content="en">⚠️ CRITICAL: DO NOT SEND FUNDS FROM EXCHANGES (BINANCE, OKX, COINBASE). USE ONLY SELF-CUSTODIAL WALLETS (PHANTOM, METAMASK, TRUST). YOU MUST CONTROL THE PRIVATE KEYS TO CLAIM ML1 AT TGE. EXCHANGES WILL CAUSE PERMANENT LOSS OF ALLOCATION.</span>
-    <span lang-content="zh">⚠️ 嚴重警告：絕對禁止從交易所（幣安、OKX等）直接提現打款！請務必使用個人錢包（Phantom, MetaMask 等）。您必須擁有私鑰才能在 TGE 時申領 ML1。從交易所打款將導致份額永久喪失！</span>
+    <span lang-content="zh">⚠️ 嚴重警告：絕對禁止從交易所（幣安、OKX等）直接提現打款！請務必使用個人錢包（Phantom, MetaMask 等）。您必須擁有私鑰才能在 TGE 時申領 ML1。從交易所提現將導致份額永久喪失！</span>
 </div>
-                <input type="text" id="reg-hash" placeholder="Transaction Hash (打款 TXID)">
+                <input type="text" id="reg-hash" placeholder="Transaction Hash (TXID)">
                 <button class="btn-submit" id="t-btn" onclick="submitToLedger()">COMMIT TO INTERSTELLAR LEDGER</button>
             </section>
 
@@ -543,6 +543,7 @@
 
         const content = {
             en: {
+                tab0: "OVERVIEW", tab1: "PIONEER HUB", tab2: "SIMULATOR",
                 loc: "LOC: JEZERO_CRATER_ALPHA", sys: "SYS_STATUS: TOP_SECRET",
                 head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V5.6 // THE DUAL-TOKEN EPOCH",
                 name: "Jack Yiu", pos: "CHIEF ARCHITECT // MARS COLONY ONE",
@@ -583,6 +584,7 @@
                 calcTierWarn: "⚠️ CURRENT TIER: 1:1 ALLOCATION. COST INCREASES BY 20% AT $500K."
             },
             zh: {
+                tab0: "系統總覽", tab1: "先鋒樞紐", tab2: "深空模擬器",
                 loc: "座標: JEZERO_CRATER_ALPHA", sys: "系統狀態: 防彈紀元",
                 head: "火星帳本 1 號", tag: "協議: ML1-V5.6 // 雙幣與防彈紀元",
                 name: "Jack Yiu", pos: "首席架構師 // 火星第一殖民地",
@@ -628,6 +630,9 @@
             document.body.className = 'lang-' + lang; 
 
             const d = content[lang];
+            document.getElementById('main-tab-0').innerText = d.tab0;
+            document.getElementById('main-tab-1').innerText = d.tab1;
+            document.getElementById('main-tab-2').innerText = d.tab2;
             document.getElementById('t-loc').innerText = d.loc;
             document.getElementById('t-sys').innerText = d.sys;
             document.getElementById('t-head').innerText = d.head;
@@ -668,7 +673,12 @@
             
             const regAmount = document.getElementById('reg-amount');
             if(regAmount) {
-                regAmount.placeholder = lang === 'en' ? "Token Amount (e.g., 0.112)" : "打款代幣數量 (例如: 0.112)";
+                regAmount.placeholder = lang === 'en' ? "Token Amount (e.g., 0.112)" : "代幣數量 (例如: 0.112)";
+            }
+            
+            const regHash = document.getElementById('reg-hash');
+            if(regHash) {
+                regHash.placeholder = lang === 'en' ? "Transaction Hash (TXID)" : "交易哈希 (打款 TXID)";
             }
 
             if (document.getElementById('calc-title')) {
@@ -796,19 +806,19 @@
         function openWhitepaperModal() { document.getElementById('whitepaper-modal').style.display = 'block'; }
         function closeWhitepaperModal() { document.getElementById('whitepaper-modal').style.display = 'none'; }
 
-        // ==================== 實時幣價引擎 (終極防彈版 CryptoCompare) ====================
+        // ==================== 實時幣價引擎 (CoinGecko API) ====================
         let livePrices = { BTC: 78226.70, ETH: 2175.83, SOL: 86.69 }; 
         
         async function fetchLivePrices() {
             try {
-                const response = await fetch('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH,SOL&tsyms=USD');
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd');
                 if (!response.ok) throw new Error("API fetch failed");
 
                 const data = await response.json();
 
-                if (data.BTC && data.BTC.USD) livePrices.BTC = data.BTC.USD;
-                if (data.ETH && data.ETH.USD) livePrices.ETH = data.ETH.USD;
-                if (data.SOL && data.SOL.USD) livePrices.SOL = data.SOL.USD;
+                if (data.bitcoin && data.bitcoin.usd) livePrices.BTC = data.bitcoin.usd;
+                if (data.ethereum && data.ethereum.usd) livePrices.ETH = data.ethereum.usd;
+                if (data.solana && data.solana.usd) livePrices.SOL = data.solana.usd;
                 
                 console.log('✅ 星際節點報價同步成功:', livePrices);
 
