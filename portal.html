@@ -12,6 +12,8 @@
             --btc-gold: #F7931A;
             --lag-blue: #00BFFF;
             --alert-red: #ff3333;
+            --tier4-purple: #b026ff;
+            --tier5-gold: #ffdf00;
             --terminal-gray: rgba(15, 15, 15, 0.98);
         }
 
@@ -42,7 +44,6 @@
         .video-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border: 1px solid #333; margin: 15px 0; overflow: hidden; }
         .video-container video { width: 100%; height: 100%; object-fit: cover; }
         
-        /* 白皮書按鈕樣式 */
         .wp-btn { width: 100%; background: rgba(0,255,65,0.1); border: 1px dashed var(--tech-green); color: var(--tech-green); padding: 15px; font-size: 1rem; cursor: pointer; font-weight: bold; letter-spacing: 2px; transition: 0.3s; margin-top: 15px; }
         .wp-btn:hover { background: var(--tech-green); color: #000; }
 
@@ -50,24 +51,28 @@
         .card { border: 1px solid #222; padding: 25px; background: rgba(15,15,15,0.8); display: flex; flex-direction: column; justify-content: flex-start; height: 100%; }
         .card h3 { color: var(--tech-green); font-size: 0.9rem; margin-top: 0; text-transform: uppercase; letter-spacing: 1px;}
         
+        h3.glow-gold { color: var(--btc-gold) !important; text-shadow: 0 0 10px rgba(247, 147, 26, 0.5); }
+
         .fission-panel { border: 1px dashed var(--tech-green); background: rgba(0,255,65,0.05); padding: 20px; margin-top: 15px; }
-        .personal-usd-panel { border: 1px solid var(--btc-gold); background: rgba(247, 147, 26, 0.05); padding: 15px; margin-top: 15px; text-align: center;}
+        .personal-usd-panel { border: 1px solid var(--btc-gold); background: rgba(247, 147, 26, 0.05); padding: 15px; margin-top: 15px; text-align: center; box-shadow: 0 0 15px rgba(247, 147, 26, 0.1) inset;}
         
         .tier-bar { height: 8px; background: #222; margin: 12px 0; position: relative; border: 1px solid #333;}
-        .tier-fill { height: 100%; background: var(--tech-green); width: 0%; transition: 1s ease-out; }
+        .tier-fill { height: 100%; background: var(--tech-green); width: 0%; transition: 1s ease-out; box-shadow: 0 0 10px var(--tech-green); }
         .copy-code { background: #000; border: 1px solid var(--tech-green); color: var(--tech-green); padding: 12px; font-size: 1.2rem; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; letter-spacing: 2px;}
         .copy-code:hover { background: rgba(0,255,65,0.1); }
         
-        .tier-list { font-size: 11px; line-height: 1.8; background: rgba(0,0,0,0.6); border: 1px solid #333; padding: 15px; margin: 15px 0; }
+        .tier-list { font-size: 11px; line-height: 1.7; background: rgba(0,0,0,0.6); border: 1px solid #333; padding: 12px 15px; margin: 15px 0; }
         .tier-list b { color: #fff; }
         .tier-1-color { color: #888; }
         .tier-2-color { color: var(--lag-blue); }
         .tier-3-color { color: var(--mars-red); }
+        .tier-4-color { color: var(--tier4-purple); }
+        .tier-5-color { color: var(--tier5-gold); }
         .o2-boost { color: #ffcc00; font-weight: bold; } 
 
         .vesting-box { margin-top: 15px; border-top: 1px dashed #333; padding-top: 15px; }
         .vesting-bar-bg { display: flex; height: 8px; width: 100%; background: #222; margin: 8px 0; border: 1px solid #333;}
-        .vesting-bar-tge { background: var(--tech-green); transition: width 0.5s, background-color 0.5s; }
+        .vesting-bar-tge { background: var(--tech-green); transition: width 0.5s, background-color 0.5s; box-shadow: 0 0 10px currentColor; }
         .vesting-bar-locked { flex: 1; background: #444; }
         .vesting-list { font-size: 11px; color: #ddd; padding-left: 15px; margin-top: 12px; line-height: 1.8; }
         .vesting-list span { color: #fff; font-weight: bold;}
@@ -89,9 +94,15 @@
         .commit-box input { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 15px; width: 100%; max-width: 400px; text-align: center; margin-bottom: 10px; outline: none; }
         .btn-commit { background: #fff; color: #000; border: none; padding: 15px; width: 100%; max-width: 400px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; letter-spacing: 1px;}
         
-        .btc-milestone { border: 1px dashed var(--btc-gold); padding: 30px 20px; background: rgba(247, 147, 26, 0.05); text-align: center; }
+        .btc-milestone { border: 1px dashed var(--btc-gold); padding: 30px 20px; background: rgba(247, 147, 26, 0.05); text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
         .progress-bar-bg { background: #222; height: 10px; width: 100%; margin: 20px 0; overflow: hidden; border: 1px solid #444; }
         .progress-bar-fill { background: var(--btc-gold); height: 100%; width: 0%; transition: width 1.5s ease-out; box-shadow: 0 0 10px var(--btc-gold);}
+
+        /* 動態抽獎按鈕樣式 */
+        .btn-draw { width: 100%; margin-top: 20px; padding: 15px; font-weight: bold; font-family: inherit; font-size: 0.9rem; letter-spacing: 1px; transition: 0.4s; }
+        .btn-draw:disabled { background: rgba(0,0,0,0.5); border: 1px dashed #555; color: #555; cursor: not-allowed; }
+        .btn-draw:not(:disabled) { background: rgba(247, 147, 26, 0.1); border: 1px solid var(--btc-gold); color: var(--btc-gold); cursor: pointer; box-shadow: 0 0 15px rgba(247, 147, 26, 0.3) inset; }
+        .btn-draw:not(:disabled):hover { background: var(--btc-gold); color: #000; box-shadow: 0 0 20px var(--btc-gold); }
 
         .roadmap-list { margin-top: 30px; border-top: 1px solid #222; padding-top: 30px; margin-bottom: 50px; }
         .roadmap-item { padding: 20px 0; border-bottom: 1px dashed #222; display: flex; flex-direction: column; }
@@ -103,7 +114,6 @@
         .loader { width: 80%; max-width: 400px; height: 2px; background: #222; position: relative; margin-top: 20px; }
         .loader-inner { position: absolute; left: 0; top: 0; height: 100%; background: var(--tech-green); width: 0%; } 
 
-        /* 白皮書彈窗樣式 */
         #wp-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 99999; overflow-y: auto; align-items: flex-start; justify-content: center; padding: 40px 15px; }
         .wp-content { background: var(--terminal-gray); border: 1px solid var(--tech-green); width: 100%; max-width: 900px; padding: 40px; box-shadow: 0 0 30px rgba(0,255,65,0.2); position: relative;}
         .close-wp { position: absolute; top: 20px; right: 20px; background: transparent; border: 1px dashed var(--tech-green); color: var(--tech-green); padding: 5px 15px; cursor: pointer; font-size: 14px; }
@@ -120,7 +130,7 @@
             .calc-box { padding: 20px 15px; }
             .calc-results { flex-direction: column; gap: 15px; }
             .commit-section { grid-template-columns: 1fr; }
-            .tier-list { font-size: 12px; } 
+            .tier-list { font-size: 10px; padding: 10px; } 
             input.key-input, .btn-primary, .calc-input-wrapper input { font-size: 0.9rem; padding: 12px;}
             .vesting-list { font-size: 10px; }
             .logout-btn { display: block !important; margin-top: 10px; }
@@ -201,22 +211,30 @@
                 
                 <div class="tier-list">
                     <span class="tier-1-color"><b>Tier 1 [Genesis]:</b></span> 
-                    <span lang-content="en">0 Invites ➡️ 20% TGE. Base BTC Chance (5%).</span>
-                    <span lang-content="zh">0 邀請 ➡️ 20% TGE。(基礎 BTC 中獎率 5%)</span><br>
+                    <span lang-content="en">0 Invites ➡️ 20% TGE. 1 BTC Ticket.</span>
+                    <span lang-content="zh">0 邀請 ➡️ 20% TGE。(1 張 BTC 抽獎券)</span><br>
                     
                     <span class="tier-2-color"><b>Tier 2 [Commander]:</b></span> 
-                    <span lang-content="en">3 Active Nodes ➡️ 25% TGE + 3x BTC Multiplier + <span class="o2-boost">10% $O2 Mining Boost</span>.</span>
-                    <span lang-content="zh">拉 3 個節點 ➡️ 25% TGE + 3倍 BTC 機率 + <span class="o2-boost">10% $O2 挖礦加速</span>。</span><br>
+                    <span lang-content="en">3 Nodes OR $100+ ➡️ 25% TGE + 3 BTC Tickets + <span class="o2-boost">10% $O2 Boost</span>.</span>
+                    <span lang-content="zh">3 節點 或 滿$100 ➡️ 25% TGE + 3 張抽獎券 + <span class="o2-boost">10% $O2 加速</span>。</span><br>
                     
                     <span class="tier-3-color"><b>Tier 3 [Overlord]:</b></span> 
-                    <span lang-content="en">10 Active Nodes ➡️ 30% TGE + 10x BTC Multiplier + <span class="o2-boost">30% $O2 Mining Boost</span> + Phase 2 Payload Quota.</span>
-                    <span lang-content="zh">拉 10 個節點 ➡️ 30% TGE + 10倍 BTC 機率 + <span class="o2-boost">30% $O2 挖礦加速</span> + 實體載荷額度。</span>
+                    <span lang-content="en">10 Nodes OR $1K+ ➡️ 30% TGE + 10 BTC Tickets + <span class="o2-boost">30% $O2 Boost</span>.</span>
+                    <span lang-content="zh">10 節點 或 滿$1K ➡️ 30% TGE + 10 張抽獎券 + <span class="o2-boost">30% $O2 加速</span>。</span><br>
+
+                    <span class="tier-4-color"><b>Tier 4 [Warlord]:</b></span> 
+                    <span lang-content="en">30 Nodes OR $10K+ ➡️ 35% TGE + 30 BTC Tickets + <span class="o2-boost">50% $O2 Boost</span>.</span>
+                    <span lang-content="zh">30 節點 或 滿$10K ➡️ 35% TGE + 30 張抽獎券 + <span class="o2-boost">50% $O2 加速</span>。</span><br>
+
+                    <span class="tier-5-color"><b>Tier 5 [Emperor]:</b></span> 
+                    <span lang-content="en">100 Nodes OR $100K+ ➡️ 40% TGE + 100 BTC Tickets + <span class="o2-boost">100% $O2 Boost</span>.</span>
+                    <span lang-content="zh">100節點 或 滿$100K ➡️ 40% TGE + 100 張抽獎券 + <span class="o2-boost">100% $O2 加速</span>。</span>
                 </div>
                 
                 <div id="seed-advantage" style="display: none; background: rgba(140, 59, 35, 0.1); border: 1px solid var(--mars-red); padding: 10px; font-size: 10px; margin-top: 10px;">
                     <b style="color: var(--mars-red);">
-                        <span lang-content="en">GENESIS DUST-SEEDER ADVANTAGE UNLOCKED:</span>
-                        <span lang-content="zh">創世塵播者大滿貫特權已解鎖：</span>
+                        <span lang-content="en">GENESIS WHALE ADVANTAGE UNLOCKED:</span>
+                        <span lang-content="zh">創世巨鯨大滿貫特權已解鎖：</span>
                     </b><br>
                     <span style="color:#ccc; display:block; margin-top:5px; line-height: 1.5;">
                         <span lang-content="en">
@@ -247,7 +265,7 @@
                 <div id="fission-post-reg" style="display: none; margin-top: auto;">
                     
                     <div class="personal-usd-panel">
-                        <h4 style="margin:0 0 5px 0; color:var(--btc-gold); font-size: 12px; letter-spacing: 1px;">
+                        <h4 style="margin:0 0 5px 0; color:var(--btc-gold); font-size: 12px; letter-spacing: 1px; text-shadow: 0 0 8px rgba(247, 147, 26, 0.4);">
                             <span lang-content="en">MY DEPLOYED CAPITAL</span>
                             <span lang-content="zh">個人累計部署資金</span>
                         </h4>
@@ -255,8 +273,8 @@
                             $<span id="my-usd-amount">0.00</span>
                         </div>
                         <div style="font-size: 10px; color: #aaa; line-height: 1.4;">
-                            <span lang-content="en">Deploy >$100 -> Auto Tier 2 | Deploy >$1000 -> Auto Tier 3 (Skip Invites)</span>
-                            <span lang-content="zh">入金滿 $100 直升 Tier 2 | 滿 $1000 直升 Tier 3 (直接解鎖最高特權)</span>
+                            <span lang-content="en">Deployments auto-upgrade your tier: >$100 (T2) | >$1K (T3) | >$10K (T4) | >$100K (T5)</span>
+                            <span lang-content="zh">大戶資金直升通道：>$100(T2) | >$1K(T3) | >$10K(T4) | >$100K(T5)</span>
                         </div>
                     </div>
 
@@ -283,7 +301,10 @@
 
             <div style="display: flex; flex-direction: column; gap: 20px;">
                 <div class="card">
-                    <h3><span lang-content="en">Dynamic Tokenomics</span><span lang-content="zh">您的當前特權狀態</span></h3>
+                    <h3 class="glow-gold">
+                        <span lang-content="en">Dynamic Tokenomics</span>
+                        <span lang-content="zh">當前特權狀態</span>
+                    </h3>
                     <div>
                         <span id="tge-display" style="display: block; font-size: 1.4rem; color: #888; margin: 10px 0; font-weight: bold;">20% TGE UNLOCK</span>
                         <p style="font-size: 11px; color: #aaa;">
@@ -350,7 +371,7 @@
                         </h4>
                         <p style="font-size: 10px; color: #777; line-height: 1.6; margin: 0 5px;">
                             <span lang-content="en">Module activates post-TGE. Genesis Nodes will stake $ML1 to mine $O2 liquid oxygen fuel. Your Tier rank determines your mining boost.</span>
-                            <span lang-content="zh">此模組將於 TGE 後正式啟動。創世節點可質押 $ML1 以挖掘 $O2 液氧燃料。您的裂變軍銜與入金階級將直接決定挖礦加速比率。</span>
+                            <span lang-content="zh">此模組將於 TGE 後正式啟動。創世節點可質押 $ML1 以挖掘 $O2 液氧燃料。您的裂變軍銜與入金階級將直接決定高達 100% 的挖礦加速比率。</span>
                         </p>
                     </div>
 
@@ -423,26 +444,33 @@
             </div>
             
             <div class="btc-milestone">
-                <h3 style="color: var(--btc-gold); margin-top: 0; font-size: 1.1rem;">
-                    <span lang-content="en">[ MILESTONE: BTC AIRDROP ]</span>
-                    <span lang-content="zh">[ 目標解鎖：BTC 創世空投池 ]</span>
-                </h3>
-                <p style="font-size: 11px; color: #aaa; margin-bottom: 5px;">
-                    <span lang-content="en">Unlocks at $250,000 USD (Calculated via USD_VALUATION). High-Tier Fission Nodes gain massive win multipliers.</span>
-                    <span lang-content="zh">募資達 25萬美金時強制解鎖！早期卡位者分肉最多。高階軍銜享有最高 10 倍空投權重加成。</span>
-                </p>
-                
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" id="btc-progress-fill"></div>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 5px;">
-                    <span id="btc-progress-text" style="font-size: 10px; color: var(--btc-gold); font-weight: bold;">SYNCING LIVE USD DATA...</span>
-                    <div style="text-align: right; font-size: 10px; color: #ccc;">
-                        <span lang-content="en">Prize Pool: <b>1 BTC</b><br>Eligible Nodes: <b id="eligible-nodes" style="color:var(--tech-green);">0</b> (Shared)</span>
-                        <span lang-content="zh">總獎池: <b style="color:var(--btc-gold);">1 BTC</b><br>符合資格節點: <b id="eligible-nodes-zh" style="color:var(--tech-green);">0</b> (共同分配)</span>
+                <div>
+                    <h3 style="color: var(--btc-gold); margin-top: 0; font-size: 1.1rem;">
+                        <span lang-content="en">[ MILESTONE: BTC AIRDROP ]</span>
+                        <span lang-content="zh">[ 目標解鎖：BTC 創世空投池 ]</span>
+                    </h3>
+                    <p style="font-size: 11px; color: #aaa; margin-bottom: 5px;">
+                        <span lang-content="en">Unlocks at $250,000 USD (Calculated via USD_VALUATION). Higher Tiers gain exponentially more Raffle Tickets.</span>
+                        <span lang-content="zh">募資達 25萬美金時強制解鎖！按抽獎券權重分配。高階軍銜享有絕對的票數優勢。</span>
+                    </p>
+                    
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="btc-progress-fill"></div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 5px;">
+                        <span id="btc-progress-text" style="font-size: 10px; color: var(--btc-gold); font-weight: bold;">SYNCING LIVE USD DATA...</span>
+                        <div style="text-align: right; font-size: 10px; color: #ccc;">
+                            <span lang-content="en">Prize Pool: <b>1 BTC</b><br>Eligible Nodes: <b id="eligible-nodes" style="color:var(--tech-green);">0</b></span>
+                            <span lang-content="zh">總獎池: <b style="color:var(--btc-gold);">1 BTC</b><br>符合資格節點: <b id="eligible-nodes-zh" style="color:var(--tech-green);">0</b></span>
+                        </div>
                     </div>
                 </div>
+
+                <button id="btc-draw-btn" class="btn-draw" disabled onclick="attemptDraw()">
+                    <span lang-content="en">MILESTONE LOCKED // WAITING FOR $250K</span>
+                    <span lang-content="zh">目標未達成 // 等待突破 25萬美金</span>
+                </button>
             </div>
         </div>
 
@@ -549,7 +577,9 @@
 
 <script>
     let tgeRate = 0.20; 
-    let globalClientIP = "UNKNOWN"; // 用於 Anti-Sybil 防刷
+    let globalClientIP = "UNKNOWN"; 
+    let currentBtcTickets = 1; 
+    let isBtcMilestoneReached = false; 
 
     // 在頁面加載時，靜默獲取使用者的真實 IP
     fetch('https://api.ipify.org?format=json')
@@ -622,7 +652,8 @@
             });
         }
         runCalc(); 
-        checkFissionStatus(true); 
+        checkFissionStatus(true);
+        updateDrawButtonUI(); 
     }
 
     function clearPioneerCache() {
@@ -662,8 +693,8 @@
                     
                     if (key === 'ml1-core-001') {
                         localStorage.setItem('ml1_fission_code', 'ML1-CORE-001');
-                        localStorage.setItem('ml1_recruits', '15');
-                        localStorage.setItem('ml1_personal_usd', '5000'); // Founder fake money
+                        localStorage.setItem('ml1_recruits', '100'); 
+                        localStorage.setItem('ml1_personal_usd', '100000'); 
                     } 
                     else if (key.startsWith('ml1-')) {
                         localStorage.setItem('ml1_fission_code', key.toUpperCase());
@@ -728,7 +759,7 @@
             `;
             
             if (savedCode === 'ML1-CORE-001') {
-                updateTgeTier(15, 5000);
+                updateTgeTier(100, 100000);
             } else {
                 if(!isLangSwitch) verifyActiveNodes(savedCode);
                 else {
@@ -750,7 +781,6 @@
             const nodesData = await resNodes.json();
             const fundsData = await resFunds.json();
 
-            // 1. 抓取我自己的錢包與個人總入金 (Personal Dashboard Logic)
             let myNodeRecord = (Array.isArray(nodesData) ? nodesData : []).find(n => n.My_Fission_Code === myCode);
             let myWallet = myNodeRecord ? (myNodeRecord.Wallet_Address || '').trim().toLowerCase() : null;
             let myTotalUSD = 0;
@@ -761,7 +791,7 @@
                     return parseFloat(fundObj[usdValKey].toString().replace(/[^0-9.-]+/g,""));
                 }
                 let amtKey = Object.keys(fundObj).find(k => k.trim().toUpperCase() === 'ASSET_AMOUNT' || k.trim().toUpperCase() === 'AMOUNT');
-                return amtKey ? parseFloat(fundObj[amtKey]) : 0; // fallback
+                return amtKey ? parseFloat(fundObj[amtKey]) : 0; 
             };
 
             const isActive = (walletAddress) => {
@@ -779,19 +809,18 @@
                 });
             }
 
-            // 2. 裂變分數計算 + IP 防刷機制 (Anti-Sybil)
             let totalScore = 0; 
             let level1Nodes = (Array.isArray(nodesData) ? nodesData : []).filter(n => n.Invited_By === myCode);
             let seenIPs = new Set();
-            seenIPs.add(globalClientIP); // 自己的 IP 先加入，防止自己刷自己
+            seenIPs.add(globalClientIP); 
 
             level1Nodes.forEach(l1 => {
                 let l1Wallet = (l1.Wallet_Address || '').trim().toLowerCase();
-                let l1IP = l1.IP_Address; // 如果有的話
+                let l1IP = l1.IP_Address;
                 let isValidIP = true;
                 
                 if(l1IP && l1IP !== "UNKNOWN") {
-                    if(seenIPs.has(l1IP)) isValidIP = false; // IP 撞車，判定為刷子！
+                    if(seenIPs.has(l1IP)) isValidIP = false; 
                     else seenIPs.add(l1IP);
                 }
 
@@ -810,7 +839,6 @@
                         if (isActive((l2.Wallet_Address || '').trim()) && l2Valid) totalScore += 0.5;
                     });
                 } else if (!isL1Active && isValidIP) {
-                    // L1 沒入金，但 IP 是乾淨的，給他穿透的機會
                     level2Nodes.forEach(l2 => {
                         let l2IP = l2.IP_Address;
                         let l2Valid = true;
@@ -855,71 +883,112 @@
         phase2Quota.style.display = 'none';
         nextTierHint.style.display = 'block';
 
-        // 資金直升通道邏輯 (Auto-Upgrade via Capital)
-        let virtualScore = count;
-        let upgradedViaUSD = false;
-        
-        if (myUSD >= 1000 && count < 10) { virtualScore = 10; upgradedViaUSD = true; }
-        else if (myUSD >= 100 && count < 3) { virtualScore = 3; upgradedViaUSD = true; }
+        let tierByNodes = count >= 100 ? 5 : count >= 30 ? 4 : count >= 10 ? 3 : count >= 3 ? 2 : 1;
+        let tierByUSD = myUSD >= 100000 ? 5 : myUSD >= 10000 ? 4 : myUSD >= 1000 ? 3 : myUSD >= 100 ? 2 : 1;
+        let currentTier = Math.max(tierByNodes, tierByUSD);
+        let upgradedViaUSD = currentTier > tierByNodes;
 
-        if (virtualScore >= 10) { 
+        fill.style.width = (currentTier * 20) + '%'; 
+
+        if (currentTier === 5) {
+            tgeRate = 0.40; 
+            currentBtcTickets = 100;
+            tgeDisplay.innerText = '40% TGE + 100x TICKETS + 100% $O2 BOOST'; 
+            tgeDisplay.style.color = 'var(--tier5-gold)';
+            tierName.innerText = upgradedViaUSD ? '[Tier 5: Emperor (Capital Upgraded)]' : '[Tier 5: Mars Emperor]';
+            tierName.style.color = 'var(--tier5-gold)';
+            tgeBar.style.width = '40%';
+            tgeBar.style.background = 'var(--tier5-gold)';
+            tgeLabel.style.color = 'var(--tier5-gold)';
+            seedAdvantage.style.display = 'block'; 
+            nextTierHint.style.display = 'none'; 
+            o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 1;">+100% MAX</b>`;
+            
+            let payloadKg = ((count > 100 ? count - 100 : 0) * 5 + 50).toFixed(1); 
+            phase2Quota.style.display = 'block';
+            phase2Quota.innerHTML = isZh ? `🌟 終極特權 實體載荷解鎖: <b>+${payloadKg} KG</b>` : `🌟 ULTIMATE ORBITAL PAYLOAD UNLOCKED: <b>+${payloadKg} KG</b>`;
+        }
+        else if (currentTier === 4) {
+            tgeRate = 0.35; 
+            currentBtcTickets = 30;
+            tgeDisplay.innerText = '35% TGE + 30x TICKETS + 50% $O2 BOOST'; 
+            tgeDisplay.style.color = 'var(--tier4-purple)';
+            tierName.innerText = upgradedViaUSD ? '[Tier 4: Warlord (Capital Upgraded)]' : '[Tier 4: Mars Warlord]';
+            tierName.style.color = 'var(--tier4-purple)';
+            tgeBar.style.width = '35%';
+            tgeBar.style.background = 'var(--tier4-purple)';
+            tgeLabel.style.color = 'var(--tier4-purple)';
+            o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 0.9;">+50%</b>`;
+            nextTierHint.innerText = isZh ? `🚀 下一階 [Emperor]：需滿 100 名推薦或累積 $100K USD！` : `🚀 NEXT [Emperor]: 100 INVITES OR $100K USD!`;
+        }
+        else if (currentTier === 3) { 
             tgeRate = 0.30; 
-            tgeDisplay.innerText = '30% TGE + 10x BTC + 30% $O2 BOOST'; 
+            currentBtcTickets = 10;
+            tgeDisplay.innerText = '30% TGE + 10x TICKETS + 30% $O2 BOOST'; 
             tgeDisplay.style.color = 'var(--mars-red)';
             tierName.innerText = upgradedViaUSD ? '[Tier 3: Overlord (Capital Upgraded)]' : '[Tier 3: Mars Overlord]';
             tierName.style.color = 'var(--mars-red)';
-            fill.style.width='100%'; 
-            tgeBar.style.width='30%';
-            tgeBar.style.background='var(--mars-red)';
-            tgeLabel.style.color='var(--mars-red)';
-            seedAdvantage.style.display = 'block'; 
-            nextTierHint.style.display = 'none'; 
-            o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 1;">+30% MAX</b>`;
-            
-            let payloadKg = ((virtualScore - 10) * 5).toFixed(1); 
-            phase2Quota.style.display = 'block';
-            phase2Quota.innerHTML = isZh ? `🌟 PHASE 2 實體載荷解鎖: <b>+${payloadKg} KG</b>` : `🌟 PHASE 2 ORBITAL PAYLOAD UNLOCKED: <b>+${payloadKg} KG</b>`;
+            tgeBar.style.width = '30%';
+            tgeBar.style.background = 'var(--mars-red)';
+            tgeLabel.style.color = 'var(--mars-red)';
+            o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 0.8;">+30%</b>`;
+            nextTierHint.innerText = isZh ? `🚀 下一階 [Warlord]：需滿 30 名推薦或累積 $10K USD！` : `🚀 NEXT [Warlord]: 30 INVITES OR $10K USD!`;
         }
-        else if (virtualScore >= 3) { 
+        else if (currentTier === 2) { 
             tgeRate = 0.25; 
-            tgeDisplay.innerText = '25% TGE + 3x BTC + 10% $O2 BOOST'; 
+            currentBtcTickets = 3;
+            tgeDisplay.innerText = '25% TGE + 3x TICKETS + 10% $O2 BOOST'; 
             tgeDisplay.style.color = 'var(--lag-blue)';
             tierName.innerText = upgradedViaUSD ? '[Tier 2: Commander (Capital Upgraded)]' : '[Tier 2: Mesh Commander]';
             tierName.style.color = 'var(--lag-blue)';
-            fill.style.width=(30 + (count/10)*40) + '%'; 
-            tgeBar.style.width='25%';
-            tgeBar.style.background='var(--lag-blue)';
-            tgeLabel.style.color='var(--lag-blue)';
-            o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 0.8;">+10%</b>`;
-            
-            if(!upgradedViaUSD) {
-                let needed = 10 - count;
-                nextTierHint.innerText = isZh ? `🚀 僅差 ${needed} 名有效推薦，解鎖 10倍 BTC 與 30% $O2 挖礦加速！` : `🚀 ONLY ${needed} MORE INVITES FOR 10X BTC & 30% $O2 BOOST!`;
-            } else {
-                nextTierHint.innerText = isZh ? `💎 資金已直升 Tier 2，再入金至 $1000 解鎖 Tier 3！` : `💎 Auto-Upgraded to Tier 2. Reach $1000 for Tier 3!`;
-            }
+            tgeBar.style.width = '25%';
+            tgeBar.style.background = 'var(--lag-blue)';
+            tgeLabel.style.color = 'var(--lag-blue)';
+            o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 0.7;">+10%</b>`;
+            nextTierHint.innerText = isZh ? `🚀 下一階 [Overlord]：需滿 10 名推薦或累積 $1K USD！` : `🚀 NEXT [Overlord]: 10 INVITES OR $1K USD!`;
         }
         else { 
             tgeRate = 0.20; 
-            tgeDisplay.innerText = '20% TGE UNLOCK';
+            currentBtcTickets = 1;
+            tgeDisplay.innerText = '20% TGE UNLOCK + 1x TICKET';
             tgeDisplay.style.color = '#888';
             tierName.innerText = '[Tier 1: Genesis]';
             tierName.style.color = '#888';
-            fill.style.width=(count * 10) + '%'; 
-            tgeBar.style.width='20%';
-            tgeBar.style.background='var(--tech-green)';
-            tgeLabel.style.color='var(--tech-green)';
+            tgeBar.style.width = '20%';
+            tgeBar.style.background = 'var(--tech-green)';
+            tgeLabel.style.color = 'var(--tech-green)';
             o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 0.5;">+0%</b>`;
-            
-            let needed = 3 - count;
-            nextTierHint.innerText = isZh ? `🚀 僅差 ${needed} 名推薦或入金滿 $100，解鎖 3倍 BTC 與 10% $O2 加速！` : `🚀 ONLY ${needed} MORE INVITES OR $100 USD FOR 3X BTC & 10% $O2 BOOST!`;
+            nextTierHint.innerText = isZh ? `🚀 下一階 [Commander]：需滿 3 名推薦或累積 $100 USD！` : `🚀 NEXT [Commander]: 3 INVITES OR $100 USD!`;
+        }
+        
+        updateDrawButtonUI();
+    }
+
+    function updateDrawButtonUI() {
+        const btn = document.getElementById('btc-draw-btn');
+        if(!btn) return;
+        const isZh = document.body.classList.contains('lang-zh');
+        
+        if (isBtcMilestoneReached) {
+            btn.disabled = false;
+            btn.innerHTML = isZh 
+                ? `🚀 獎池已解鎖！投入 [ ${currentBtcTickets} ] 張抽獎券爭奪 BTC` 
+                : `🚀 POOL UNLOCKED! CAST [ ${currentBtcTickets} ] TICKETS FOR BTC`;
+        } else {
+            btn.disabled = true;
+            btn.innerHTML = isZh 
+                ? `🔒 目標未達成 // 等待突破 25萬美金解鎖` 
+                : `🔒 MILESTONE LOCKED // WAITING FOR $250K`;
         }
     }
 
-    function copyCode() {
-        const code = document.getElementById('user-code').innerText;
-        navigator.clipboard.writeText(code);
-        alert("UNIVERSAL KEY COPIED. Share with your network to mine $O2.");
+    function attemptDraw() {
+        const isZh = document.body.classList.contains('lang-zh');
+        if (isZh) {
+            alert(`✅ ${currentBtcTickets} 張抽獎券已成功寫入星際帳本合約！\n系統將在創世倒數結束後，統一由區塊鏈 VRF 隨機數開獎。`);
+        } else {
+            alert(`✅ ${currentBtcTickets} Tickets successfully cast into the Interstellar Ledger!\nAwaiting VRF smart contract resolution at Genesis completion.`);
+        }
     }
 
     async function fetchLiveProgress() {
@@ -944,9 +1013,18 @@
             let percent = Math.min((totalUSDValue / btcGoal) * 100, 100).toFixed(2);
             document.getElementById('btc-progress-fill').style.width = percent + '%';
             document.getElementById('btc-progress-text').innerText = `CURRENT PROGRESS: ${percent}% (${totalUSDValue.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})} / 250,000 USD)`;
+            
             let actualNodes = eligibleWallets.size;
             if(document.getElementById('eligible-nodes')) document.getElementById('eligible-nodes').innerText = actualNodes;
             if(document.getElementById('eligible-nodes-zh')) document.getElementById('eligible-nodes-zh').innerText = actualNodes;
+            
+            if (totalUSDValue >= btcGoal) {
+                isBtcMilestoneReached = true;
+            } else {
+                isBtcMilestoneReached = false;
+            }
+            updateDrawButtonUI();
+
         } catch (error) { document.getElementById('btc-progress-text').innerText = 'PROGRESS SYNC ERROR'; }
     }
 
@@ -958,8 +1036,8 @@
         if (wallet.toUpperCase() === 'ARCHITECT') {
             alert("🚀 FOUNDER OVERRIDE ACTIVATED.");
             localStorage.setItem('ml1_fission_code', 'ML1-CORE-001');
-            localStorage.setItem('ml1_recruits', '15'); 
-            localStorage.setItem('ml1_personal_usd', '5000'); 
+            localStorage.setItem('ml1_recruits', '100'); 
+            localStorage.setItem('ml1_personal_usd', '100000'); 
             checkFissionStatus();
             return;
         }
@@ -969,14 +1047,13 @@
         btn.innerText = "VERIFYING..."; btn.disabled = true;
         const myFissionCode = 'ML1-' + Math.random().toString(36).substring(2, 6).toUpperCase();
 
-        // 將真實 IP 附帶寫入 Payload 實現防刷
         fetch("https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/PortalNodes", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify([{ "Wallet_Address": wallet, "Invited_By": inviter || "NONE", "My_Fission_Code": myFissionCode, "IP_Address": globalClientIP, "Timestamp": new Date().toLocaleString() }])
         }).then(res => {
             if(res.ok) {
-                alert("✅ Node Secured!");
+                alert("✅ Node Secured! You are now an active Genesis Base Node.");
                 localStorage.setItem('ml1_fission_code', myFissionCode);
                 localStorage.setItem('ml1_recruits', '0');
                 localStorage.setItem('ml1_personal_usd', '0');
