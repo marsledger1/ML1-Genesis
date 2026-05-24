@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML1 V5.6 | MARS SOVEREIGN SUPREMACY</title>
+    <title>ML1 V5.7.0 | MARS SOVEREIGN SUPREMACY</title>
     <script src="https://w.soundcloud.com/player/api.js"></script>
     <style>
         :root {
@@ -11,6 +11,7 @@
             --mars-red: #8c3b23;
             --tech-green: #00ff41;
             --lag-blue: #00BFFF;
+            --tier5-gold: #ffdf00;
             --terminal-gray: rgba(15, 15, 15, 0.96);
             --text-glow: 0 0 15px rgba(0, 255, 65, 0.4);
         }
@@ -174,7 +175,7 @@
     <div class="container">
         <header>
             <h1 id="t-head">MARS LEDGER 1</h1>
-            <div class="tagline" id="t-tag">PROTOCOL: ML1-V5.6 // THE DUAL-TOKEN EPOCH</div>
+            <div class="tagline" id="t-tag">PROTOCOL: ML1-V5.7.0 // THE GENESIS COUNCIL EPOCH</div>
         </header>
 
         <div class="main-tab-nav">
@@ -200,18 +201,23 @@
                 <div class="tech-grid" id="pill-grid"></div>
             </section>
 
-            <section class="tech-section" style="border: 1px solid var(--lag-blue); padding: 30px; background: rgba(0, 191, 255, 0.05); margin-top: -20px; margin-bottom: 40px;">
-                <h3 id="t-tok-h" style="color: var(--lag-blue); border-bottom: 1px solid #00BFFF; padding-bottom: 10px; font-size: 1rem;">V5.6 SUPREMACY: TOKENOMICS & PRICING TIER</h3>
+            <section class="tech-section" style="border: 1px solid var(--lag-blue); padding: 30px; background: rgba(0, 191, 255, 0.05); margin-top: -20px; margin-bottom: 20px;">
+                <h3 id="t-tok-h" style="color: var(--lag-blue); border-bottom: 1px solid #00BFFF; padding-bottom: 10px; font-size: 1rem;">V5.7.0 SUPREMACY: TOKENOMICS & PRICING TIER</h3>
                 <div class="tech-grid" id="tok-grid"></div>
                 
                 <div style="margin-top: 25px; padding: 15px; border: 1px dashed var(--mars-red); background: rgba(140, 59, 35, 0.1); text-align: center;">
                     <span lang-content="en" style="color: #fff; font-size: 0.9rem;">🔒 <strong>[CLASSIFIED] CRYO-SLEEP STAKING & $O2 PROTOCOL</strong><br><span style="font-size:0.75rem; color:#aaa; margin-top:5px; display:inline-block;">Genesis Nodes will gain exclusive clearance to the Dual-Token Staking Matrix post-TGE. Secure your $ML1 allocation to mine $O2 (Liquid Oxygen).</span></span>
                     <span lang-content="zh" style="color: #fff; font-size: 0.9rem;">🔒 <strong>[機密] 冷凍休眠質押與 $O2 液氧協議</strong><br><span style="font-size:0.75rem; color:#aaa; margin-top:5px; display:inline-block;">創世節點將在 TGE 後解鎖雙幣質押矩陣的專屬權限。搶佔 $ML1 份額以獲取未來的製氧權。</span></span>
                 </div>
+            </section>
+
+            <section class="tech-section" style="border: 1px solid var(--tier5-gold); padding: 30px; background: rgba(255, 223, 0, 0.05); margin-bottom: 40px;">
+                <h3 id="t-mesh-h" style="color: var(--tier5-gold); border-bottom: 1px solid var(--tier5-gold); padding-bottom: 10px; font-size: 1rem;">MESH EXPANSION & THE GENESIS COUNCIL</h3>
+                <div class="tech-grid" id="mesh-grid"></div>
 
                 <p id="t-verify" style="font-size: 0.65rem; color: #666; margin-top: 25px; letter-spacing: 1px; text-align: center;"></p>
-                <div style="margin-top: 15px; padding-top: 20px; border-top: 1px dashed rgba(0, 191, 255, 0.3); text-align: center;">
-                    <p id="t-dust-h" style="font-size: 0.85rem; color: #fff; letter-spacing: 2px; margin: 0; text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);"></p>
+                <div style="margin-top: 15px; padding-top: 20px; border-top: 1px dashed rgba(255, 223, 0, 0.3); text-align: center;">
+                    <p id="t-dust-h" style="font-size: 0.85rem; color: #fff; letter-spacing: 2px; margin: 0; text-shadow: 0 0 10px rgba(255, 223, 0, 0.5);"></p>
                     <p id="t-dust-p" style="font-size: 0.65rem; color: var(--tech-green); margin-top: 8px; opacity: 0.8;"></p>
                 </div>
             </section>
@@ -427,7 +433,7 @@
     <div id="whitepaper-modal">
         <div class="modal-content">
             <button onclick="closeWhitepaperModal()" class="modal-close">✕ CLOSE ARCHIVE</button>
-            <h1>ML1 PROTOCOL TECHNICAL WHITEPAPER v5.6</h1>
+            <h1>ML1 PROTOCOL TECHNICAL WHITEPAPER v5.7.0</h1>
             
             <h2 style="margin-top:60px;">ENGLISH VERSION</h2>
             <p><strong>The Latency Wall</strong><br>
@@ -438,11 +444,14 @@
             • Permissionless PoPW (Proof of Physical Work for Edge-Compute Robots)<br>
             • The Dual-Token Economy ($ML1 Deed & $O2 Liquid Oxygen Mining)</p>
 
+            <p><strong>Mesh Expansion & 2-Tier Volume Penetration</strong><br>
+            The expansion protocol utilizes a mathematically bulletproof 2-Tier penetration model. L1 recruits grant 100% volume and 1.0 score; L2 recruits grant 100% volume and 0.5 score. A strict On-Chain + IP Anti-Sybil rule requires actual deposited value (pUSD > 0) to validate nodes, protecting the system from bot farming.</p>
+
             <p><strong>Non-Inflationary Financial Protocol & ISRU Economy</strong><br>
             Earth-based systems rely on synchronous consensus and infinite money printing. ML1 solves this with a fixed 10,000,000 supply ($ML1). Post-TGE, Genesis Nodes can stake their $ML1 into "Cryo-Sleep" to mine $O2, the utility token used for Martian API calls and Degen casino features. Pure resource-backed interstellar liquidity.</p>
             
-            <p><strong>Genesis Dust-Seeders</strong><br>
-            First-mover advantage in the Phase 1 Tiered Bonding Curve. Permanent Genesis Block immortalization, physical node naming rights, and 1:1 equity conversion to Mars Ledger Corp.</p>
+            <p><strong>The Genesis Council ($1M Hard Cap)</strong><br>
+            First-mover advantage in the Phase 1 Tiered Bonding Curve. Upon reaching the $1,000,000 Phase 1 Hard Cap, the Top 10 wallets on the Interstellar Leaderboard will permanently form the Genesis Council. They will unlock a permanent 5% Global $O2 Tax dividend, Phase 2 Price Lock quota, and Admin Keys for Jezero hardware nodes.</p>
 
             <h2 style="margin-top:60px;">中文版（繁體）</h2>
             <p><strong>延遲之牆</strong><br>
@@ -453,11 +462,14 @@
             • 無需許可的實體工作證明（PoPW）<br>
             • 雙幣生態系統（$ML1 地契與 $O2 液氧挖礦）</p>
 
+            <p><strong>網格裂變機制與兩代資金穿透</strong><br>
+            系統採用無懈可擊的兩代穿透 (2-Tier Penetration) 模型：直推 (L1) 貢獻 100% 業績與 1.0 算力；間推 (L2) 貢獻 100% 業績與 0.5 算力。底層強制綁定 IP 指紋與星際鏈上資金交叉防刷機制，零資金機器人帳號無法產生任何算力。</p>
+
             <p><strong>非通脹金融協議與 ISRU 經濟</strong><br>
             地球金融系統依賴同步共識與無限印鈔。ML1 以固定 10,000,000 總量 ($ML1) 徹底解決。在 TGE 後，創世節點可將 $ML1 放入「冷凍休眠質押」以挖掘 $O2（火星 API 調用與賭場燃料）。這是純資源驅動的星際流動性。</p>
             
-            <p><strong>創世塵播者</strong><br>
-            在 Phase 1 階梯式聯合曲線中享有絕對的先發優勢。永久刻入創世區塊、物理網格命名權，以及 1:1 兌換 Mars Ledger Corp. 優先股權。</p>
+            <p><strong>創世議會戰力榜 ($1M 硬頂特權)</strong><br>
+            在 Phase 1 階梯式聯合曲線中享有絕對的先發優勢。當 100 萬美金硬頂達成瞬間，全網排名前 10 的大戶將永久晉升為「創世議會」，並解鎖：全網 5% $O2 燃燒稅永久分紅、Phase 2 創世匯率 1:1 鎖定額度，以及火星實體節點之多簽管理員密鑰。</p>
         </div>
     </div>
 
@@ -481,7 +493,7 @@
             // 4. 啟動背景音樂系統
             if(typeof initSoundCloud === 'function') initSoundCloud();
             
-            console.log('%c✅ ML1 V5.6 系統全面上線 (UI, Core, API Modules Active)', 'color:#00ff41; font-size:14px');
+            console.log('%c✅ ML1 V5.7.0 系統全面上線 (UI, Core, API Modules Active)', 'color:#00ff41; font-size:14px');
         };
     </script>
 </body>

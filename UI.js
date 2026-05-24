@@ -90,7 +90,7 @@ const content = {
     en: {
         tab0: "OVERVIEW", tab1: "PIONEER HUB", tab2: "SIMULATOR",
         loc: "LOC: JEZERO_CRATER_ALPHA", sys: "SYS_STATUS: TOP_SECRET",
-        head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V5.6 // THE DUAL-TOKEN EPOCH",
+        head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V5.7.0 // THE GENESIS COUNCIL EPOCH",
         name: "Jack Yiu", pos: "CHIEF ARCHITECT // MARS COLONY ONE",
         bio: "\"Traditional TCP/IP and legacy Earth-bound blockchains (BTC, ETH, SOL) collapse under the 3-22 minute Latency Wall. Their synchronous consensus mechanisms cannot survive the speed of light barrier. ML1 is the first asynchronous state machine designed for the vacuum of deep space—enabling Mars-native liquidity that remains functional even when Earth is occluded.\"",
         pillH: "CORE INFRASTRUCTURE PILLARS",
@@ -100,13 +100,19 @@ const content = {
             ["PROTOCOL 433", "Sub-Ghz frequency bridges ensuring ledger persistence and peer-to-peer survival even during global Martian dust storms."],
             ["THE DUAL-TOKEN ECONOMY", "$ML1 (Fixed 10M supply) acts as the Mars land deed. Post-TGE, nodes can lock $ML1 into 'Cryo-Sleep Staking' to mine $O2 (Liquid Oxygen)."]
         ],
-        tokH: "V5.6 SUPREMACY: TOKENOMICS & PRICING TIER",
+        tokH: "V5.7.0 SUPREMACY: TOKENOMICS & PRICING TIER",
         toks: [
             ["10,000,000 FIXED SUPPLY ($ML1)", "Total supply is hard-capped. Zero inflation. Pure resource-backed interstellar liquidity."],
             ["TIERED BONDING CURVE (FOMO)", "Phase 1 early birds get 1:1 allocation. Cost increases to 1:1.2 at $500k, 1:1.5 at $750k, and doubles (1:2) in Phase 2. The earlier you deploy, the more equity you secure."]
         ],
+        meshH: "MESH EXPANSION & THE GENESIS COUNCIL",
+        meshes: [
+            ["2-TIER VOLUME PENETRATION", "A bulletproof network expansion algorithm. Direct recruits (L1) grant 100% volume and 1.0 score. Indirect recruits (L2) grant 100% volume and 0.5 score. Strict IP & On-chain cross-validation active."],
+            ["MILITARY RANK SYSTEM", "Your capital and mesh size determine your Tier (From Genesis to Emperor). Reach Tier 5 ($50k+ or 100 Nodes) to unlock 40% TGE, 100 BTC Raffle Tickets, and a 100% $O2 Mining Boost."],
+            ["THE GENESIS COUNCIL (TOP 10)", "When the $1M Phase 1 Hard Cap is reached, the Top 10 Leaderboard wallets permanently become the Genesis Council, unlocking a 5% Global $O2 Tax dividend, Phase 2 Price Lock quota, and hardware Admin Keys."]
+        ],
         verify: "* ALL COMMITS ARE MANUALLY VERIFIED VIA AIR-GAPPED SNAPSHOT SYNC TO ENSURE INTERSTELLAR LEDGER INTEGRITY.",
-        dustH: 'CURRENT STATUS: RECRUITMENT OF <span style="color: var(--lag-blue); font-weight: bold;">"GENESIS DUST-SEEDERS"</span> IS ACTIVE.',
+        dustH: 'CURRENT STATUS: RECRUITMENT OF <span style="color: var(--tier5-gold); font-weight: bold;">"GENESIS DUST-SEEDERS"</span> IS ACTIVE.',
         dustP: "EACH SEEDER WILL BE IMMORTALIZED IN THE ML1 GENESIS BLOCK // FIRST-LEVEL ACCESS GRANTED.",
         syncH: "GENESIS FUNDING SYNCHRONIZATION", syncP: "[ TARGET: 1,000,000 USD // SECURE PHASE 1 HARDWARE & MINT 10M $ML1 (THE ANCHOR OF FAITH) ]",
         nodeH: "PIONEER VALIDATION NODES", regH: "PIONEER REGISTRY (VC PORTAL)",
@@ -131,7 +137,7 @@ const content = {
     zh: {
         tab0: "系統總覽", tab1: "先鋒樞紐", tab2: "深空模擬器",
         loc: "座標: JEZERO_CRATER_ALPHA", sys: "系統狀態: 防彈紀元",
-        head: "火星帳本 1 號", tag: "協議: ML1-V5.6 // 雙幣與防彈紀元",
+        head: "火星帳本 1 號", tag: "協議: ML1-V5.7.0 // 創世議會與雙幣紀元",
         name: "Jack Yiu", pos: "首席架構師 // 火星第一殖民地",
         bio: "「傳統 TCP/IP 與舊有的地球鏈協議（BTC, ETH, SOL）在 3-22 分鐘的延遲牆面前會徹底崩潰。它們的同步共識機制無法跨越光速障礙。ML1 是首個為深空真空設計的非同步狀態機——確保在地球信號被遮蔽時，火星本土流動性依然能自主運作。」",
         pillH: "核心基礎設施四大支柱",
@@ -141,13 +147,19 @@ const content = {
             ["協議 433 (PROTOCOL 433)", "Sub-Ghz 無線橋接技術，確保即使在全球性火星沙塵暴期間，帳本數據仍能點對點存續。"],
             ["雙幣生態系統", "$ML1 (恆定1000萬) 作為火星地契。TGE 後，節點可將 $ML1 投入「冷凍休眠質押 (Cryo-Sleep)」以挖掘 $O2 (液氧) 燃料。"]
         ],
-        tokH: "V5.6 至高無上：代幣定價階梯",
+        tokH: "V5.7.0 至高無上：代幣定價階梯",
         toks: [
             ["10,000,000 恆定總量 ($ML1)", "供應量永久封頂，零通脹。純粹由資源驅動的星際流動性。"],
             ["階梯式聯合曲線 (Bonding Curve)", "Phase 1 早期參與者享有 1:1 兌換。資金池達 50萬美金後成本上升至 1:1.2，75萬上升至 1:1.5，Phase 2 正式翻倍 (1:2)。越早入金，暴利空間越大。"]
         ],
+        meshH: "網格裂變機制與創世議會",
+        meshes: [
+            ["兩代資金穿透 (2-TIER PENETRATION)", "無懈可擊的擴張演算法。直推 (L1) 貢獻 100% 業績與 1.0 算力；間推 (L2) 貢獻 100% 業績與 0.5 算力。內建 IP 與星際鏈上資金交叉防刷驗證。"],
+            ["軍閥階級系統 (MILITARY TIERS)", "由您的入金總量與網格規模決定軍階（從創世到火星大帝）。達成第五階 ($50k 或 100 節點) 即可解鎖 40% TGE、100 張 BTC 抽獎券與 100% $O2 挖礦極限加速。"],
+            ["創世議會戰力榜 (THE GENESIS COUNCIL)", "當 Phase 1 達成 100 萬美金硬頂瞬間，排名前 10 的大戶將永久晉升為創世議會，解鎖「全網 5% $O2 稅收分紅」、「Phase 2 創世匯率鎖定額度」與「實體節點最高管理員密鑰」。"]
+        ],
         verify: "* 所有提交均通過離線快照異步驗證，以確保星際賬本的完整性。",
-        dustH: '當前狀態：<span style="color: var(--lag-blue); font-weight: bold;">「創世塵播者」</span>招募中',
+        dustH: '當前狀態：<span style="color: var(--tier5-gold); font-weight: bold;">「創世塵播者」</span>招募中',
         dustP: "每位播種者將被永久刻入 ML1 創世區塊 // 獲取第一級核心訪問權限",
         syncH: "創世資金同步進度", syncP: "[ 戰略目標: 1,000,000 USD // 觸發第一階段硬體製造與 1000 萬 $ML1 創世鑄造 (信仰之錨) ]",
         nodeH: "先鋒驗證節點 (錢包地址)", regH: "先鋒註冊入口 (VC 提交門戶)",
@@ -200,9 +212,18 @@ function setLang(lang) {
     document.getElementById('pill-grid').innerHTML = d.pills.map(p => `
         <div class="spec-card"><h4>${p[0]}</h4><p>${p[1]}</p></div>
     `).join('');
+    
     document.getElementById('tok-grid').innerHTML = d.toks.map(t => `
         <div class="spec-card" style="border-left-color: var(--lag-blue); background: rgba(0,0,0,0.4);">
             <h4>${t[0]}</h4><p>${t[1]}</p>
+        </div>
+    `).join('');
+
+    // 新增：渲染 網格裂變機制與創世議會 區塊
+    document.getElementById('t-mesh-h').innerText = d.meshH;
+    document.getElementById('mesh-grid').innerHTML = d.meshes.map(m => `
+        <div class="spec-card" style="border-left-color: var(--tier5-gold); background: rgba(0,0,0,0.4);">
+            <h4 style="color: var(--tier5-gold);">${m[0]}</h4><p>${m[1]}</p>
         </div>
     `).join('');
 
