@@ -129,10 +129,11 @@ const content = {
         calcShareText: "Your share of Genesis Fund:",
         calcTgeText: "TGE unlock: <strong style='color:#ff0;'>20%</strong> • Remaining vested with hardware milestones",
         calcButton: "CALCULATE MY MARS LEGACY",
+        // 更新：工業能源特權 (英文版)
         calcAdvTitle: "Genesis Dust-Seeders Advantage:",
-        adv1: "Permanent name on Jezero Crater hardware nodes",
-        adv2: "1:1 equity conversion to Mars Ledger Corp.",
-        adv3: "Priority ISRU resource allocation on Mars",
+        adv1: "Hardware Node NFT Naming & $O2 Routing Yield",
+        adv2: "1:1 Equity in Mars Resource Trust (Dividends)",
+        adv3: "Lifetime $O2 Wholesale Pricing Rights",
         calcTierWarn: "⚠️ CURRENT TIER: 1:1 ALLOCATION. COST INCREASES BY 20% AT $500K."
     },
     zh: {
@@ -177,10 +178,11 @@ const content = {
         calcShareText: "您在創世基金的份額：",
         calcTgeText: "TGE 解鎖： <strong style='color:#ff0;'>20%</strong> • 剩餘部分隨硬體部署里程碑逐步釋放",
         calcButton: "計算我的火星遺產",
-        calcAdvTitle: "創世塵播者優勢：",
-        adv1: "Jezero Crater 硬體節點永久命名權",
-        adv2: "1:1 兌換 Mars Ledger Corp. 優先股權",
-        adv3: "火星 ISRU 資源優先分配權",
+        // 更新：工業能源特權 (繁體中文版)
+        calcAdvTitle: "創世塵播者終極優勢：",
+        adv1: "實體節點 NFT 命名權與 $O2 路由手續費收益",
+        adv2: "1:1 兌換火星資源信託 (Resource Trust) 分紅股權",
+        adv3: "終身享有 $O2 工業燃料批發定價權",
         calcTierWarn: "⚠️ 當前階梯：1:1 頂級額度。資金池達 50萬 USD 後成本將增加 20%。"
     }
 };
@@ -221,7 +223,6 @@ function setLang(lang) {
         </div>
     `).join('');
 
-    // 渲染 網格裂變機制與創世議會 區塊 (已補齊 4 個區塊達成平衡)
     document.getElementById('t-mesh-h').innerText = d.meshH;
     document.getElementById('mesh-grid').innerHTML = d.meshes.map(m => `
         <div class="spec-card" style="border-left-color: var(--tier5-gold); background: rgba(0,0,0,0.4);">
