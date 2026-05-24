@@ -40,6 +40,19 @@
 
         #investor-dashboard { display: none; }
         
+        .portal-tab-nav { display: flex; background: #111; border: 1px solid #333; margin-bottom: 20px; }
+        .portal-tab-btn { flex: 1; padding: 15px; background: none; border: none; color: #888; font-family: inherit; font-size: 0.9rem; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        .portal-tab-btn.active { background: var(--tech-green); color: #000; box-shadow: 0 0 15px var(--tech-green); }
+        .portal-tab-content { display: none; }
+        .portal-tab-content.active { display: block; }
+
+        .lb-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10px; }
+        .lb-table th { background: #222; color: var(--tech-green); padding: 12px; text-align: left; border: 1px solid #333; text-transform: uppercase; }
+        .lb-table td { background: #0a0a0a; color: #ccc; padding: 12px; border: 1px solid #333; word-break: break-all; }
+        .lb-table tr:nth-child(1) td { color: var(--tier5-gold); font-weight: bold; background: rgba(255,223,0,0.1); }
+        .lb-table tr:nth-child(2) td { color: silver; font-weight: bold; }
+        .lb-table tr:nth-child(3) td { color: #cd7f32; font-weight: bold; }
+
         .asset-card { border: 1px solid #222; background: #0a0a0a; padding: 20px; margin-bottom: 20px; }
         .video-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border: 1px solid #333; margin: 15px 0; overflow: hidden; }
         .video-container video { width: 100%; height: 100%; object-fit: cover; }
@@ -98,7 +111,6 @@
         .progress-bar-bg { background: #222; height: 10px; width: 100%; margin: 20px 0; overflow: hidden; border: 1px solid #444; }
         .progress-bar-fill { background: var(--btc-gold); height: 100%; width: 0%; transition: width 1.5s ease-out; box-shadow: 0 0 10px var(--btc-gold);}
 
-        /* 動態抽獎按鈕樣式 */
         .btn-draw { width: 100%; margin-top: 20px; padding: 15px; font-weight: bold; font-family: inherit; font-size: 0.9rem; letter-spacing: 1px; transition: 0.4s; }
         .btn-draw:disabled { background: rgba(0,0,0,0.5); border: 1px dashed #555; color: #555; cursor: not-allowed; }
         .btn-draw:not(:disabled) { background: rgba(247, 147, 26, 0.1); border: 1px solid var(--btc-gold); color: var(--btc-gold); cursor: pointer; box-shadow: 0 0 15px rgba(247, 147, 26, 0.3) inset; }
@@ -135,6 +147,7 @@
             .vesting-list { font-size: 10px; }
             .logout-btn { display: block !important; margin-top: 10px; }
             .wp-content { padding: 25px 15px; }
+            .portal-tab-btn { font-size: 0.75rem; padding: 12px 5px; }
         }
     </style>
 </head>
@@ -186,352 +199,420 @@
 
     <div id="investor-dashboard">
         
-        <div class="asset-card">
-            <h3>
-                <span lang-content="en" style="color: var(--tech-green);">[ MISSION_INTEL_UNLOCKED ]</span>
-                <span lang-content="zh" style="color: var(--tech-green);">[ 任務情報已解鎖 ]</span>
-            </h3>
-            <div class="video-container">
-                <video controls loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
-                    <source src="https://i.imgur.com/PNf6Jkz.mp4" type="video/mp4">
-                </video>
-            </div>
-            
-            <button class="wp-btn" onclick="openWhitepaper()">
-                <span lang-content="en">>> ACCESS DEIF MANIFESTO (WHITEPAPER) <<</span>
-                <span lang-content="zh">>> 查閱星際金融憲章 (核心白皮書) <<</span>
+        <div class="portal-tab-nav" id="portal-tabs" style="display:none;">
+            <button class="portal-tab-btn active" onclick="switchPortalTab('dashboard', event)">
+                <span lang-content="en">DASHBOARD</span><span lang-content="zh">個人終端</span>
+            </button>
+            <button class="portal-tab-btn" onclick="switchPortalTab('leaderboard', event)">
+                <span lang-content="en">LEADERBOARD</span><span lang-content="zh">星際戰力榜</span>
             </button>
         </div>
 
-        <div class="data-grid">
-            <div class="card" id="fission-card" style="border-color: var(--lag-blue);">
-                <h3 style="color: var(--lag-blue);">
-                    <span lang-content="en">Mesh Expansion Protocol</span><span lang-content="zh">網格裂變軍銜系統</span>
+        <div id="tab-dashboard" class="portal-tab-content active">
+            <div class="asset-card">
+                <h3>
+                    <span lang-content="en" style="color: var(--tech-green);">[ MISSION_INTEL_UNLOCKED ]</span>
+                    <span lang-content="zh" style="color: var(--tech-green);">[ 任務情報已解鎖 ]</span>
                 </h3>
-                
-                <div class="tier-list">
-                    <span class="tier-1-color"><b>Tier 1 [Genesis]:</b></span> 
-                    <span lang-content="en">0 Invites ➡️ 20% TGE. 1 BTC Ticket.</span>
-                    <span lang-content="zh">0 邀請 ➡️ 20% TGE。(1 張 BTC 抽獎券)</span><br>
-                    
-                    <span class="tier-2-color"><b>Tier 2 [Commander]:</b></span> 
-                    <span lang-content="en">3 Nodes OR $100+ ➡️ 25% TGE + 3 BTC Tickets + <span class="o2-boost">10% $O2 Boost</span>.</span>
-                    <span lang-content="zh">3 節點 或 滿$100 ➡️ 25% TGE + 3 張抽獎券 + <span class="o2-boost">10% $O2 加速</span>。</span><br>
-                    
-                    <span class="tier-3-color"><b>Tier 3 [Overlord]:</b></span> 
-                    <span lang-content="en">10 Nodes OR $1K+ ➡️ 30% TGE + 10 BTC Tickets + <span class="o2-boost">30% $O2 Boost</span>.</span>
-                    <span lang-content="zh">10 節點 或 滿$1K ➡️ 30% TGE + 10 張抽獎券 + <span class="o2-boost">30% $O2 加速</span>。</span><br>
-
-                    <span class="tier-4-color"><b>Tier 4 [Warlord]:</b></span> 
-                    <span lang-content="en">30 Nodes OR $10K+ ➡️ 35% TGE + 30 BTC Tickets + <span class="o2-boost">50% $O2 Boost</span>.</span>
-                    <span lang-content="zh">30 節點 或 滿$10K ➡️ 35% TGE + 30 張抽獎券 + <span class="o2-boost">50% $O2 加速</span>。</span><br>
-
-                    <span class="tier-5-color"><b>Tier 5 [Emperor]:</b></span> 
-                    <span lang-content="en">100 Nodes OR $100K+ ➡️ 40% TGE + 100 BTC Tickets + <span class="o2-boost">100% $O2 Boost</span>.</span>
-                    <span lang-content="zh">100節點 或 滿$100K ➡️ 40% TGE + 100 張抽獎券 + <span class="o2-boost">100% $O2 加速</span>。</span>
+                <div class="video-container">
+                    <video controls loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+                        <source src="https://i.imgur.com/PNf6Jkz.mp4" type="video/mp4">
+                    </video>
                 </div>
                 
-                <div id="seed-advantage" style="display: none; background: rgba(140, 59, 35, 0.1); border: 1px solid var(--mars-red); padding: 10px; font-size: 10px; margin-top: 10px;">
-                    <b style="color: var(--mars-red);">
-                        <span lang-content="en">GENESIS WHALE ADVANTAGE UNLOCKED:</span>
-                        <span lang-content="zh">創世巨鯨大滿貫特權已解鎖：</span>
-                    </b><br>
-                    <span style="color:#ccc; display:block; margin-top:5px; line-height: 1.5;">
-                        <span lang-content="en">
-                            ✅ Permanent name on Jezero Crater hardware nodes<br>
-                            ✅ 1:1 equity conversion to Mars Ledger Corp.<br>
-                            ✅ Priority ISRU resource allocation on Mars
-                        </span>
-                        <span lang-content="zh">
-                            ✅ 獲得 Jezero Crater 硬體節點永久命名權<br>
-                            ✅ 1:1 兌換 Mars Ledger Corp. 實體優先股權<br>
-                            ✅ 火星 ISRU 原位資源優先分配權
-                        </span>
-                    </span>
-                </div>
-                
-                <p style="font-size: 10px; color: #888; border-top: 1px dashed #333; padding-top: 10px; margin-top: 15px;">
-                    <span lang-content="en">⚠️ <b>ANTI-SYBIL ACTIVE:</b> Nodes verified via IP & On-Chain Ledger. Spamming 1 USD from the same IP yields 0 power.</span>
-                    <span lang-content="zh">⚠️ <b>防刷引擎已啟動：</b>系統將核對 IP 與主賬本入金。同 IP 互刷零頭小號將被扣除算力權重。</span>
-                </p>
+                <button class="wp-btn" onclick="openWhitepaper()">
+                    <span lang-content="en">>> ACCESS DEIF MANIFESTO (WHITEPAPER) <<</span>
+                    <span lang-content="zh">>> 查閱星際金融憲章 (核心白皮書) <<</span>
+                </button>
+            </div>
 
-                <div id="fission-pre-reg" style="margin-top: auto; background: rgba(0,255,65,0.05); border: 1px dashed var(--tech-green); padding: 20px; text-align: center;">
-                    <p style="font-size: 12px; color: var(--tech-green); margin: 0; line-height: 1.8;">
-                        <span lang-content="en">>> <b>NO FISSION CODE DETECTED</b> <<<br>Secure your Genesis Node below to unlock your Universal Key and start your mesh expansion.</span>
-                        <span lang-content="zh">>> <b>尚未解鎖裂變權限</b> <<<br>在下方預約您的創世節點，即可獲取通用金鑰並開始您的網格擴張。</span>
+            <div class="data-grid">
+                <div class="card" id="fission-card" style="border-color: var(--lag-blue);">
+                    <h3 style="color: var(--lag-blue);">
+                        <span lang-content="en">Mesh Expansion Protocol</span><span lang-content="zh">網格裂變軍銜系統</span>
+                    </h3>
+                    
+                    <div class="tier-list">
+                        <span class="tier-1-color"><b><span lang-content="en">Tier 1 [Genesis]:</span><span lang-content="zh">第一階 [創世]:</span></b></span> 
+                        <span lang-content="en">0 Invites ➡️ 20% TGE. 1 BTC Ticket.</span>
+                        <span lang-content="zh">0 邀請 ➡️ 20% TGE。(1 張 BTC 抽獎券)</span><br>
+                        
+                        <span class="tier-2-color"><b><span lang-content="en">Tier 2 [Commander]:</span><span lang-content="zh">第二階 [指揮官]:</span></b></span> 
+                        <span lang-content="en">3 Nodes OR $100+ ➡️ 25% TGE + 3 BTC Tickets + <span class="o2-boost">10% $O2 Boost</span>.</span>
+                        <span lang-content="zh">3 節點 或 滿$100 ➡️ 25% TGE + 3 張抽獎券 + <span class="o2-boost">10% $O2 加速</span>。</span><br>
+                        
+                        <span class="tier-3-color"><b><span lang-content="en">Tier 3 [Overlord]:</span><span lang-content="zh">第三階 [領主]:</span></b></span> 
+                        <span lang-content="en">10 Nodes OR $1K+ ➡️ 30% TGE + 10 BTC Tickets + <span class="o2-boost">30% $O2 Boost</span>.</span>
+                        <span lang-content="zh">10 節點 或 滿$1K ➡️ 30% TGE + 10 張抽獎券 + <span class="o2-boost">30% $O2 加速</span>。</span><br>
+
+                        <span class="tier-4-color"><b><span lang-content="en">Tier 4 [Warlord]:</span><span lang-content="zh">第四階 [軍閥]:</span></b></span> 
+                        <span lang-content="en">30 Nodes OR $10K+ ➡️ 35% TGE + 30 BTC Tickets + <span class="o2-boost">50% $O2 Boost</span>.</span>
+                        <span lang-content="zh">30 節點 或 滿$10K ➡️ 35% TGE + 30 張抽獎券 + <span class="o2-boost">50% $O2 加速</span>。</span><br>
+
+                        <span class="tier-5-color"><b><span lang-content="en">Tier 5 [Emperor]:</span><span lang-content="zh">第五階 [火星大帝]:</span></b></span> 
+                        <span lang-content="en">100 Nodes OR $50K+ ➡️ 40% TGE + 100 BTC Tickets + <span class="o2-boost">100% $O2 Boost</span>.</span>
+                        <span lang-content="zh">100節點 或 滿$50K ➡️ 40% TGE + 100 張抽獎券 + <span class="o2-boost">100% $O2 加速</span>。</span>
+                    </div>
+                    
+                    <div id="seed-advantage" style="display: none; background: rgba(140, 59, 35, 0.1); border: 1px solid var(--mars-red); padding: 10px; font-size: 10px; margin-top: 10px;">
+                        <b style="color: var(--mars-red);">
+                            <span lang-content="en">GENESIS WHALE ADVANTAGE UNLOCKED:</span>
+                            <span lang-content="zh">創世巨鯨大滿貫特權已解鎖：</span>
+                        </b><br>
+                        <span style="color:#ccc; display:block; margin-top:5px; line-height: 1.5;">
+                            <span lang-content="en">
+                                ✅ Permanent name on Jezero Crater hardware nodes<br>
+                                ✅ 1:1 equity conversion to Mars Ledger Corp.<br>
+                                ✅ Priority ISRU resource allocation on Mars
+                            </span>
+                            <span lang-content="zh">
+                                ✅ 獲得 Jezero Crater 硬體節點永久命名權<br>
+                                ✅ 1:1 兌換 Mars Ledger Corp. 實體優先股權<br>
+                                ✅ 火星 ISRU 原位資源優先分配權
+                            </span>
+                        </span>
+                    </div>
+                    
+                    <p style="font-size: 10px; color: #888; border-top: 1px dashed #333; padding-top: 10px; margin-top: 15px;">
+                        <span lang-content="en">⚠️ <b>ANTI-SYBIL ACTIVE:</b> Nodes verified via IP & On-Chain Ledger. Spamming 1 USD from the same IP yields 0 power.</span>
+                        <span lang-content="zh">⚠️ <b>防刷引擎已啟動：</b>系統將核對 IP 與主賬本入金。同 IP 互刷零頭小號將被扣除算力權重。</span>
                     </p>
+
+                    <div id="fission-pre-reg" style="margin-top: auto; background: rgba(0,255,65,0.05); border: 1px dashed var(--tech-green); padding: 20px; text-align: center;">
+                        <p style="font-size: 12px; color: var(--tech-green); margin: 0; line-height: 1.8;">
+                            <span lang-content="en">>> <b>NO FISSION CODE DETECTED</b> <<<br>Secure your Genesis Node below to unlock your Universal Key and start your mesh expansion.</span>
+                            <span lang-content="zh">>> <b>尚未解鎖裂變權限</b> <<<br>在下方預約您的創世節點，即可獲取通用金鑰並開始您的網格擴張。</span>
+                        </p>
+                    </div>
+
+                    <div id="fission-post-reg" style="display: none; margin-top: auto;">
+                        
+                        <div class="personal-usd-panel">
+                            <h4 style="margin:0 0 5px 0; color:var(--btc-gold); font-size: 12px; letter-spacing: 1px; text-shadow: 0 0 8px rgba(247, 147, 26, 0.4);">
+                                <span lang-content="en">TOTAL DEPLOYED (PERSONAL + TEAM)</span>
+                                <span lang-content="zh">部署資金 (個人 + 團隊總業績)</span>
+                            </h4>
+                            <div style="font-size: 1.8rem; color: #fff; font-weight: bold; margin-bottom: 5px;">
+                                $<span id="my-usd-amount">0.00</span>
+                            </div>
+                            <div style="font-size: 10px; color: #aaa; line-height: 1.4;">
+                                <span lang-content="en">Personal: $<span id="personal-usd-display">0.00</span> | Team: $<span id="team-usd-display">0.00</span></span>
+                                <span lang-content="zh">個人入金: $<span id="personal-usd-display-zh">0.00</span> | 團隊業績: $<span id="team-usd-display-zh">0.00</span></span><br>
+                                <span lang-content="en">Auto-upgrade: >$100 (T2) | >$1K (T3) | >$10K (T4) | >$50K (T5)</span>
+                                <span lang-content="zh">業績直升通道：>$100(T2) | >$1K(T3) | >$10K(T4) | >$50K(T5)</span>
+                            </div>
+                        </div>
+
+                        <div class="fission-panel" style="margin-bottom: 0;">
+                            <span style="font-size: 10px; color: #888;">YOUR EXCLUSIVE UNIVERSAL KEY:</span><br>
+                            <button class="copy-code" onclick="copyCode()" id="user-code">ML1-XXXX</button>
+                            <p style="font-size: 9px; color: var(--tech-green); margin-top: 0; text-align: center;">
+                                <span lang-content="en">// Your recruits are your $O2 Oxygen Tanks. Share to upgrade.</span>
+                                <span lang-content="zh">// 你的下線就是你未來的 $O2 氧氣瓶，瘋狂擴張吧！</span>
+                            </p>
+                            
+                            <div style="font-size: 11px; display: flex; justify-content: space-between; margin-top: 15px;">
+                                <span>Active Recruits Score: <b id="recruit-count">0</b></span>
+                                <span id="tier-name" style="color: #888; font-weight: bold;">[Tier 1: Genesis]</span>
+                            </div>
+                            <div class="tier-bar"><div class="tier-fill" id="tier-fill"></div></div>
+                            <div id="next-tier-hint" style="font-size: 10px; color: #ffcc00; text-align: center; margin-top: 5px; font-weight: bold; animation: pulse 1.5s infinite;"></div>
+                            
+                            <div id="phase2-quota" style="font-size: 10px; color: #00BFFF; margin-top: 5px; display: none; font-weight: bold;"></div>
+                            <div id="syncing-indicator" style="font-size: 9px; color: var(--lag-blue); margin-top: 5px; display: none;">[ SCANNING ON-CHAIN LEDGER & IP DATA... ]</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div id="fission-post-reg" style="display: none; margin-top: auto;">
-                    
-                    <div class="personal-usd-panel">
-                        <h4 style="margin:0 0 5px 0; color:var(--btc-gold); font-size: 12px; letter-spacing: 1px; text-shadow: 0 0 8px rgba(247, 147, 26, 0.4);">
-                            <span lang-content="en">MY DEPLOYED CAPITAL</span>
-                            <span lang-content="zh">個人累計部署資金</span>
-                        </h4>
-                        <div style="font-size: 1.8rem; color: #fff; font-weight: bold; margin-bottom: 5px;">
-                            $<span id="my-usd-amount">0.00</span>
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="card">
+                        <h3 class="glow-gold">
+                            <span lang-content="en">Dynamic Tokenomics</span>
+                            <span lang-content="zh">當前特權狀態</span>
+                        </h3>
+                        <div>
+                            <span id="tge-display" style="display: block; font-size: 1.4rem; color: #888; margin: 10px 0; font-weight: bold;">20% TGE UNLOCK</span>
+                            <p style="font-size: 11px; color: #aaa;">
+                                <span lang-content="en">Your current allocation tier based on capital deployed and mesh expansion. Remaining tokens are linearly vested via hardware milestones.</span>
+                                <span lang-content="zh">基於您當前有效裂變人數與入金總額的 TGE 解鎖比例。剩餘部分隨硬體里程碑線性解鎖。</span>
+                            </p>
                         </div>
-                        <div style="font-size: 10px; color: #aaa; line-height: 1.4;">
-                            <span lang-content="en">Deployments auto-upgrade your tier: >$100 (T2) | >$1K (T3) | >$10K (T4) | >$100K (T5)</span>
-                            <span lang-content="zh">大戶資金直升通道：>$100(T2) | >$1K(T3) | >$10K(T4) | >$100K(T5)</span>
+                        
+                        <div class="vesting-box">
+                            <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px;">
+                                <span id="tge-label" style="color: var(--tech-green); transition: 0.5s; font-weight: bold;">
+                                    <span lang-content="en">TGE (Immediate Release)</span>
+                                    <span lang-content="zh">TGE (立即釋放)</span>
+                                </span>
+                                <span style="color: #888;">
+                                    <span lang-content="en">Hardware Vesting (Locked)</span>
+                                    <span lang-content="zh">硬體里程碑鎖倉</span>
+                                </span>
+                            </div>
+                            <div class="vesting-bar-bg">
+                                <div id="tge-bar-fill" class="vesting-bar-tge" style="width: 20%;"></div>
+                                <div class="vesting-bar-locked"></div>
+                            </div>
+                            <ul class="vesting-list">
+                                <li>
+                                    <span lang-content="en" style="color:#aaa; font-weight:normal;">Protocol 433 Procured:</span>
+                                    <span lang-content="zh" style="color:#aaa; font-weight:normal;">採購 433 協議硬件：</span>
+                                    <span class="highlight-tge">
+                                        <span lang-content="en">+20% Tokens Unlocked</span>
+                                        <span lang-content="zh">+釋放 20% 份額</span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span lang-content="en" style="color:#aaa; font-weight:normal;">Starship Mesh Deployed:</span>
+                                    <span lang-content="zh" style="color:#aaa; font-weight:normal;">星艦網格成功部署：</span>
+                                    <span class="highlight-tge">
+                                        <span lang-content="en">+30% Tokens Unlocked</span>
+                                        <span lang-content="zh">+釋放 30% 份額</span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span lang-content="en" style="color:#aaa; font-weight:normal;">Optimus API Synced:</span>
+                                    <span lang-content="zh" style="color:#aaa; font-weight:normal;">Optimus 機器人對接：</span>
+                                    <span class="highlight-tge">
+                                        <span lang-content="en">+Remaining Unlock</span>
+                                        <span lang-content="zh">+釋放剩餘所有代幣</span>
+                                    </span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
 
-                    <div class="fission-panel" style="margin-bottom: 0;">
-                        <span style="font-size: 10px; color: #888;">YOUR EXCLUSIVE UNIVERSAL KEY:</span><br>
-                        <button class="copy-code" onclick="copyCode()" id="user-code">ML1-XXXX</button>
-                        <p style="font-size: 9px; color: var(--tech-green); margin-top: 0; text-align: center;">
-                            <span lang-content="en">// Your recruits are your $O2 Oxygen Tanks. Share to upgrade.</span>
-                            <span lang-content="zh">// 你的下線就是你未來的 $O2 氧氣瓶，瘋狂擴張吧！</span>
-                        </p>
-                        
-                        <div style="font-size: 11px; display: flex; justify-content: space-between; margin-top: 15px;">
-                            <span>Active Recruits Score: <b id="recruit-count">0</b></span>
-                            <span id="tier-name" style="color: #888; font-weight: bold;">[Tier 1: Genesis]</span>
+                    <div class="card" style="border-color: #555; background: repeating-linear-gradient(45deg, rgba(20,20,20,0.8), rgba(20,20,20,0.8) 10px, rgba(15,15,15,0.8) 10px, rgba(15,15,15,0.8) 20px);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="color: #666; margin: 0;"><span lang-content="en">Cryo-Sleep Staking</span><span lang-content="zh">冷凍休眠質押模組</span></h3>
+                            <span style="background: var(--alert-red); color: #fff; font-size: 9px; padding: 3px 8px; font-weight: bold; letter-spacing: 1px;">OFFLINE</span>
                         </div>
-                        <div class="tier-bar"><div class="tier-fill" id="tier-fill"></div></div>
-                        <div id="next-tier-hint" style="font-size: 10px; color: #ffcc00; text-align: center; margin-top: 5px; font-weight: bold; animation: pulse 1.5s infinite;"></div>
                         
-                        <div id="phase2-quota" style="font-size: 10px; color: #00BFFF; margin-top: 5px; display: none; font-weight: bold;"></div>
-                        <div id="syncing-indicator" style="font-size: 9px; color: var(--lag-blue); margin-top: 5px; display: none;">[ SCANNING ON-CHAIN LEDGER & IP DATA... ]</div>
+                        <div style="text-align: center; padding: 15px 0;">
+                            <div style="font-size: 2rem; opacity: 0.3;">🔒</div>
+                            <h4 style="color: #999; margin: 10px 0 5px 0; letter-spacing: 1px;">
+                                <span lang-content="en">$O2 MINING LOCKED</span>
+                                <span lang-content="zh">$O2 液氧挖礦未解鎖</span>
+                            </h4>
+                            <p style="font-size: 10px; color: #777; line-height: 1.6; margin: 0 5px;">
+                                <span lang-content="en">Module activates post-TGE. Genesis Nodes will stake $ML1 to mine $O2 liquid oxygen fuel. Your Tier rank determines your mining boost.</span>
+                                <span lang-content="zh">此模組將於 TGE 後正式啟動。創世節點可質押 $ML1 以挖掘 $O2 液氧燃料。您的裂變軍銜與入金階級將直接決定高達 100% 的挖礦加速比率。</span>
+                            </p>
+                        </div>
+
+                        <div style="border-top: 1px dashed #444; padding-top: 15px; margin-top: 5px; display: flex; justify-content: space-between; font-size: 10px; color: #666;">
+                            <span lang-content="en">EST. YIELD: <b style="color: var(--tech-green);">10 $O2 / Day per $ML1</b></span>
+                            <span lang-content="zh">基礎產量預期: <b style="color: var(--tech-green);">10 $O2 / 每日 每顆 $ML1</b></span>
+                            <span id="o2-boost-display">BOOST: <b style="color: #ffcc00; opacity: 0.6;">+0%</b></span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-                <div class="card">
-                    <h3 class="glow-gold">
-                        <span lang-content="en">Dynamic Tokenomics</span>
-                        <span lang-content="zh">當前特權狀態</span>
+            <div class="calc-box">
+                <h3 style="color: var(--lag-blue); margin-top: 0;">
+                    <span lang-content="en">[ TIERED BONDING CURVE CALCULATOR v1.6 ]</span>
+                    <span lang-content="zh">[ 階梯定價與估值對比計算器 v1.6 ]</span>
+                </h3>
+                <p style="font-size: 11px; color: #888; margin-bottom: 20px;">
+                    <span lang-content="en">Current Phase 1 Pool is <b style="color: #fff;">Under $500k</b> (1:1 Ratio). Prices increase by 20% at $500k, 50% at $750k, and double (1:2) in Phase 2.</span>
+                    <span lang-content="zh">目前 Phase 1 資金池處於 <b style="color: #fff;">$50萬美金以內</b> (1:1 創世額度)。突破 50萬後成本上漲 20%，Phase 2 正式翻倍。</span>
+                </p>
+                
+                <div class="calc-input-wrapper">
+                    <input type="number" id="inv-amount" placeholder="Input USD Amount (e.g. 1000)" oninput="runCalc()">
+                </div>
+                
+                <div class="calc-results">
+                    <div class="res-item">
+                        <span style="font-size: 11px; color: #aaa;" lang-content="en">Current Tier Allocation (1:1)</span>
+                        <span style="font-size: 11px; color: #aaa;" lang-content="zh">現在入金 (1:1 創世紅利)</span><br>
+                        <span id="res-total" style="font-size: 1.8rem; color: var(--tech-green); font-weight: bold;">0 ML1</span>
+                    </div>
+                    <div class="res-item" style="opacity: 0.5;">
+                        <span style="font-size: 11px; color: #888;" lang-content="en">If you wait for Phase 2 (1:2)</span>
+                        <span style="font-size: 11px; color: #888;" lang-content="zh">等到 Phase 2 才入金 (1:2)</span><br>
+                        <span id="res-phase2" style="font-size: 1.4rem; color: #fff; font-weight: bold; text-decoration: line-through;">0 ML1</span>
+                    </div>
+                </div>
+                <div id="fomo-alert" class="fomo-alert"></div>
+            </div>
+
+            <div class="commit-section">
+                <div class="commit-box" id="reg-box">
+                    <h3 style="margin-top:0; font-size: 1.1rem; letter-spacing: 1px;">
+                        <span lang-content="en">GENESIS NODE RESERVATION</span>
+                        <span lang-content="zh">創世節點預約</span>
                     </h3>
+                    <p style="font-size: 11px; margin-bottom: 10px; color: #ddd;">
+                        <span lang-content="en">Valid Web3 Wallets only. Sybil attacks will be blacklisted.</span>
+                        <span lang-content="zh">為防範女巫攻擊，僅接受標準 Web3 錢包地址。填寫無效數據將被系統拉黑。</span>
+                    </p>
+
+                    <p style="font-size: 10px; color: #ffcc00; font-weight: bold; margin-bottom: 15px; border: 1px dashed #ffcc00; padding: 8px;">
+                        ⚠️ <span lang-content="en">MUST match your EXACT sending address. Do not use Exchange (CEX) directly!</span>
+                        <span lang-content="zh">極度重要：必須填寫你「實際打款」的個人錢包地址，嚴禁直接從交易所提現，否則無法派發 BTC 與未來 $O2 挖礦權！</span>
+                    </p>
+
+                    <select id="wallet-network" style="background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 12px; width: 100%; max-width: 400px; text-align: center; margin-bottom: 10px; outline: none; font-family: inherit;">
+                        <option value="EVM">EVM 鏈 (ETH / BNB / Arbitrum - 0x開頭)</option>
+                        <option value="SOL">Solana 鏈 (Phantom / Backpack 等)</option>
+                        <option value="BTC">Bitcoin 原生鏈</option>
+                    </select>
+
+                    <input type="text" id="node-wallet" placeholder="Paste your SENDING Wallet Address Here">
+                    <input type="text" id="inviter-code" placeholder="Inviter Code (邀請人代碼 - Optional)">
+                    <button class="btn-commit" onclick="commitToMars()" id="commit-btn">
+                        <span lang-content="en">CONFIRM EQUITY COMMITMENT</span>
+                        <span lang-content="zh">確認提交股權意向</span>
+                    </button>
+                </div>
+                
+                <div class="btc-milestone">
                     <div>
-                        <span id="tge-display" style="display: block; font-size: 1.4rem; color: #888; margin: 10px 0; font-weight: bold;">20% TGE UNLOCK</span>
-                        <p style="font-size: 11px; color: #aaa;">
-                            <span lang-content="en">Your current allocation tier based on capital deployed and mesh expansion. Remaining tokens are linearly vested via hardware milestones.</span>
-                            <span lang-content="zh">基於您當前有效裂變人數與入金總額的 TGE 解鎖比例。剩餘部分隨硬體里程碑線性解鎖。</span>
+                        <h3 style="color: var(--btc-gold); margin-top: 0; font-size: 1.1rem;">
+                            <span lang-content="en">[ MILESTONE: BTC AIRDROP ]</span>
+                            <span lang-content="zh">[ 目標解鎖：BTC 創世空投池 ]</span>
+                        </h3>
+                        <p style="font-size: 11px; color: #aaa; margin-bottom: 5px;">
+                            <span lang-content="en">Unlocks at $250,000 USD (Calculated via USD_VALUATION). Higher Tiers gain exponentially more Raffle Tickets.</span>
+                            <span lang-content="zh">募資達 25萬美金時強制解鎖！按抽獎券權重分配。高階軍銜享有絕對的票數優勢。</span>
                         </p>
+                        
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="btc-progress-fill"></div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 5px;">
+                            <span id="btc-progress-text" style="font-size: 10px; color: var(--btc-gold); font-weight: bold;">SYNCING LIVE USD DATA...</span>
+                            <div style="text-align: right; font-size: 10px; color: #ccc;">
+                                <span lang-content="en">Prize Pool: <b>1 BTC</b><br>Eligible Nodes: <b id="eligible-nodes" style="color:var(--tech-green);">0</b></span>
+                                <span lang-content="zh">總獎池: <b style="color:var(--btc-gold);">1 BTC</b><br>符合資格節點: <b id="eligible-nodes-zh" style="color:var(--tech-green);">0</b></span>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="vesting-box">
-                        <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px;">
-                            <span id="tge-label" style="color: var(--tech-green); transition: 0.5s; font-weight: bold;">
-                                <span lang-content="en">TGE (Immediate Release)</span>
-                                <span lang-content="zh">TGE (立即釋放)</span>
-                            </span>
-                            <span style="color: #888;">
-                                <span lang-content="en">Hardware Vesting (Locked)</span>
-                                <span lang-content="zh">硬體里程碑鎖倉</span>
-                            </span>
-                        </div>
-                        <div class="vesting-bar-bg">
-                            <div id="tge-bar-fill" class="vesting-bar-tge" style="width: 20%;"></div>
-                            <div class="vesting-bar-locked"></div>
-                        </div>
-                        <ul class="vesting-list">
-                            <li>
-                                <span lang-content="en" style="color:#aaa; font-weight:normal;">Protocol 433 Procured:</span>
-                                <span lang-content="zh" style="color:#aaa; font-weight:normal;">採購 433 協議硬件：</span>
-                                <span class="highlight-tge">
-                                    <span lang-content="en">+20% Tokens Unlocked</span>
-                                    <span lang-content="zh">+釋放 20% 份額</span>
-                                </span>
-                            </li>
-                            <li>
-                                <span lang-content="en" style="color:#aaa; font-weight:normal;">Starship Mesh Deployed:</span>
-                                <span lang-content="zh" style="color:#aaa; font-weight:normal;">星艦網格成功部署：</span>
-                                <span class="highlight-tge">
-                                    <span lang-content="en">+30% Tokens Unlocked</span>
-                                    <span lang-content="zh">+釋放 30% 份額</span>
-                                </span>
-                            </li>
-                            <li>
-                                <span lang-content="en" style="color:#aaa; font-weight:normal;">Optimus API Synced:</span>
-                                <span lang-content="zh" style="color:#aaa; font-weight:normal;">Optimus 機器人對接：</span>
-                                <span class="highlight-tge">
-                                    <span lang-content="en">+Remaining Unlock</span>
-                                    <span lang-content="zh">+釋放剩餘所有代幣</span>
-                                </span>
-                            </li>
-                        </ul>
+
+                    <button id="btc-draw-btn" class="btn-draw" disabled onclick="attemptDraw()">
+                        <span lang-content="en">MILESTONE LOCKED // WAITING FOR $250K</span>
+                        <span lang-content="zh">目標未達成 // 等待突破 25萬美金</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="roadmap-list">
+                <h2 style="color: var(--tech-green); font-size: 1.2rem; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px;">
+                    <span lang-content="en">[ STRATEGIC DEPLOYMENT: 2026-2030 ]</span>
+                    <span lang-content="zh">[ 戰略部署藍圖：2026-2030 ]</span>
+                </h2>
+                
+                <div class="roadmap-item">
+                    <span class="phase-label">PHASE 1 (2026)</span>
+                    <div class="phase-title">
+                        <span lang-content="en">Dust-Seeding & Hardware Base</span>
+                        <span lang-content="zh">創世播種與底層基礎設施</span>
+                    </div>
+                    <div class="phase-desc">
+                        <span lang-content="en">Achieve $1.0M seed liquidity. Develop Protocol 433 (Asynchronous State Machine) core architecture. Lock the first 1,000 Genesis hardware node whitelists and allocations.</span>
+                        <span lang-content="zh">達成 100 萬美元種子輪流動性目標。完成 Protocol 433（非同步狀態機）核心架構研發。鎖定首批 1,000 個創世硬體節點白名單與權益分配。</span>
                     </div>
                 </div>
-
-                <div class="card" style="border-color: #555; background: repeating-linear-gradient(45deg, rgba(20,20,20,0.8), rgba(20,20,20,0.8) 10px, rgba(15,15,15,0.8) 10px, rgba(15,15,15,0.8) 20px);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h3 style="color: #666; margin: 0;"><span lang-content="en">Cryo-Sleep Staking</span><span lang-content="zh">冷凍休眠質押模組</span></h3>
-                        <span style="background: var(--alert-red); color: #fff; font-size: 9px; padding: 3px 8px; font-weight: bold; letter-spacing: 1px;">OFFLINE</span>
+                
+                <div class="roadmap-item">
+                    <span class="phase-label">PHASE 2 (2027)</span>
+                    <div class="phase-title" style="color: var(--btc-gold);">
+                        <span lang-content="en">Orbital Mesh Handshake & $O2 Staking</span>
+                        <span lang-content="zh">深空網格握手與 $O2 質押</span>
                     </div>
-                    
-                    <div style="text-align: center; padding: 15px 0;">
-                        <div style="font-size: 2rem; opacity: 0.3;">🔒</div>
-                        <h4 style="color: #999; margin: 10px 0 5px 0; letter-spacing: 1px;">
-                            <span lang-content="en">$O2 MINING LOCKED</span>
-                            <span lang-content="zh">$O2 液氧挖礦未解鎖</span>
-                        </h4>
-                        <p style="font-size: 10px; color: #777; line-height: 1.6; margin: 0 5px;">
-                            <span lang-content="en">Module activates post-TGE. Genesis Nodes will stake $ML1 to mine $O2 liquid oxygen fuel. Your Tier rank determines your mining boost.</span>
-                            <span lang-content="zh">此模組將於 TGE 後正式啟動。創世節點可質押 $ML1 以挖掘 $O2 液氧燃料。您的裂變軍銜與入金階級將直接決定高達 100% 的挖礦加速比率。</span>
-                        </p>
+                    <div class="phase-desc">
+                        <span lang-content="en">Uncrewed Starship hardware deployment via Commercial Payload Rideshare. Establish the first physical node array in the Martian North Pole, completing the first Earth-Mars deep-space financial data handshake. Post-TGE $O2 Liquid Oxygen Staking mechanisms activated.</span>
+                        <span lang-content="zh">透過商業航太載荷計畫 (Commercial Payload Rideshare)，部署無人星艦硬體載荷。於火星北極建立首個實體節點陣列，透過非同步狀態機，完成地球與火星深空的首次財務數據握手。TGE 後正式啟動 $O2 液氧質押挖礦機制。</span>
                     </div>
-
-                    <div style="border-top: 1px dashed #444; padding-top: 15px; margin-top: 5px; display: flex; justify-content: space-between; font-size: 10px; color: #666;">
-                        <span lang-content="en">EST. YIELD: <b style="color: var(--tech-green);">10 $O2 / Day per $ML1</b></span>
-                        <span lang-content="zh">基礎產量預期: <b style="color: var(--tech-green);">10 $O2 / 每日 每顆 $ML1</b></span>
-                        <span id="o2-boost-display">BOOST: <b style="color: #ffcc00; opacity: 0.6;">+0%</b></span>
+                </div>
+                
+                <div class="roadmap-item">
+                    <span class="phase-label">PHASE 3 (2028-2029)</span>
+                    <div class="phase-title">
+                        <span lang-content="en">Permissionless Robot Matrix</span>
+                        <span lang-content="zh">無需許可的機器人矩陣對接</span>
+                    </div>
+                    <div class="phase-desc">
+                        <span lang-content="en">Release open-source API protocol layer compatible with next-gen automated machinery (e.g., Tesla Optimus specs). Activate Proof of Physical Work (PoPW), allowing any uncrewed Mars equipment to permissionlessly anchor its ISRU production to the ML1 network.</span>
+                        <span lang-content="zh">發布針對次世代自動化機械（相容 Tesla Optimus 等機型數據架構）的開源 API 協議層。啟動無需許可的實體工作證明 (PoPW)，允許任何登陸火星的無人設備，無縫將其原位資源 (ISRU) 產能與 ML1 網路進行價值錨定。</span>
+                    </div>
+                </div>
+                
+                <div class="roadmap-item" style="border-bottom: none;">
+                    <span class="phase-label">PHASE 4 (2030+)</span>
+                    <div class="phase-title">
+                        <span lang-content="en">Interplanetary Sovereign Economy</span>
+                        <span lang-content="zh">星際主權經濟體</span>
+                    </div>
+                    <div class="phase-desc">
+                        <span lang-content="en">Fully autonomous financial settlement independent of Earth's inflation. Activating 1:1 conversion rights from $ML1 to Mars Ledger Corp. physical equity.</span>
+                        <span lang-content="zh">實現完全獨立於地球通膨的去中心化自動財務結算。全面啟動 1:1 轉換權，將 $ML1 兌換為 Mars Ledger Corp 實體優先股權，完成星際資產轉移。</span>
                     </div>
                 </div>
             </div>
+            <footer style="margin-top: 20px; text-align: center; font-size: 9px; color: #333; padding-bottom: 30px;">
+                CODE IS LAW. PHYSICS IS THE JUDGE. © 2026 ML1 GENESIS
+            </footer>
         </div>
 
-        <div class="calc-box">
-            <h3 style="color: var(--lag-blue); margin-top: 0;">
-                <span lang-content="en">[ TIERED BONDING CURVE CALCULATOR v1.6 ]</span>
-                <span lang-content="zh">[ 階梯定價與估值對比計算器 v1.6 ]</span>
-            </h3>
-            <p style="font-size: 11px; color: #888; margin-bottom: 20px;">
-                <span lang-content="en">Current Phase 1 Pool is <b style="color: #fff;">Under $500k</b> (1:1 Ratio). Prices increase by 20% at $500k, 50% at $750k, and double (1:2) in Phase 2.</span>
-                <span lang-content="zh">目前 Phase 1 資金池處於 <b style="color: #fff;">$50萬美金以內</b> (1:1 創世額度)。突破 50萬後成本上漲 20%，Phase 2 正式翻倍。</span>
-            </p>
-            
-            <div class="calc-input-wrapper">
-                <input type="number" id="inv-amount" placeholder="Input USD Amount (e.g. 1000)" oninput="runCalc()">
-            </div>
-            
-            <div class="calc-results">
-                <div class="res-item">
-                    <span style="font-size: 11px; color: #aaa;" lang-content="en">Current Tier Allocation (1:1)</span>
-                    <span style="font-size: 11px; color: #aaa;" lang-content="zh">現在入金 (1:1 創世紅利)</span><br>
-                    <span id="res-total" style="font-size: 1.8rem; color: var(--tech-green); font-weight: bold;">0 ML1</span>
-                </div>
-                <div class="res-item" style="opacity: 0.5;">
-                    <span style="font-size: 11px; color: #888;" lang-content="en">If you wait for Phase 2 (1:2)</span>
-                    <span style="font-size: 11px; color: #888;" lang-content="zh">等到 Phase 2 才入金 (1:2)</span><br>
-                    <span id="res-phase2" style="font-size: 1.4rem; color: #fff; font-weight: bold; text-decoration: line-through;">0 ML1</span>
-                </div>
-            </div>
-            <div id="fomo-alert" class="fomo-alert"></div>
-        </div>
-
-        <div class="commit-section">
-            <div class="commit-box" id="reg-box">
-                <h3 style="margin-top:0; font-size: 1.1rem; letter-spacing: 1px;">
-                    <span lang-content="en">GENESIS NODE RESERVATION</span>
-                    <span lang-content="zh">創世節點預約</span>
+        <div id="tab-leaderboard" class="portal-tab-content">
+            <div class="card" style="border-color: var(--tech-green);">
+                <h3 class="glow-gold">
+                    <span lang-content="en">TOP 10 GENESIS SEEDERS</span>
+                    <span lang-content="zh">創世前十大節點戰力榜</span>
                 </h3>
-                <p style="font-size: 11px; margin-bottom: 10px; color: #ddd;">
-                    <span lang-content="en">Valid Web3 Wallets only. Sybil attacks will be blacklisted.</span>
-                    <span lang-content="zh">為防範女巫攻擊，僅接受標準 Web3 錢包地址。填寫無效數據將被系統拉黑。</span>
+                <p style="font-size: 10px; color: #888;">
+                    <span lang-content="en">Ranked by Total Deployed Capital (Personal + Team Volume). Real-time on-chain sync.</span>
+                    <span lang-content="zh">按總部署資金 (個人入金 + 團隊業績) 排序。星際賬本實時防刷驗證同步。</span>
                 </p>
-
-                <p style="font-size: 10px; color: #ffcc00; font-weight: bold; margin-bottom: 15px; border: 1px dashed #ffcc00; padding: 8px;">
-                    ⚠️ <span lang-content="en">MUST match your EXACT sending address. Do not use Exchange (CEX) directly!</span>
-                    <span lang-content="zh">極度重要：必須填寫你「實際打款」的個人錢包地址，嚴禁直接從交易所提現，否則無法派發 BTC 與未來 $O2 挖礦權！</span>
-                </p>
-
-                <select id="wallet-network" style="background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 12px; width: 100%; max-width: 400px; text-align: center; margin-bottom: 10px; outline: none; font-family: inherit;">
-                    <option value="EVM">EVM 鏈 (ETH / BNB / Arbitrum - 0x開頭)</option>
-                    <option value="SOL">Solana 鏈 (Phantom / Backpack 等)</option>
-                    <option value="BTC">Bitcoin 原生鏈</option>
-                </select>
-
-                <input type="text" id="node-wallet" placeholder="Paste your SENDING Wallet Address Here">
-                <input type="text" id="inviter-code" placeholder="Inviter Code (邀請人代碼 - Optional)">
-                <button class="btn-commit" onclick="commitToMars()" id="commit-btn">
-                    <span lang-content="en">CONFIRM EQUITY COMMITMENT</span>
-                    <span lang-content="zh">確認提交股權意向</span>
-                </button>
-            </div>
-            
-            <div class="btc-milestone">
-                <div>
-                    <h3 style="color: var(--btc-gold); margin-top: 0; font-size: 1.1rem;">
-                        <span lang-content="en">[ MILESTONE: BTC AIRDROP ]</span>
-                        <span lang-content="zh">[ 目標解鎖：BTC 創世空投池 ]</span>
-                    </h3>
-                    <p style="font-size: 11px; color: #aaa; margin-bottom: 5px;">
-                        <span lang-content="en">Unlocks at $250,000 USD (Calculated via USD_VALUATION). Higher Tiers gain exponentially more Raffle Tickets.</span>
-                        <span lang-content="zh">募資達 25萬美金時強制解鎖！按抽獎券權重分配。高階軍銜享有絕對的票數優勢。</span>
-                    </p>
-                    
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" id="btc-progress-fill"></div>
-                    </div>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 5px;">
-                        <span id="btc-progress-text" style="font-size: 10px; color: var(--btc-gold); font-weight: bold;">SYNCING LIVE USD DATA...</span>
-                        <div style="text-align: right; font-size: 10px; color: #ccc;">
-                            <span lang-content="en">Prize Pool: <b>1 BTC</b><br>Eligible Nodes: <b id="eligible-nodes" style="color:var(--tech-green);">0</b></span>
-                            <span lang-content="zh">總獎池: <b style="color:var(--btc-gold);">1 BTC</b><br>符合資格節點: <b id="eligible-nodes-zh" style="color:var(--tech-green);">0</b></span>
-                        </div>
-                    </div>
+                
+                <div style="overflow-x: auto;">
+                    <table class="lb-table">
+                        <thead>
+                            <tr>
+                                <th><span lang-content="en">RANK</span><span lang-content="zh">排名</span></th>
+                                <th><span lang-content="en">FISSION CODE</span><span lang-content="zh">裂變代碼</span></th>
+                                <th><span lang-content="en">INVITES</span><span lang-content="zh">直推人數</span></th>
+                                <th><span lang-content="en">TOTAL VOLUME (USD)</span><span lang-content="zh">總業績 (USD)</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="lb-body">
+                            <tr><td colspan="4" style="text-align:center;">
+                                <span lang-content="en">SYNCING LEDGER DATA...</span>
+                                <span lang-content="zh">正在同步星際帳本數據...</span>
+                            </td></tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <button id="btc-draw-btn" class="btn-draw" disabled onclick="attemptDraw()">
-                    <span lang-content="en">MILESTONE LOCKED // WAITING FOR $250K</span>
-                    <span lang-content="zh">目標未達成 // 等待突破 25萬美金</span>
-                </button>
             </div>
+
+            <div style="margin-top: 30px; border: 1px solid var(--tier5-gold); background: rgba(255, 223, 0, 0.05); padding: 20px; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -10px; right: -20px; font-size: 5rem; opacity: 0.1; color: var(--tier5-gold);">👑</div>
+                <h3 style="color: var(--tier5-gold); margin-top: 0; font-size: 1.1rem; text-shadow: 0 0 10px rgba(255, 223, 0, 0.4);">
+                    <span lang-content="en">[ THE GENESIS COUNCIL: $1M HARD CAP REWARD ]</span>
+                    <span lang-content="zh">[ 創世議會：100萬美金滿水位終極特權 ]</span>
+                </h3>
+                <p style="font-size: 11px; color: #ccc; line-height: 1.8; margin-bottom: 0;">
+                    <span lang-content="en">
+                        Upon reaching the $1,000,000 Phase 1 limit, the Top 10 addresses will be permanently elevated to the <b>Genesis Council</b>, unlocking:<br>
+                        <b style="color: var(--tech-green);">1. The Global $O2 Tax:</b> A permanent 5% yield of all future $O2 burnt by the entire network.<br>
+                        <b style="color: var(--lag-blue);">2. Phase Lock Quota:</b> Retain the 1:1 $ML1 entry price in Phase 2 for an allocation equal to your Phase 1 contribution (Vested linearly to prevent market dumping).<br>
+                        <b style="color: var(--mars-red);">3. Admin Keys:</b> Multi-sig governance rights (7/11 consensus) over the first physical Jezero Crater hardware node.
+                    </span>
+                    <span lang-content="zh">
+                        當 Phase 1 達到 100 萬美金硬頂瞬間，排名前 10 的地址將永久晉升為<b>「創世議會 (Genesis Council)」</b>，並解鎖：<br>
+                        <b style="color: var(--tech-green);">1. 全網 $O2 稅收：</b> 永久享有未來全網新玩家燃燒 $O2 時 5% 的回收利潤分配。<br>
+                        <b style="color: var(--lag-blue);">2. 創世匯率鎖定額度：</b> 獲得與您 Phase 1 總貢獻等值的「1:1 底層成本購買額度」，此特權籌碼將啟動智能鎖倉以保護二級市場與散戶權益。<br>
+                        <b style="color: var(--mars-red);">3. 火星管理員密鑰：</b> 獲得首個實體節點的聯合治理權，納入 7/11 多簽安全矩陣。
+                    </span>
+                </p>
+            </div>
+
         </div>
 
-        <div class="roadmap-list">
-            <h2 style="color: var(--tech-green); font-size: 1.2rem; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px;">
-                <span lang-content="en">[ STRATEGIC DEPLOYMENT: 2026-2030 ]</span>
-                <span lang-content="zh">[ 戰略部署藍圖：2026-2030 ]</span>
-            </h2>
-            
-            <div class="roadmap-item">
-                <span class="phase-label">PHASE 1 (2026)</span>
-                <div class="phase-title">
-                    <span lang-content="en">Dust-Seeding & Hardware Base</span>
-                    <span lang-content="zh">創世播種與底層基礎設施</span>
-                </div>
-                <div class="phase-desc">
-                    <span lang-content="en">Achieve $1.0M seed liquidity. Develop Protocol 433 (Asynchronous State Machine) core architecture. Lock the first 1,000 Genesis hardware node whitelists and allocations.</span>
-                    <span lang-content="zh">達成 100 萬美元種子輪流動性目標。完成 Protocol 433（非同步狀態機）核心架構研發。鎖定首批 1,000 個創世硬體節點白名單與權益分配。</span>
-                </div>
-            </div>
-            
-            <div class="roadmap-item">
-                <span class="phase-label">PHASE 2 (2027)</span>
-                <div class="phase-title" style="color: var(--btc-gold);">
-                    <span lang-content="en">Orbital Mesh Handshake & $O2 Staking</span>
-                    <span lang-content="zh">深空網格握手與 $O2 質押</span>
-                </div>
-                <div class="phase-desc">
-                    <span lang-content="en">Uncrewed Starship hardware deployment via Commercial Payload Rideshare. Establish the first physical node array in the Martian North Pole, completing the first Earth-Mars deep-space financial data handshake. Post-TGE $O2 Liquid Oxygen Staking mechanisms activated.</span>
-                    <span lang-content="zh">透過商業航太載荷計畫 (Commercial Payload Rideshare)，部署無人星艦硬體載荷。於火星北極建立首個實體節點陣列，透過非同步狀態機，完成地球與火星深空的首次財務數據握手。TGE 後正式啟動 $O2 液氧質押挖礦機制。</span>
-                </div>
-            </div>
-            
-            <div class="roadmap-item">
-                <span class="phase-label">PHASE 3 (2028-2029)</span>
-                <div class="phase-title">
-                    <span lang-content="en">Permissionless Robot Matrix</span>
-                    <span lang-content="zh">無需許可的機器人矩陣對接</span>
-                </div>
-                <div class="phase-desc">
-                    <span lang-content="en">Release open-source API protocol layer compatible with next-gen automated machinery (e.g., Tesla Optimus specs). Activate Proof of Physical Work (PoPW), allowing any uncrewed Mars equipment to permissionlessly anchor its ISRU production to the ML1 network.</span>
-                    <span lang-content="zh">發布針對次世代自動化機械（相容 Tesla Optimus 等機型數據架構）的開源 API 協議層。啟動無需許可的實體工作證明 (PoPW)，允許任何登陸火星的無人設備，無縫將其原位資源 (ISRU) 產能與 ML1 網路進行價值錨定。</span>
-                </div>
-            </div>
-            
-            <div class="roadmap-item" style="border-bottom: none;">
-                <span class="phase-label">PHASE 4 (2030+)</span>
-                <div class="phase-title">
-                    <span lang-content="en">Interplanetary Sovereign Economy</span>
-                    <span lang-content="zh">星際主權經濟體</span>
-                </div>
-                <div class="phase-desc">
-                    <span lang-content="en">Fully autonomous financial settlement independent of Earth's inflation. Activating 1:1 conversion rights from $ML1 to Mars Ledger Corp. physical equity.</span>
-                    <span lang-content="zh">實現完全獨立於地球通膨的去中心化自動財務結算。全面啟動 1:1 轉換權，將 $ML1 兌換為 Mars Ledger Corp 實體優先股權，完成星際資產轉移。</span>
-                </div>
-            </div>
-        </div>
-
-        <footer style="margin-top: 20px; text-align: center; font-size: 9px; color: #333; padding-bottom: 30px;">
-            CODE IS LAW. PHYSICS IS THE JUDGE. © 2026 ML1 GENESIS
-        </footer>
     </div>
 </div>
 
@@ -562,7 +643,7 @@
 
             <div lang-content="zh">
                 <h3 style="color: #fff; font-size: 1rem; margin-top: 20px;">1. 延遲之牆與地球區塊鏈的致命缺陷</h3>
-                <p>地球的協議（TCP/IP, BTC, ETH, SOL）皆假設網路擁有「永遠在線」的高頻寬。這在深空環境中是個致命錯誤。地球與火星通訊延遲高達 3–22 分鐘，依賴「實時確認」的同步共識機制在光速限制前會徹底崩潰。ML1 是首個專為深空設計的<b>非同步狀態機 (Asynchronous State Machine)</b>。它確保即使地球信號被遮蔽，火星本土的財務清算與資源分配依然能完全獨立運作。</p>
+                <p>地球的協議（TCP/IP, BTC, ETH, SOL）皆假設網路擁有「永遠在線」的高頻寬。這在深空環境中是個致命錯誤。地球與火星通訊延遲高達 3–22 分鐘，依賴「實時確認」的同步共識機制在光速限制前會徹底崩潰。ML1 是首個為深空設計的<b>非同步狀態機 (Asynchronous State Machine)</b>。它確保即使地球信號被遮蔽，火星本土的財務清算與資源分配依然能完全獨立運作。</p>
 
                 <h3 style="color: #fff; font-size: 1rem; margin-top: 20px;">2. 雙幣機制與 ISRU 實體經濟</h3>
                 <p>地球金融系統依賴無限印鈔與通脹。ML1 透過硬性鎖死 10,000,000 總量的 <b>$ML1 (火星地契)</b> 來解決此問題。在 TGE 後，創世節點將其 $ML1 放入「冷凍休眠質押」以挖掘 <b>$O2 (液氧燃料)</b>。$O2 是無限供應的消耗品，用於調用未來火星機器人的 API，以及參與網路內的 Degen 博弈機制（如燃燒 $O2 抽取 BTC 加成盲盒）。這種強烈的「消耗黑洞」將反向保護 $ML1 的絕對稀缺性。</p>

@@ -17,6 +17,7 @@ function checkFissionStatus(isLangSwitch = false) {
         document.getElementById('user-code').innerText = savedCode;
         document.getElementById('gate-ui').style.display = 'none';
         document.getElementById('investor-dashboard').style.display = 'block';
+        if(document.getElementById('portal-tabs')) document.getElementById('portal-tabs').style.display = 'flex';
         document.getElementById('logout-btn').style.display = 'block';
         
         document.getElementById('reg-box').innerHTML = `
@@ -28,19 +29,25 @@ function checkFissionStatus(isLangSwitch = false) {
         `;
         
         if (savedCode === 'ML1-CORE-001') {
-            if(typeof updateTgeTier === 'function') updateTgeTier(100, 100000);
+            if(typeof updateTgeTier === 'function') updateTgeTier(100, 100000, 0);
+            if(!isLangSwitch) verifyActiveNodes('ML1-CORE-001');
         } else {
             if(!isLangSwitch) verifyActiveNodes(savedCode);
             else {
                 let r = parseFloat(localStorage.getItem('ml1_recruits') || 0);
                 let m = parseFloat(localStorage.getItem('ml1_personal_usd') || 0);
-                if(typeof updateTgeTier === 'function') updateTgeTier(r, m); 
+                let t = parseFloat(localStorage.getItem('ml1_team_usd') || 0);
+                if(typeof updateTgeTier === 'function') updateTgeTier(r, m, t); 
             }
         }
+    } else {
+        // 【修復核心】：如果是使用 mars2026 等訪客金鑰進入，本地沒有 savedCode
+        // 依然強制觸發 API，去抓取全網數據來渲染排行榜！
+        if(!isLangSwitch) verifyActiveNodes('GUEST_MODE');
     }
 }
 
-// --- 3. 驗證節點活躍度與計算算力 (Verify Nodes & IP Check) ---
+// --- 3. 全局數據映射與算力計算 (Core Verification & Leaderboard) ---
 async function verifyActiveNodes(myCode) {
     document.getElementById('syncing-indicator').style.display = 'block';
     try {
@@ -51,84 +58,156 @@ async function verifyActiveNodes(myCode) {
         const nodesData = await resNodes.json();
         const fundsData = await resFunds.json();
 
-        let myNodeRecord = (Array.isArray(nodesData) ? nodesData : []).find(n => n.My_Fission_Code === myCode);
-        let myWallet = myNodeRecord ? (myNodeRecord.Wallet_Address || '').trim().toLowerCase() : null;
-        let myTotalUSD = 0;
-
         const getUSDValue = (fundObj) => {
             let usdValKey = Object.keys(fundObj).find(k => k.trim().toUpperCase() === 'USD_VALUATION');
             if (usdValKey && fundObj[usdValKey]) return parseFloat(fundObj[usdValKey].toString().replace(/[^0-9.-]+/g,""));
-            let amtKey = Object.keys(fundObj).find(k => k.trim().toUpperCase() === 'ASSET_AMOUNT' || k.trim().toUpperCase() === 'AMOUNT');
+            let amtKey = Object.keys(fundObj).find(k => k.trim().toUpperCase().includes('AMOUNT'));
             return amtKey ? parseFloat(fundObj[amtKey]) : 0; 
         };
 
-        const isActive = (walletAddress) => {
-            if (!walletAddress) return false;
-            return fundsData.some(fund => {
-                let fundWallet = (fund.PIONEER_ADDRESS || fund.Wallet_Address || '').trim().toLowerCase();
-                return fundWallet === walletAddress.toLowerCase() && getUSDValue(fund) > 0;
-            });
-        };
+        let walletToUSD = {};
+        fundsData.forEach(f => {
+            let wKey = Object.keys(f).find(k => k.toUpperCase().includes('ADDRESS') || k.toUpperCase().includes('WALLET'));
+            let w = wKey && f[wKey] ? f[wKey].toString().trim().toLowerCase() : '';
+            if(w) walletToUSD[w] = (walletToUSD[w] || 0) + getUSDValue(f);
+        });
 
-        if (myWallet) {
-            fundsData.forEach(fund => {
-                let fw = (fund.PIONEER_ADDRESS || fund.Wallet_Address || '').trim().toLowerCase();
-                if(fw === myWallet) myTotalUSD += getUSDValue(fund);
-            });
-        }
+        let nodeStats = {};
+        let validNodes = Array.isArray(nodesData) ? nodesData : [];
+        
+        validNodes.forEach(n => {
+            let codeKey = Object.keys(n).find(k => k.toUpperCase().includes('FISSION_CODE'));
+            let code = codeKey ? n[codeKey] : n.My_Fission_Code;
 
-        let totalScore = 0; 
-        let level1Nodes = (Array.isArray(nodesData) ? nodesData : []).filter(n => n.Invited_By === myCode);
-        let seenIPs = new Set();
-        seenIPs.add(globalClientIP); 
+            let wKey = Object.keys(n).find(k => k.toUpperCase().includes('ADDRESS') || k.toUpperCase().includes('WALLET'));
+            let w = wKey && n[wKey] ? n[wKey].toString().trim().toLowerCase() : '';
 
-        level1Nodes.forEach(l1 => {
-            let l1Wallet = (l1.Wallet_Address || '').trim().toLowerCase();
-            let l1IP = l1.IP_Address;
-            let isValidIP = true;
-            
-            if(l1IP && l1IP !== "UNKNOWN") {
-                if(seenIPs.has(l1IP)) isValidIP = false; 
-                else seenIPs.add(l1IP);
-            }
+            let inviterKey = Object.keys(n).find(k => k.toUpperCase().includes('INVIT'));
+            let inviter = inviterKey ? n[inviterKey] : n.Invited_By;
 
-            let isL1Active = isActive(l1Wallet);
-            let l1Code = l1.My_Fission_Code;
-            let level2Nodes = nodesData.filter(n => n.Invited_By === l1Code);
+            let ipKey = Object.keys(n).find(k => k.toUpperCase().includes('IP'));
+            let ip = ipKey ? n[ipKey] : (n.IP_Address || "UNKNOWN");
 
-            if (isL1Active && isValidIP) {
-                totalScore += 1.0; 
-                level2Nodes.forEach(l2 => {
-                    let l2IP = l2.IP_Address;
-                    let l2Valid = true;
-                    if(l2IP && l2IP !== "UNKNOWN") {
-                        if(seenIPs.has(l2IP)) l2Valid = false; else seenIPs.add(l2IP);
-                    }
-                    if (isActive((l2.Wallet_Address || '').trim()) && l2Valid) totalScore += 0.5;
-                });
-            } else if (!isL1Active && isValidIP) {
-                level2Nodes.forEach(l2 => {
-                    let l2IP = l2.IP_Address;
-                    let l2Valid = true;
-                    if(l2IP && l2IP !== "UNKNOWN") {
-                        if(seenIPs.has(l2IP)) l2Valid = false; else seenIPs.add(l2IP);
-                    }
-                    if (isActive((l2.Wallet_Address || '').trim()) && l2Valid) totalScore += 1.0; 
-                });
+            if (code) {
+                nodeStats[code] = { 
+                    code: code, 
+                    wallet: w, 
+                    inviter: inviter, 
+                    pUSD: walletToUSD[w] || 0, 
+                    tUSD: 0, 
+                    score: 0,
+                    ip: ip
+                };
             }
         });
 
-        if(typeof updateTgeTier === 'function') updateTgeTier(totalScore, myTotalUSD);
-        localStorage.setItem('ml1_recruits', totalScore);
-        localStorage.setItem('ml1_personal_usd', myTotalUSD);
+        Object.values(nodeStats).forEach(node => {
+            let l1 = Object.values(nodeStats).filter(n => n.inviter === node.code);
+            let seenIPs = new Set();
+            if(node.ip !== "UNKNOWN") seenIPs.add(node.ip);
+
+            l1.forEach(child => {
+                let validL1 = true;
+                if(child.ip !== "UNKNOWN") {
+                    if(seenIPs.has(child.ip)) validL1 = false;
+                    else seenIPs.add(child.ip);
+                }
+                
+                if(child.pUSD > 0) {
+                    node.tUSD += child.pUSD;
+                    if(validL1) node.score += 1;
+                }
+
+                let l2 = Object.values(nodeStats).filter(n => n.inviter === child.code);
+                l2.forEach(gchild => {
+                    let validL2 = true;
+                    if(gchild.ip !== "UNKNOWN") {
+                        if(seenIPs.has(gchild.ip)) validL2 = false;
+                        else seenIPs.add(gchild.ip);
+                    }
+                    if(gchild.pUSD > 0) {
+                        node.tUSD += gchild.pUSD; 
+                        if(validL2 && (child.pUSD > 0 || validL1)) node.score += 0.5;
+                    }
+                });
+            });
+        });
+
+        let myData = nodeStats[myCode] || { pUSD: 0, tUSD: 0, score: 0 };
+        if(typeof updateTgeTier === 'function') updateTgeTier(myData.score, myData.pUSD, myData.tUSD);
+        
+        localStorage.setItem('ml1_recruits', myData.score);
+        localStorage.setItem('ml1_personal_usd', myData.pUSD);
+        localStorage.setItem('ml1_team_usd', myData.tUSD);
         document.getElementById('syncing-indicator').style.display = 'none';
+
+        // --- 排行榜渲染邏輯 (Top 10 + 個人排名兜底) ---
+        let activeNodes = Object.values(nodeStats).filter(n => (n.pUSD + n.tUSD) > 0 || n.score > 0);
+        activeNodes.sort((a,b) => (b.pUSD + b.tUSD) - (a.pUSD + a.tUSD));
+
+        let lbHtml = '';
+        let myRank = -1;
+        
+        // 尋找自己的真實排名 (如果是 GUEST_MODE，這裡會找不到，myRank 保持 -1)
+        let myActiveNode = activeNodes.find((n, idx) => {
+            if(n.code === myCode) {
+                myRank = idx + 1;
+                return true;
+            }
+            return false;
+        });
+
+        // 渲染 Top 10
+        activeNodes.slice(0, 10).forEach((n, idx) => {
+            let currentRank = idx + 1;
+            let totalVol = n.pUSD + n.tUSD;
+            let maskCode = n.code.length > 5 ? n.code.substring(0, n.code.length - 2) + "**" : n.code;
+            
+            let isMe = (n.code === myCode);
+            let rowStyle = isMe ? 'background: rgba(0,255,65,0.1); border-left: 3px solid var(--tech-green);' : '';
+            let meTag = isMe ? ' <span style="color:var(--tech-green); font-size:9px; font-weight:bold;">[YOU]</span>' : '';
+            
+            lbHtml += `<tr style="${rowStyle}">
+                <td>#${currentRank}</td>
+                <td>${maskCode}${meTag}</td>
+                <td>${n.score}</td>
+                <td>$${totalVol.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+            </tr>`;
+        });
+
+        // 若自己的排名超過第 10 名，在最後一行補上自己的數據 (訪客不顯示)
+        if (myRank > 10 && myActiveNode) {
+            let totalVol = myActiveNode.pUSD + myActiveNode.tUSD;
+            let maskCode = myActiveNode.code.length > 5 ? myActiveNode.code.substring(0, myActiveNode.code.length - 2) + "**" : myActiveNode.code;
+            
+            lbHtml += `<tr><td colspan="4" style="text-align:center; color:#555; padding: 4px; letter-spacing: 2px;">• • •</td></tr>`;
+            lbHtml += `<tr style="background: rgba(0,255,65,0.1); border-left: 3px solid var(--tech-green);">
+                <td style="color:var(--tech-green); font-weight:bold;">#${myRank}</td>
+                <td>${maskCode} <span style="color:var(--tech-green); font-size:9px; font-weight:bold;">[YOU]</span></td>
+                <td>${myActiveNode.score}</td>
+                <td>$${totalVol.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+            </tr>`;
+        }
+        
+        const lbBody = document.getElementById('lb-body');
+        if(lbBody) {
+            if(!lbHtml) {
+                lbHtml = `<tr><td colspan="4" style="text-align:center;">
+                    <span lang-content="en">NO DATA YET</span>
+                    <span lang-content="zh">目前尚無節點數據</span>
+                </td></tr>`;
+            }
+            lbBody.innerHTML = lbHtml;
+            if(typeof setLanguage === 'function') setLanguage(document.body.className.replace('lang-', ''));
+        }
 
     } catch (error) {
         console.error("Verification failed", error);
         document.getElementById('syncing-indicator').style.display = 'none';
         let r = parseFloat(localStorage.getItem('ml1_recruits') || 0);
         let m = parseFloat(localStorage.getItem('ml1_personal_usd') || 0);
-        if(typeof updateTgeTier === 'function') updateTgeTier(r, m); 
+        let t = parseFloat(localStorage.getItem('ml1_team_usd') || 0);
+        if(typeof updateTgeTier === 'function') updateTgeTier(r, m, t); 
     }
 }
 
@@ -143,7 +222,7 @@ async function fetchLiveProgress() {
         if (Array.isArray(data)) {
             data.forEach(item => {
                 let usdVal = parseFloat(item.USD_VALUATION || item.Amount || item.ASSET_AMOUNT || 0);
-                const walletKey = Object.keys(item).find(k => k.trim().toUpperCase() === 'PIONEER_ADDRESS' || k.trim().toUpperCase() === 'WALLET_ADDRESS');
+                const walletKey = Object.keys(item).find(k => k.trim().toUpperCase().includes('ADDRESS') || k.trim().toUpperCase().includes('WALLET'));
                 
                 if (!isNaN(usdVal) && usdVal > 0) {
                     totalUSDValue += usdVal;
@@ -181,6 +260,7 @@ function commitToMars() {
         localStorage.setItem('ml1_fission_code', 'ML1-CORE-001');
         localStorage.setItem('ml1_recruits', '100'); 
         localStorage.setItem('ml1_personal_usd', '100000'); 
+        localStorage.setItem('ml1_team_usd', '0'); 
         checkFissionStatus();
         return;
     }
@@ -203,6 +283,7 @@ function commitToMars() {
             localStorage.setItem('ml1_fission_code', myFissionCode);
             localStorage.setItem('ml1_recruits', '0');
             localStorage.setItem('ml1_personal_usd', '0');
+            localStorage.setItem('ml1_team_usd', '0');
             checkFissionStatus();
         } else { btn.disabled = false; }
     });

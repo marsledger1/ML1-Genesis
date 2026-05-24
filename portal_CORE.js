@@ -14,6 +14,7 @@ function clearPioneerCache() {
         localStorage.removeItem('ml1_fission_code');
         localStorage.removeItem('ml1_recruits');
         localStorage.removeItem('ml1_personal_usd');
+        localStorage.removeItem('ml1_team_usd');
         window.location.reload();
     }
 }
@@ -53,11 +54,19 @@ function isValidWeb3Wallet(address) {
     return /^0x[a-fA-F0-9]{40}$/.test(address) || /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
 }
 
-// --- 5. 更新 TGE 階級與軍銜顯示 ---
-function updateTgeTier(count, myUSD = 0) {
+// --- 5. 更新 TGE 階級與軍銜顯示 (個人 + 團隊業績) ---
+function updateTgeTier(count, myUSD = 0, teamUSD = 0) {
     document.getElementById('recruit-count').innerText = count;
-    document.getElementById('my-usd-amount').innerText = myUSD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
     
+    let totalVolume = myUSD + teamUSD;
+    
+    document.getElementById('my-usd-amount').innerText = totalVolume.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    
+    if(document.getElementById('personal-usd-display')) document.getElementById('personal-usd-display').innerText = myUSD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    if(document.getElementById('team-usd-display')) document.getElementById('team-usd-display').innerText = teamUSD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    if(document.getElementById('personal-usd-display-zh')) document.getElementById('personal-usd-display-zh').innerText = myUSD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    if(document.getElementById('team-usd-display-zh')) document.getElementById('team-usd-display-zh').innerText = teamUSD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
     let fill = document.getElementById('tier-fill');
     let tgeDisplay = document.getElementById('tge-display');
     let tierName = document.getElementById('tier-name');
@@ -74,9 +83,8 @@ function updateTgeTier(count, myUSD = 0) {
     nextTierHint.style.display = 'block';
 
     let tierByNodes = count >= 100 ? 5 : count >= 30 ? 4 : count >= 10 ? 3 : count >= 3 ? 2 : 1;
-    let tierByUSD = myUSD >= 100000 ? 5 : myUSD >= 10000 ? 4 : myUSD >= 1000 ? 3 : myUSD >= 100 ? 2 : 1;
+    let tierByUSD = totalVolume >= 50000 ? 5 : totalVolume >= 10000 ? 4 : totalVolume >= 1000 ? 3 : totalVolume >= 100 ? 2 : 1;
     let currentTier = Math.max(tierByNodes, tierByUSD);
-    let upgradedViaUSD = currentTier > tierByNodes;
 
     fill.style.width = (currentTier * 20) + '%'; 
 
@@ -84,7 +92,7 @@ function updateTgeTier(count, myUSD = 0) {
         tgeRate = 0.40; currentBtcTickets = 100;
         tgeDisplay.innerText = '40% TGE + 100x TICKETS + 100% $O2 BOOST'; 
         tgeDisplay.style.color = 'var(--tier5-gold)';
-        tierName.innerText = upgradedViaUSD ? '[Tier 5: Emperor (Capital Upgraded)]' : '[Tier 5: Mars Emperor]';
+        tierName.innerText = isZh ? '[第五階: 火星大帝]' : '[Tier 5: Mars Emperor]';
         tierName.style.color = 'var(--tier5-gold)';
         tgeBar.style.width = '40%'; tgeBar.style.background = 'var(--tier5-gold)'; tgeLabel.style.color = 'var(--tier5-gold)';
         seedAdvantage.style.display = 'block'; nextTierHint.style.display = 'none'; 
@@ -98,41 +106,41 @@ function updateTgeTier(count, myUSD = 0) {
         tgeRate = 0.35; currentBtcTickets = 30;
         tgeDisplay.innerText = '35% TGE + 30x TICKETS + 50% $O2 BOOST'; 
         tgeDisplay.style.color = 'var(--tier4-purple)';
-        tierName.innerText = upgradedViaUSD ? '[Tier 4: Warlord (Capital Upgraded)]' : '[Tier 4: Mars Warlord]';
+        tierName.innerText = isZh ? '[第四階: 軍閥]' : '[Tier 4: Mars Warlord]';
         tierName.style.color = 'var(--tier4-purple)';
         tgeBar.style.width = '35%'; tgeBar.style.background = 'var(--tier4-purple)'; tgeLabel.style.color = 'var(--tier4-purple)';
         o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 0.9;">+50%</b>`;
-        nextTierHint.innerText = isZh ? `🚀 下一階 [Emperor]：需滿 100 名推薦或累積 $100K USD！` : `🚀 NEXT [Emperor]: 100 INVITES OR $100K USD!`;
+        nextTierHint.innerText = isZh ? `🚀 下一階 [火星大帝]：需滿 100 名推薦或業績達 $50K USD！` : `🚀 NEXT [Emperor]: 100 INVITES OR $50K VOL!`;
     }
     else if (currentTier === 3) { 
         tgeRate = 0.30; currentBtcTickets = 10;
         tgeDisplay.innerText = '30% TGE + 10x TICKETS + 30% $O2 BOOST'; 
         tgeDisplay.style.color = 'var(--mars-red)';
-        tierName.innerText = upgradedViaUSD ? '[Tier 3: Overlord (Capital Upgraded)]' : '[Tier 3: Mars Overlord]';
+        tierName.innerText = isZh ? '[第三階: 領主]' : '[Tier 3: Mars Overlord]';
         tierName.style.color = 'var(--mars-red)';
         tgeBar.style.width = '30%'; tgeBar.style.background = 'var(--mars-red)'; tgeLabel.style.color = 'var(--mars-red)';
         o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 0.8;">+30%</b>`;
-        nextTierHint.innerText = isZh ? `🚀 下一階 [Warlord]：需滿 30 名推薦或累積 $10K USD！` : `🚀 NEXT [Warlord]: 30 INVITES OR $10K USD!`;
+        nextTierHint.innerText = isZh ? `🚀 下一階 [軍閥]：需滿 30 名推薦或業績達 $10K USD！` : `🚀 NEXT [Warlord]: 30 INVITES OR $10K VOL!`;
     }
     else if (currentTier === 2) { 
         tgeRate = 0.25; currentBtcTickets = 3;
         tgeDisplay.innerText = '25% TGE + 3x TICKETS + 10% $O2 BOOST'; 
         tgeDisplay.style.color = 'var(--lag-blue)';
-        tierName.innerText = upgradedViaUSD ? '[Tier 2: Commander (Capital Upgraded)]' : '[Tier 2: Mesh Commander]';
+        tierName.innerText = isZh ? '[第二階: 指揮官]' : '[Tier 2: Mesh Commander]';
         tierName.style.color = 'var(--lag-blue)';
         tgeBar.style.width = '25%'; tgeBar.style.background = 'var(--lag-blue)'; tgeLabel.style.color = 'var(--lag-blue)';
         o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 0.7;">+10%</b>`;
-        nextTierHint.innerText = isZh ? `🚀 下一階 [Overlord]：需滿 10 名推薦或累積 $1K USD！` : `🚀 NEXT [Overlord]: 10 INVITES OR $1K USD!`;
+        nextTierHint.innerText = isZh ? `🚀 下一階 [領主]：需滿 10 名推薦或業績達 $1K USD！` : `🚀 NEXT [Overlord]: 10 INVITES OR $1K VOL!`;
     }
     else { 
         tgeRate = 0.20; currentBtcTickets = 1;
         tgeDisplay.innerText = '20% TGE UNLOCK + 1x TICKET';
         tgeDisplay.style.color = '#888';
-        tierName.innerText = '[Tier 1: Genesis]';
+        tierName.innerText = isZh ? '[第一階: 創世]' : '[Tier 1: Genesis]';
         tierName.style.color = '#888';
         tgeBar.style.width = '20%'; tgeBar.style.background = 'var(--tech-green)'; tgeLabel.style.color = 'var(--tech-green)';
         o2BoostDisplay.innerHTML = `BOOST: <b style="color: #ffcc00; opacity: 0.5;">+0%</b>`;
-        nextTierHint.innerText = isZh ? `🚀 下一階 [Commander]：需滿 3 名推薦或累積 $100 USD！` : `🚀 NEXT [Commander]: 3 INVITES OR $100 USD!`;
+        nextTierHint.innerText = isZh ? `🚀 下一階 [指揮官]：需滿 3 名推薦或業績達 $100 USD！` : `🚀 NEXT [Commander]: 3 INVITES OR $100 VOL!`;
     }
     
     updateDrawButtonUI();
@@ -191,12 +199,14 @@ function startSyncSequence() {
                 lagScreen.style.display = 'none';
                 document.getElementById('gate-ui').style.display = 'none';
                 document.getElementById('investor-dashboard').style.display = 'block';
+                if(document.getElementById('portal-tabs')) document.getElementById('portal-tabs').style.display = 'flex';
                 document.getElementById('logout-btn').style.display = 'block'; 
                 
                 if (key === 'ml1-core-001') {
                     localStorage.setItem('ml1_fission_code', 'ML1-CORE-001');
                     localStorage.setItem('ml1_recruits', '100'); 
                     localStorage.setItem('ml1_personal_usd', '100000'); 
+                    localStorage.setItem('ml1_team_usd', '0'); 
                 } 
                 else if (key.startsWith('ml1-')) {
                     localStorage.setItem('ml1_fission_code', key.toUpperCase());

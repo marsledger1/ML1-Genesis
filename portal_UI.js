@@ -7,7 +7,7 @@ let isBgmPlaying = false;
 
 function initAggressiveBGM() {
     const bgm = document.getElementById('portal-bgm');
-    if(!bgm) return; // 防呆，避免找不到元素
+    if(!bgm) return; 
     
     bgm.volume = 0.4; 
 
@@ -79,7 +79,6 @@ function setLanguage(lang) {
         });
     }
     
-    // 如果 Core 的方法已經載入，切換語言後順便更新畫面計算
     if (typeof runCalc === "function") runCalc(); 
     if (typeof checkFissionStatus === "function") checkFissionStatus(true);
     if (typeof updateDrawButtonUI === "function") updateDrawButtonUI(); 
@@ -93,4 +92,13 @@ function copyCode() {
         const isZh = document.body.classList.contains('lang-zh');
         alert(isZh ? "金鑰已複製！" : "Universal Key Copied!");
     }
+}
+
+// --- 5. 排行榜與終端 Tab 切換 (Portal Tab Switcher) ---
+function switchPortalTab(tabId, event) {
+    document.querySelectorAll('.portal-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.portal-tab-content').forEach(c => c.classList.remove('active'));
+    
+    if(event) event.currentTarget.classList.add('active');
+    document.getElementById('tab-' + tabId).classList.add('active');
 }
