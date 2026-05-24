@@ -262,19 +262,33 @@
                 </div>
             </section>
 
-            <section class="node-allocation" style="border-color: var(--lag-blue);">
-                <h3 id="t-reg-h" style="margin-top: 0; font-size: 1rem; color: var(--lag-blue);">PIONEER REGISTRY (VC PORTAL)</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <select id="reg-network"><option value="BTC">BTC</option><option value="ETH/BASE">ETH/BASE</option><option value="SOL">SOLANA</option></select>
-                    <input type="number" id="reg-amount" placeholder="Token Amount (e.g., 0.112)" step="any">
+            <section class="node-allocation" style="background: var(--mars-red); border: 1px solid var(--mars-red); text-align: center; padding: 40px; margin-bottom: 30px;">
+                <h3 id="t-reg-h" style="margin-top: 0; font-size: 1.2rem; color: #fff; letter-spacing: 1px;">PIONEER REGISTRY (VC PORTAL)</h3>
+                
+                <p style="font-size: 0.75rem; color: #ffcc00; font-weight: bold; margin-bottom: 15px; border: 1px dashed #ffcc00; padding: 10px; background: rgba(0,0,0,0.2);">
+                    <span lang-content="en">⚠️ AFTER COMMITTING: Proceed to the Pioneer Hub (Portal) to register your Fission Code and activate On-Chain Cross-Validation!</span>
+                    <span lang-content="zh">⚠️ 強烈建議：打款提交後，請務必前往「先鋒樞紐 (Pioneer Hub)」註冊您的專屬裂變代碼，啟動星際鏈上交叉驗證！</span>
+                </p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <select id="reg-network" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 15px; width: 100%; outline: none; font-family: inherit; text-align: center;">
+                        <option value="BTC">BTC</option>
+                        <option value="ETH/BASE">ETH/BASE</option>
+                        <option value="SOL">SOLANA</option>
+                    </select>
+                    <input type="number" id="reg-amount" placeholder="Token Amount (e.g., 0.112)" step="any" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 15px; width: 100%; outline: none; text-align: center;">
                 </div>
-                <input type="text" id="reg-wallet" placeholder="Wallet Address (Must match reservation)" style="margin-bottom: 10px;">
-<div style="background: rgba(255, 0, 0, 0.1); border-left: 3px solid #ff4444; padding: 10px; margin-bottom: 15px; font-size: 0.75rem; color: #ff4444; text-transform: uppercase;">
-    <span lang-content="en">⚠️ CRITICAL: DO NOT SEND FUNDS FROM EXCHANGES (BINANCE, OKX, COINBASE). USE ONLY SELF-CUSTODIAL WALLETS (PHANTOM, METAMASK, TRUST). YOU MUST CONTROL THE PRIVATE KEYS TO CLAIM ML1 AT TGE. EXCHANGES WILL CAUSE PERMANENT LOSS OF ALLOCATION.</span>
-    <span lang-content="zh">⚠️ 嚴重警告：絕對禁止從交易所（幣安、OKX等）直接提現打款！請務必使用個人錢包（Phantom, MetaMask 等）。您必須擁有私鑰才能在 TGE 時申領 ML1。從交易所提現將導致份額永久喪失！</span>
-</div>
-                <input type="text" id="reg-hash" placeholder="Transaction Hash (TXID)">
-                <button class="btn-submit" id="t-btn" onclick="submitToLedger()">COMMIT TO INTERSTELLAR LEDGER</button>
+                
+                <input type="text" id="reg-wallet" placeholder="Wallet Address (Must match reservation)" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 15px; width: 100%; outline: none; text-align: center; margin-bottom: 10px;">
+                
+                <div style="background: rgba(0, 0, 0, 0.4); border-left: 3px solid #ffdf00; padding: 10px; margin-bottom: 15px; font-size: 0.7rem; color: #ffdf00; text-transform: uppercase; text-align: left;">
+                    <span lang-content="en">⚠️ CRITICAL: DO NOT SEND FUNDS FROM EXCHANGES (BINANCE, OKX, COINBASE). USE ONLY SELF-CUSTODIAL WALLETS (PHANTOM, METAMASK, TRUST). YOU MUST CONTROL THE PRIVATE KEYS TO CLAIM ML1 AT TGE. EXCHANGES WILL CAUSE PERMANENT LOSS OF ALLOCATION.</span>
+                    <span lang-content="zh">⚠️ 嚴重警告：絕對禁止從交易所（幣安、OKX等）直接提現打款！請務必使用個人錢包（Phantom, MetaMask 等）。您必須擁有私鑰才能在 TGE 時申領 ML1。從交易所提現將導致份額永久喪失！</span>
+                </div>
+                
+                <input type="text" id="reg-hash" placeholder="Transaction Hash (TXID)" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 15px; width: 100%; outline: none; text-align: center; margin-bottom: 15px;">
+                
+                <button class="btn-submit" id="t-btn" onclick="submitToLedger()" style="background: #fff; color: #000; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.3s; letter-spacing: 1px;">COMMIT TO INTERSTELLAR LEDGER</button>
             </section>
 
             <div style="background:#111; border:2px solid var(--lag-blue); padding:20px; margin-bottom:40px; max-width:860px; margin-left:auto; margin-right:auto;">
