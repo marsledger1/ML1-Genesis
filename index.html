@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ML1 V5.7.0 | MARS SOVEREIGN SUPREMACY</title>
-    <script src="https://w.soundcloud.com/player/api.js"></script>
     <style>
         :root {
             --bg-deep: #050505;
@@ -151,9 +150,9 @@
 </head>
 <body class="lang-en">
     
-    <iframe id="sc-widget" allow="autoplay" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;" 
-            src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/user-902835287/martin-garrix-live&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false">
-    </iframe>
+    <audio id="index-bgm" loop>
+        <source src="https://raw.githubusercontent.com/marsledger1/ML1-Genesis/main/indexbgm.mp3" type="audio/mpeg">
+    </audio>
 
     <div class="mars-bg-layer"></div>
     
@@ -387,29 +386,30 @@
             </div>
         </div>
 
-        <div id="main-content-2" class="tab-content">
+<div id="main-content-2" class="tab-content">
             <div style="text-align:center; margin-bottom:25px;">
                 <h2 style="color:var(--tech-green); letter-spacing:3px;">ML1 // DEEP SPACE TELEMETRY</h2>
                 <p style="color:#666; font-size:0.9rem;">
-                    <span lang-content="en">Live Optimus Hardware Sync • Asynchronous State Machine</span>
-                    <span lang-content="zh">Optimus 硬體實時同步 • 非同步狀態機模擬</span>
+                    <span lang-content="en">Edge-Compute Hardware Sync • NASA Open Telemetry</span>
+                    <span lang-content="zh">邊緣運算實體節點同步 • NASA 開源遙測鏈路</span>
                 </p>
             </div>
 
             <div style="position:relative; border:2px solid var(--tech-green); height:450px; margin:0 auto 30px; max-width:940px; overflow:hidden; background-color:#000;">
                 
-                <div id="telemetry-bg" style="position:absolute; top:0; left:0; width:100%; height:100%; background: url('a.jpg') center/cover; opacity: 0.6; transition: all 0.3s; filter: grayscale(50%) contrast(120%);"></div>
+                <div id="telemetry-bg" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity: 0.85; transition: all 0.3s; filter: grayscale(10%) contrast(120%) hue-rotate(320deg);">
+                    <iframe src="https://eyes.nasa.gov/apps/solar-system/#/mars?embed=true" width="100%" height="100%" frameborder="0" style="pointer-events: auto;"></iframe>
+                </div>
                 
                 <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 65, 0.05) 50%); background-size: 100% 4px; pointer-events:none;"></div>
-                
                 <div id="screen-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,0,0,0); transition: background 0.5s; pointer-events:none;"></div>
 
-                <div style="position:absolute; top:20px; left:20px; color:var(--tech-green); font-size:0.8rem; letter-spacing:1px; text-shadow: 0 0 5px var(--tech-green);">
-                    <span lang-content="en">[CAM_01] STARBASE // OPTIMUS_NODE_ACTIVE</span>
-                    <span lang-content="zh">[CAM_01] 星艦基地 // OPTIMUS_節點在線</span><br>
+                <div style="position:absolute; top:20px; left:20px; color:var(--tech-green); font-size:0.8rem; letter-spacing:1px; text-shadow: 0 0 8px #000; pointer-events:none; background: rgba(0,0,0,0.6); padding: 5px 10px; border: 1px solid #333;">
+                    <span lang-content="en">[CAM_01] JEZERO_BASE // EDGE_NODE_ACTIVE</span>
+                    <span lang-content="zh">[CAM_01] 耶澤羅基地 // 邊緣運算節點在線</span><br>
                     <span lang-content="en">SYS_LOAD: </span><span lang-content="zh">系統負載: </span><span id="sys-load">42</span>%
                 </div>
-                <div style="position:absolute; top:20px; right:20px; color:var(--tech-green); font-size:0.8rem; text-align:right;">
+                <div style="position:absolute; top:20px; right:20px; color:var(--tech-green); font-size:0.8rem; text-align:right; text-shadow: 0 0 8px #000; pointer-events:none; background: rgba(0,0,0,0.6); padding: 5px 10px; border: 1px solid #333;">
                     <span lang-content="en">LATENCY: </span><span lang-content="zh">通訊延遲: </span><span id="live-latency">21.4</span> MIN<br>
                     <span id="conn-status" style="color:#00ff41; font-weight:bold;">
                         <span lang-content="en">■ UPLINK SECURE</span>
@@ -417,18 +417,19 @@
                     </span>
                 </div>
 
-                <div style="position:absolute; bottom:20px; left:20px; right:20px; background:rgba(0,0,0,0.85); border:1px solid #333; padding:15px; font-family:'Courier New', monospace; height: 120px; overflow:hidden;">
+                <div style="position:absolute; bottom:20px; left:20px; right:20px; background:rgba(0,0,0,0.85); border:1px solid var(--tech-green); padding:15px; font-family:'Courier New', monospace; height: 120px; overflow:hidden; pointer-events:none;">
                     <div id="terminal-output" style="color:var(--tech-green); font-size:0.85rem; line-height:1.5;">
                         <div lang-content="en">> INITIALIZING ML1 ASYNCHRONOUS ENGINE...<br>> AWAITING HARDWARE COMMAND...</div>
                         <div lang-content="zh">> 正在初始化 ML1 非同步引擎...<br>> 等待硬體指令輸入...</div>
+                        <div style="color:#888; font-size:0.7rem; margin-top:10px;">// TOUCH & DRAG TO EXPLORE MARS 3D ORBIT //</div>
                     </div>
                 </div>
             </div>
 
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; margin:30px 0 40px;">
                 <button onclick="triggerISRU()" style="background:#0a0a0a; color:var(--tech-green); border:1px solid var(--tech-green); padding:20px; font-size:0.9rem; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:0.3s; font-weight:bold;" onmouseover="this.style.background='rgba(0,255,65,0.1)'" onmouseout="this.style.background='#0a0a0a'">
-                    <span lang-content="en">[01] FORCE ISRU VALIDATION</span>
-                    <span lang-content="zh">[01] 強制執行 ISRU 驗證</span>
+                    <span lang-content="en">[01] FETCH OPEN TELEMETRY DATA</span>
+                    <span lang-content="zh">[01] 獲取深空實體遙測數據</span>
                 </button>
                 <button onclick="triggerSnapshot()" style="background:#0a0a0a; color:var(--lag-blue); border:1px solid var(--lag-blue); padding:20px; font-size:0.9rem; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:0.3s; font-weight:bold;" onmouseover="this.style.background='rgba(0,191,255,0.1)'" onmouseout="this.style.background='#0a0a0a'">
                     <span lang-content="en">[02] EMIT UPLINK SNAPSHOT</span>
@@ -505,7 +506,7 @@
             setInterval(() => { if(typeof updateProgress === 'function') updateProgress(); }, 60000);
             
             // 4. 啟動背景音樂系統
-            if(typeof initSoundCloud === 'function') initSoundCloud();
+            if(typeof initBGM === 'function') initBGM();
             
             console.log('%c✅ ML1 V5.7.0 系統全面上線 (UI, Core, API Modules Active)', 'color:#00ff41; font-size:14px');
         };

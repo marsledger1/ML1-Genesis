@@ -2,58 +2,55 @@
 // UI.js - 視覺與互動模組 (Visual & Interactive Module)
 // ==========================================
 
-// --- 1. 音樂控制系統 (BGM System) ---
-let scWidget;
+// --- 1. 暴力強制音樂播放系統 (Native Audio BGM System) ---
 let isPlaying = false;
 
-function initSoundCloud() {
-    const iframeElement = document.getElementById('sc-widget');
-    scWidget = SC.Widget(iframeElement);
+function initBGM() {
+    const bgm = document.getElementById('index-bgm');
+    if(!bgm) return;
+    bgm.volume = 0.5; // 音量控制 (0.0 到 1.0)
 
-    scWidget.bind(SC.Widget.Events.READY, function() {
-        scWidget.setVolume(50); 
-        scWidget.play(); 
-        
-        const forcePlay = () => {
-            if (!isPlaying) scWidget.play();
-            ['touchstart', 'touchend', 'click', 'scroll'].forEach(evt => {
-                document.removeEventListener(evt, forcePlay, true);
-            });
-        };
-        
+    bgm.addEventListener('play', () => { 
+        isPlaying = true; 
+        updateBgmUI(); 
+    });
+    
+    bgm.addEventListener('pause', () => { 
+        isPlaying = false; 
+        updateBgmUI(); 
+    });
+
+    // 手機端需要使用者點擊/滑動才能播放音樂
+    const forcePlay = () => {
+        if (bgm.paused) bgm.play().catch(()=>{});
         ['touchstart', 'touchend', 'click', 'scroll'].forEach(evt => {
-            document.addEventListener(evt, forcePlay, true); 
+            document.removeEventListener(evt, forcePlay, true);
         });
+    };
 
-        const forcePlayInterval = setInterval(() => {
-            if (!isPlaying) {
-                scWidget.play();
-            } else {
-                clearInterval(forcePlayInterval);
-            }
-        }, 1000);
+    ['touchstart', 'touchend', 'click', 'scroll'].forEach(evt => {
+        document.addEventListener(evt, forcePlay, true);
     });
-
-    scWidget.bind(SC.Widget.Events.PLAY, function() {
-        isPlaying = true;
-        updateBgmUI();
-    });
-
-    scWidget.bind(SC.Widget.Events.PAUSE, function() {
-        isPlaying = false;
-        updateBgmUI();
-    });
+    
+    // 備用循環檢測，確保音樂不中斷
+    const forcePlayInterval = setInterval(() => {
+        if (!isPlaying) bgm.play().catch(()=>{});
+        else clearInterval(forcePlayInterval);
+    }, 1000);
 }
 
 function toggleBGM(e) {
-    if(e) e.stopPropagation(); 
-    if (scWidget) scWidget.toggle();
+    if(e) e.stopPropagation();
+    const bgm = document.getElementById('index-bgm');
+    if(bgm) { 
+        if(bgm.paused) bgm.play(); 
+        else bgm.pause(); 
+    }
 }
 
 function updateBgmUI() {
     const btn = document.getElementById('bgm-toggle');
     const isZh = document.body.classList.contains('lang-zh');
-    
     if (!isPlaying) {
         btn.innerText = isZh ? "🔇 系統音樂: 關閉" : "🔇 BGM: OFF";
         btn.classList.remove('playing');
@@ -129,7 +126,6 @@ const content = {
         calcShareText: "Your share of Genesis Fund:",
         calcTgeText: "TGE unlock: <strong style='color:#ff0;'>20%</strong> • Remaining vested with hardware milestones",
         calcButton: "CALCULATE MY MARS LEGACY",
-        // 更新：工業能源特權 (英文版)
         calcAdvTitle: "Genesis Dust-Seeders Advantage:",
         adv1: "Hardware Node NFT Naming & $O2 Routing Yield",
         adv2: "1:1 Equity in Mars Resource Trust (Dividends)",
@@ -178,7 +174,6 @@ const content = {
         calcShareText: "您在創世基金的份額：",
         calcTgeText: "TGE 解鎖： <strong style='color:#ff0;'>20%</strong> • 剩餘部分隨硬體部署里程碑逐步釋放",
         calcButton: "計算我的火星遺產",
-        // 更新：工業能源特權 (繁體中文版)
         calcAdvTitle: "創世塵播者終極優勢：",
         adv1: "實體節點 NFT 命名權與 $O2 路由手續費收益",
         adv2: "1:1 兌換火星資源信託 (Resource Trust) 分紅股權",
@@ -303,22 +298,46 @@ function typeWriter(textEn, textZh, color = 'var(--tech-green)') {
 
 function triggerISRU() {
     const bg = document.getElementById('telemetry-bg');
-    bg.style.filter = 'grayscale(0%) contrast(150%) brightness(1.2)';
-    setTimeout(() => bg.style.filter = 'grayscale(50%) contrast(120%)', 500);
+    // 視覺閃爍特效
+    bg.style.filter = 'grayscale(0%) contrast(150%) brightness(1.5)';
+    setTimeout(() => bg.style.filter = 'grayscale(10%) contrast(120%) hue-rotate(320deg)', 500);
     
-    const resTypes = [
-        { en: "SUBSURFACE H2O (ICE)", zh: "地下水冰 (H2O)", min: 3.0, max: 8.5 },
-        { en: "LIQUID O2 SYNTHESIZED", zh: "液氧 (O2) 合成完畢", min: 1.0, max: 4.2 },
-        { en: "METHANE (CH4) FUEL", zh: "甲烷 (CH4) 燃料", min: 2.0, max: 5.5 },
-        { en: "REGOLITH RARE-EARTH", zh: "火星壤稀土礦物", min: 0.1, max: 1.8 }
-    ];
-    
-    const rand = resTypes[Math.floor(Math.random() * resTypes.length)];
-    const amount = (Math.random() * (rand.max - rand.min) + rand.min).toFixed(2);
+    typeWriter("> FETCHING OPEN TELEMETRY FROM NASA JPL...", "> 正在獲取 NASA JPL 公開遙測數據...", "var(--lag-blue)");
 
-    typeWriter(`> [OPTIMUS_01] SENSOR: ${amount}KG ${rand.en} DETECTED.`, `> [OPTIMUS_01] 傳感器: 採集/合成 ${amount}KG ${rand.zh}.`, "#fff");
-    setTimeout(() => typeWriter("> PROOF OF PHYSICAL WORK (PoPW) HASH GENERATED.", "> 物理工作量證明 (PoPW) 哈希已生成.", "var(--tech-green)"), 600);
-    setTimeout(() => typeWriter("> ML1 LOCAL LEDGER UPDATED. AWAITING BATCH...", "> ML1 本地帳本已更新. 等待批次同步...", "var(--tech-green)"), 1200);
+    // 使用您的專屬 NASA API Key
+    const NASA_API_KEY = "xeI0LEZvEP9KKYYcUtxf4FBNcKVZPJ4zD5D7hkPQ";
+    const url = `https://api.nasa.gov/mars-photos/api/v1/rovers/perseverance/latest_photos?api_key=${NASA_API_KEY}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if(data && data.latest_photos && data.latest_photos.length > 0) {
+                const photo = data.latest_photos[0];
+                const sol = photo.sol;
+                const earthDate = photo.earth_date;
+                const status = photo.rover.status.toUpperCase();
+                const cam = photo.camera.full_name;
+
+                setTimeout(() => {
+                    typeWriter(`> [NASA_JPL] MARS SOL: ${sol} | EARTH DATE: ${earthDate}`, `> [NASA_JPL] 火星日: ${sol} | 地球同步日期: ${earthDate}`, "#fff");
+                }, 800);
+
+                setTimeout(() => {
+                    typeWriter(`> ROVER: PERSEVERANCE | STATUS: ${status} | CAM: ${cam}`, `> 載具: 毅力號 (PERSEVERANCE) | 狀態: ${status} | 傳感器: ${cam}`, "var(--tech-green)");
+                }, 1600);
+
+                setTimeout(() => {
+                    typeWriter("> PROOF OF PHYSICAL WORK (PoPW) ANCHORED TO ML1.", "> 實體工作量證明 (PoPW) 已成功錨定至 ML1 帳本.", "var(--tier5-gold)");
+                }, 2400);
+            } else {
+                throw new Error("No data");
+            }
+        })
+        .catch(err => {
+            setTimeout(() => {
+                typeWriter("> NASA API UPLINK FAILED. SIGNAL BLOCKED BY SOLAR FLARE.", "> NASA API 鏈路中斷，信號遭太陽閃焰干擾.", "#ff4444");
+            }, 1000);
+        });
 }
 
 function triggerSnapshot() {
