@@ -40,6 +40,10 @@ We do not seek permission from Earth authorities or aerospace corporations. By u
 * **Utility:** Infinite supply utility token. Post-TGE, Genesis Nodes lock their `$ML1` into **"Cryo-Sleep Staking"** to mine `$O2`. 
 * **Burn Mechanics:** Burnt to pay for Martian API calls, mesh bandwidth routing, and Decentralized Raffle Engine features.
 
+### 3. `$DUST` (Classified Asset & The Degen Skinner Box)
+* **The Mechanism:** To prevent `$O2` inflation, ML1 features a gamified edge-compute terminal (ISRU Blind-Mining). Users must burn `$O2` to trigger the terminal, which executes a real-time call to the **NASA JPL Open Telemetry API** (fetching live Perseverance Rover data as Proof of Physical Work).
+* **The Psychology:** Successfully executed API calls yield a strictly classified, ultra-low probability drop of `$DUST`. This creates a perfect **"Skinner Box" (Operant Conditioning Chamber)**—driving daily Degen engagement, continuously burning the `$O2` supply, and generating massive deflationary value for the entire network.
+
 ---
 
 ## 🚨 PHASE 1: GENESIS RECRUITMENT & MILITARY TIERS
