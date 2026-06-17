@@ -266,7 +266,7 @@ async function autoConnectWallet(inputId, buttonId) {
 }
 
 // 2. 點擊按鈕主動連線 (防劫持 + 跨平台提示)
-async function connectWallet(buttonId) {
+async function connectWallet(inputId, buttonId) {
     const btn = document.getElementById(buttonId);
     if (!btn) return;
     
@@ -274,65 +274,74 @@ async function connectWallet(buttonId) {
     btn.innerText = isZh ? "請求授權中..." : "VERIFYING...";
     
     if (typeof window.ethereum !== 'undefined') {
-        try {
-            // 請求連接錢包
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const userAddress = accounts[0];
+        
+        // 💡 黑科技 1：打包一個專屬的「成功執行動作」
+        const handleSuccess = (account) => {
+            const shortAddr = account.substring(0, 6) + "..." + account.substring(account.length - 4);
             
-            // 縮寫錢包地址 (前6後4)
-            const shortAddr = userAddress.substring(0, 6) + "..." + userAddress.substring(userAddress.length - 4);
-            
-            // 成功連接後的按鈕樣式 (發光駭客綠)
+            // 1. 點亮按鈕為綠色
             btn.innerText = `✅ ${shortAddr}`;
             btn.style.background = 'rgba(0, 255, 65, 0.2)';
             btn.style.border = '1px solid #00ff41';
             btn.style.color = '#00ff41';
             
-            // 🚀 關鍵修復：自動填入 Portal 的輸入框並防呆鎖定
-            // 在 Portal 頁面，輸入框的 ID 叫做 'access-key'
-            const accessKeyInput = document.getElementById('access-key');
-            if (accessKeyInput) {
-                accessKeyInput.value = userAddress;
-                accessKeyInput.readOnly = true; // 防劫持鎖定，不准手動修改
-                accessKeyInput.style.color = "var(--tech-green)";
-                accessKeyInput.style.borderColor = "var(--tech-green)";
-                accessKeyInput.style.background = "rgba(0, 255, 65, 0.05)";
+            // 2. 瞬間填入輸入框並物理鎖死 (防劫持防呆)
+            const targetInput = document.getElementById(inputId);
+            if (targetInput) {
+                targetInput.value = account;
+                targetInput.readOnly = true; 
+                targetInput.style.color = "var(--tech-green)";
+                targetInput.style.borderColor = "var(--tech-green)";
+                targetInput.style.background = "rgba(0, 255, 65, 0.05)";
+                targetInput.style.cursor = "not-allowed"; // 鼠標變成禁止符號
             }
+        };
 
-            // 嘗試自動點擊解鎖按鈕 (UX 極致優化)
-            const unlockBtn = document.getElementById('unlock-btn');
-            if (unlockBtn) {
-                // 給一點延遲，讓用戶看得到輸入框被填入的動畫效果
-                setTimeout(() => {
-                    unlockBtn.click();
-                }, 800);
+        // 💡 黑科技 2：裝上「全域雷達監聽 (Event Listener)」
+        // 解決你的痛點：就算 MetaMask 彈窗閃退，你手動點開擴充功能連接，
+        // 只要一連上，這裡的雷達就會瞬間捕捉到，並立刻自動觸發填入與鎖死！
+        window.ethereum.on('accountsChanged', (accounts) => {
+            if (accounts.length > 0) {
+                handleSuccess(accounts[0]);
+            }
+        });
+
+        try {
+            // 強制抓取正牌 MetaMask
+            let provider = window.ethereum;
+            if (window.ethereum.providers) {
+                provider = window.ethereum.providers.find(p => p.isMetaMask) || provider;
+            }
+            
+            // 主動發送連接請求
+            const accounts = await provider.request({ method: 'eth_requestAccounts' });
+            if (accounts.length > 0) {
+                handleSuccess(accounts[0]);
             }
 
         } catch (error) {
             console.error("Wallet connection error:", error);
-            btn.innerText = isZh ? "🦊 連接 METAMASK 失敗" : "🦊 CONNECTION FAILED";
-
-            // 精準判斷錯誤類型，給予雙語提示
-            if (error.code === 4001) {
+            
+            // 如果代碼是 -32002，代表請求已經在背景排隊了 (彈窗被隱藏)
+            if (error.code === -32002) {
+                btn.innerText = isZh ? "⚠️ 請手動打開 MetaMask" : "⚠️ OPEN METAMASK";
                 alert(isZh 
-                    ? "❌ 授權失敗：您拒絕了連接請求。" 
-                    : "❌ Connection Rejected: You denied the connection request.");
-            } else if (error.code === -32002) {
-                alert(isZh 
-                    ? "⚠️ 授權請求已發送！\n請點擊瀏覽器右上角的「MetaMask 狐狸圖標」解鎖並確認連接。" 
-                    : "⚠️ Request already sent!\nPlease click the MetaMask fox icon in your browser extension to unlock and confirm.");
+                    ? "⚠️ 授權請求已在背景執行！\n因為瀏覽器阻擋了彈窗，請您「手動點擊右上角的 MetaMask 狐狸圖標」來確認連接。\n(只要連上，系統會瞬間自動為您填入地址！)" 
+                    : "⚠️ Request pending in background!\nPlease manually click the MetaMask icon in your browser to confirm.");
+            } else if (error.code === 4001) {
+                btn.innerText = isZh ? "🦊 連接 METAMASK" : "🦊 CONNECT METAMASK";
+                alert(isZh ? "❌ 授權失敗：您拒絕了連接請求。" : "❌ Connection Rejected.");
             } else {
-                alert(isZh 
-                    ? "❌ 發生未知錯誤: " + error.message + "\n\n💡 排除故障指南：\n💻 【電腦用戶】請關閉其他錢包擴充功能 (如 Trust/OKX)，只保留 MetaMask！\n📱 【手機用戶】請在錢包 App 內的「發現 / DApp 瀏覽器」中開啟本網站！" 
-                    : "❌ Unknown Error: " + error.message + "\n\n💡 Troubleshooting Guide:\n💻 [Desktop] Disable other wallet extensions (e.g., Trust/OKX) and keep ONLY MetaMask active!\n📱 [Mobile] Open this website INSIDE your Wallet App's built-in DApp Browser!");
+                btn.innerText = isZh ? "🦊 連接失敗" : "🦊 FAILED";
+                alert("Error: " + error.message);
             }
         }
     } else {
-        // 系統完全找不到錢包環境 (例如普通手機 Safari)
+        // 完全找不到錢包環境
         btn.innerText = isZh ? "🦊 連接 METAMASK" : "🦊 CONNECT METAMASK";
         alert(isZh 
-            ? "⚠️ 系統偵測不到 Web3 錢包！\n\n💻 【電腦用戶】請先安裝 MetaMask 擴充功能。\n📱 【手機用戶】請複製本站網址，到 MetaMask / Trust Wallet 內建的瀏覽器中開啟！" 
-            : "⚠️ No Web3 Wallet Detected!\n\n💻 [Desktop] Please install the MetaMask extension.\n📱 [Mobile] Please copy this URL and open it INSIDE your MetaMask or Trust Wallet app's built-in browser!");
+            ? "⚠️ 系統偵測不到 Web3 錢包！請先安裝 MetaMask 擴充功能。" 
+            : "⚠️ No Web3 Wallet Detected! Please install MetaMask.");
     }
 }
 
