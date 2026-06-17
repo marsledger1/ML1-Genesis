@@ -15,19 +15,34 @@ async function updateProgress() {
         
         if (Array.isArray(data)) {
             data.forEach(item => {
-                let amount = 0;
+                let usdValue = 0;
                 let wallet = '';
+                let status = '';
+
+                // 準確抓取欄位，避免誤抓 ASSET_AMOUNT
                 for (let key in item) {
-                    if (key.toUpperCase().includes('USD') || key.toUpperCase().includes('AMOUNT')) {
+                    const upperKey = key.toUpperCase();
+                    
+                    // 1. 只抓取 USD_VALUATION，嚴格排除任何 AMOUNT
+                    if (upperKey.includes('USD_VALUATION')) {
                         let val = parseFloat(item[key]);
-                        if (!isNaN(val)) amount = val;
+                        if (!isNaN(val)) usdValue = val;
                     }
-                    if (key.toUpperCase().includes('ADDRESS') || key.toUpperCase().includes('WALLET')) {
+                    
+                    // 2. 抓取錢包地址 PIONEER_ADDRESS
+                    if (upperKey.includes('ADDRESS') || upperKey.includes('WALLET')) {
                         wallet = item[key];
                     }
+
+                    // 3. 抓取驗證狀態 VALIDATION_STATUS
+                    if (upperKey.includes('STATUS')) {
+                        status = (item[key] || '').toUpperCase();
+                    }
                 }
-                if (amount > 0) {
-                    totalUSD += amount;
+                
+                // 🛡️ 核心防護機制：必須有 USD 數值，且你手動標記了 "APPROVED"，才會計入總額！
+                if (usdValue > 0 && status.includes('APPROVED')) {
+                    totalUSD += usdValue;
                     if (wallet) eligibleWallets.add(wallet.trim().toLowerCase());
                 }
             });
