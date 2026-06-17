@@ -229,76 +229,120 @@ async function verifyActiveNodes(myCode) {
     }
 }
 
-// --- 4. 抓取全網即時進度 (Fetch Live Funding Progress for Portal) ---
+// --- 4. 抓取全網即時進度 (Hybrid Floating TVL for Portal) ---
 async function fetchLiveProgress() {
     try {
-        const response = await fetch('https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1');
-        const data = await response.json();
-        
+        const syncText = document.getElementById('sync-progress-text');
+        const btcText = document.getElementById('btc-progress-text');
+        if (syncText) syncText.innerText = "SYNCING LIVE TVL...";
+        if (btcText) btcText.innerText = "SYNCING LIVE TVL...";
+
+        // 🚀 雙軌並行抓取：Google Sheet 數據 + CoinGecko 即時幣價
+        const [sheetRes, priceRes] = await Promise.all([
+            fetch('https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1').catch(() => null),
+            fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd').catch(() => null)
+        ]);
+
+        let currentPrices = typeof livePrices !== 'undefined' ? livePrices : { BTC: 65000, ETH: 3500, SOL: 150 };
+        if (priceRes && priceRes.ok) {
+            const pData = await priceRes.json();
+            if (pData.bitcoin) currentPrices.BTC = pData.bitcoin.usd;
+            if (pData.ethereum) currentPrices.ETH = pData.ethereum.usd;
+            if (pData.solana) currentPrices.SOL = pData.solana.usd;
+        }
+
+        const data = await sheetRes.json();
         let totalUSD = 0;
         let eligibleWallets = new Set(); 
 
         if (Array.isArray(data)) {
             data.forEach(item => {
-                let usdValue = 0;
+                let amount = 0;
+                let network = '';
+                let staticUsd = 0;
                 let status = '';
                 let wallet = ''; 
 
                 for (let key in item) {
                     const upperKey = key.toUpperCase();
-                    
-                    if (upperKey.includes('USD_VALUATION')) {
-                        let val = parseFloat(item[key]);
-                        if (!isNaN(val)) usdValue = val;
-                    }
-                    
-                    if (upperKey.includes('ADDRESS') || upperKey.includes('WALLET')) {
-                        wallet = item[key];
-                    }
-
-                    if (upperKey.includes('STATUS')) {
-                        status = (item[key] || '').toUpperCase();
-                    }
+                    if (upperKey.includes('ASSET_AMOUNT') || upperKey === 'AMOUNT') amount = parseFloat(item[key]) || 0;
+                    else if (upperKey.includes('NETWORK')) network = (item[key] || '').toUpperCase();
+                    else if (upperKey.includes('USD_VALUATION')) staticUsd = parseFloat(item[key]) || 0;
+                    else if (upperKey.includes('STATUS')) status = (item[key] || '').toUpperCase();
+                    else if (upperKey.includes('ADDRESS') || upperKey.includes('WALLET')) wallet = item[key];
                 }
                 
-                // 必須有數值且狀態為 APPROVED
-                if (usdValue > 0 && status.includes('APPROVED')) {
-                    totalUSD += usdValue;
+                // 🛡️ 核心防護：必須是 APPROVED 才計入
+                if (status.includes('APPROVED')) {
                     if (wallet) eligibleWallets.add(wallet.trim().toLowerCase()); 
+                    
+                    // 📈 動態浮動計算邏輯
+                    if (amount > 0 && network) {
+                        if (network.includes('BTC') || network.includes('BITCOIN')) totalUSD += amount * currentPrices.BTC;
+                        else if (network.includes('ETH') || network.includes('BASE')) totalUSD += amount * currentPrices.ETH;
+                        else if (network.includes('SOL')) totalUSD += amount * currentPrices.SOL;
+                        else if (network.includes('USD')) totalUSD += amount;
+                        else totalUSD += staticUsd;
+                    } else if (staticUsd > 0) {
+                        totalUSD += staticUsd;
+                    }
                 }
             });
         }
 
-        // 🎯 Portal 抽獎專屬目標：250,000 USD
-        const GOAL = 250000;
-        let percent = Math.min((totalUSD / GOAL) * 100, 100).toFixed(2);
+        // 🎯 1. 更新首頁大進度條 ($1M 目標)
+        const MAIN_GOAL = 1000000;
+        let mainPercent = Math.min((totalUSD / MAIN_GOAL) * 100, 100).toFixed(2);
         
-        // 🚨 完美對齊 portal.html 入面真實存在嘅 ID
-        const btcText = document.getElementById('btc-progress-text');
+        const uiPercent = document.getElementById('sync-percent');
+        const uiBar = document.getElementById('sync-bar');
+        const syncNodes = document.getElementById('sync-nodes');
+        const syncNodesZh = document.getElementById('sync-nodes-zh');
+
+        if (uiPercent) uiPercent.innerText = mainPercent + '%';
+        if (uiBar) uiBar.style.width = mainPercent + '%';
+        if (syncText) syncText.innerText = `SYNCED: $${totalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} / $${MAIN_GOAL.toLocaleString()}`;
+        if (syncNodes) syncNodes.innerText = eligibleWallets.size;
+        if (syncNodesZh) syncNodesZh.innerText = eligibleWallets.size;
+
+        // 🎯 2. 更新 BTC 抽獎進度條 ($250K 目標)
+        const BTC_GOAL = 250000;
+        let btcPercent = Math.min((totalUSD / BTC_GOAL) * 100, 100).toFixed(2);
+        
         const btcBar = document.getElementById('btc-progress-fill');
         const nodesEn = document.getElementById('eligible-nodes');
         const nodesZh = document.getElementById('eligible-nodes-zh');
+        const drawBtn = document.getElementById('btc-draw-btn');
         
-        // 更新網頁畫面
-        if (btcText) btcText.innerText = `SYNCED: $${totalUSD.toLocaleString()} / $${GOAL.toLocaleString()}`;
-        if (btcBar) btcBar.style.width = percent + '%';
+        if (btcText) btcText.innerText = `SYNCED: $${totalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} / $${BTC_GOAL.toLocaleString()}`;
+        if (btcBar) btcBar.style.width = btcPercent + '%';
         if (nodesEn) nodesEn.innerText = eligibleWallets.size;
         if (nodesZh) nodesZh.innerText = eligibleWallets.size;
 
-        // 🎯 判斷是否達到 25萬 目標，並解鎖抽獎按鈕
-        if (totalUSD >= GOAL) {
-            isBtcMilestoneReached = true;
-        } else {
-            isBtcMilestoneReached = false;
+        // 🎯 3. 判斷抽獎按鈕解鎖狀態
+        if (drawBtn) {
+            const isZh = document.body.classList.contains('lang-zh');
+            if (totalUSD >= BTC_GOAL) {
+                isBtcMilestoneReached = true; 
+                drawBtn.disabled = false;
+                drawBtn.innerHTML = isZh ? `🚀 獎池已解鎖！投入 [ ${currentBtcTickets} ] 張抽獎券爭奪 BTC` : `🚀 POOL UNLOCKED! CAST [ ${currentBtcTickets} ] TICKETS FOR BTC`;
+            } else {
+                isBtcMilestoneReached = false;
+                drawBtn.disabled = true;
+                drawBtn.innerHTML = isZh ? `🔒 目標未達成 // 等待突破 25萬美金解鎖` : `🔒 MILESTONE LOCKED // WAITING FOR $250K`;
+            }
         }
-        if (typeof updateDrawButtonUI === 'function') updateDrawButtonUI();
 
     } catch (error) {
         console.error("Portal progress fetch failed:", error);
+        const syncText = document.getElementById('sync-progress-text');
         const btcText = document.getElementById('btc-progress-text');
+        if (syncText) syncText.innerText = "SYNC FAILED. RETRYING...";
         if (btcText) btcText.innerText = "SYNC FAILED. RETRYING...";
     }
 }
+
+window.fetchLiveProgress = fetchLiveProgress;
 
 // --- 5. 註冊新節點至星際帳本 (Commit Node to Mars) ---
 function commitToMars() {
