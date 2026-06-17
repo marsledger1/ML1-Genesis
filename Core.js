@@ -67,7 +67,7 @@ setInterval(() => {
     }
 }, 2000);
 
-// --- Web3 錢包連接模組 (WalletConnect) ---
+// --- Web3 錢包連接模組 (WalletConnect - 防劫持版) ---
 async function connectWallet(inputId, buttonId) {
     if (typeof window.ethereum !== 'undefined') {
         try {
@@ -75,11 +75,21 @@ async function connectWallet(inputId, buttonId) {
             const isZh = document.body.classList.contains('lang-zh');
             btn.innerText = isZh ? "請求授權中..." : "CONNECTING...";
             
+            // 🚀 核心防劫持邏輯：強制找出正牌的 MetaMask
+            let provider = window.ethereum;
+            if (window.ethereum.providers) {
+                // 如果瀏覽器裝了多個錢包（例如 OKX + MetaMask），找出 MetaMask！
+                provider = window.ethereum.providers.find(p => p.isMetaMask) || provider;
+            } else if (window.ethereum.isPhantom || window.ethereum.isOKExWallet) {
+                // 防範其他錢包強制覆蓋
+                alert("⚠️ 系統偵測到信號可能被 OKX / Phantom 等其他錢包攔截！\n建議您先在擴充功能中暫時關閉其他錢包，以確保 MetaMask 正常彈出。");
+            }
+            
             // 彈出 MetaMask 要求授權
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const accounts = await provider.request({ method: 'eth_requestAccounts' });
             const userAddress = accounts[0];
             
-            // 🚀 授權成功：自動填入對應的 input 欄位 (reg-wallet 或 node-wallet)
+            // 授權成功：自動填入對應的 input 欄位
             document.getElementById(inputId).value = userAddress;
             
             // 更新按鈕狀態為成功，並顯示縮短後的地址
@@ -93,14 +103,13 @@ async function connectWallet(inputId, buttonId) {
             const btn = document.getElementById(buttonId);
             btn.innerText = "🦊 CONNECT METAMASK / 連接錢包";
 
-            // 🎯 精準判斷錯誤類型
+            // 精準判斷錯誤類型
             if (error.code === 4001) {
                 alert("❌ 授權失敗：您拒絕了連接請求。 / Connection Rejected.");
             } else if (error.code === -32002) {
-                // 這是最常發生的情況：請求已在背景排隊
                 alert("⚠️ 授權請求已發送！\n請點擊瀏覽器右上角的「MetaMask 狐狸圖標」解鎖並確認連接。");
             } else {
-                alert("❌ 發生未知錯誤 / Unknown Error: " + error.message);
+                alert("❌ 發生未知錯誤 / Error: " + error.message + "\n\n💡 小貼士：如果是 'No active wallet found'，請先去瀏覽器右上角「管理擴充功能」，將 OKX 或 Phantom 等其他錢包【暫時關閉】，只保留 MetaMask！");
             }
         }
     } else {
