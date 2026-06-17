@@ -87,7 +87,7 @@ const content = {
     en: {
         tab0: "OVERVIEW", tab1: "PIONEER HUB", tab2: "SIMULATOR",
         loc: "LOC: JEZERO_CRATER_ALPHA", sys: "SYS_STATUS: TOP_SECRET",
-        head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V5.7.0 // THE GENESIS COUNCIL EPOCH",
+        head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V6.1.0 // THE THERMODYNAMIC EPOCH",
         name: "Jack Yiu", pos: "CHIEF ARCHITECT // MARS COLONY ONE",
         bio: "\"Traditional TCP/IP and legacy Earth-bound blockchains (BTC, ETH, SOL) collapse under the 3-22 minute Latency Wall. Their synchronous consensus mechanisms cannot survive the speed of light barrier. ML1 is the first asynchronous state machine designed for the vacuum of deep space—enabling Mars-native liquidity that remains functional even when Earth is occluded.\"",
         pillH: "CORE INFRASTRUCTURE PILLARS",
@@ -135,7 +135,7 @@ const content = {
     zh: {
         tab0: "系統總覽", tab1: "先鋒樞紐", tab2: "深空模擬器",
         loc: "座標: JEZERO_CRATER_ALPHA", sys: "系統狀態: 防彈紀元",
-        head: "火星帳本 1 號", tag: "協議: ML1-V5.7.0 // 創世議會與雙幣紀元",
+        head: "火星帳本 1 號", tag: "協議: ML1-V6.1.0 // 熱力學三位一體紀元",
         name: "Jack Yiu", pos: "首席架構師 // 火星第一殖民地",
         bio: "「傳統 TCP/IP 與舊有的地球鏈協議（BTC, ETH, SOL）在 3-22 分鐘的延遲牆面前會徹底崩潰。它們的同步共識機制無法跨越光速障礙。ML1 是首個為深空真空設計的非同步狀態機——確保在地球信號被遮蔽時，火星本土流動性依然能自主運作。」",
         pillH: "核心基礎設施四大支柱",
