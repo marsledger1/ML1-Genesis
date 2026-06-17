@@ -218,3 +218,35 @@ function startSyncSequence() {
         lBar.style.width = currentProgress + '%';
     }, 40);
 }
+
+// --- Web3 錢包連接模組 (WalletConnect) ---
+async function connectWallet(inputId, buttonId) {
+    if (typeof window.ethereum !== 'undefined') {
+        try {
+            const btn = document.getElementById(buttonId);
+            const isZh = document.body.classList.contains('lang-zh');
+            btn.innerText = isZh ? "請求授權中..." : "CONNECTING...";
+            
+            // 彈出 MetaMask 要求授權
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const userAddress = accounts[0];
+            
+            // 授權成功：自動填入對應的 input 欄位
+            document.getElementById(inputId).value = userAddress;
+            
+            // 更新按鈕狀態為成功，並顯示縮短後的地址
+            const shortAddr = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+            btn.innerText = `✅ ${shortAddr}`;
+            btn.style.background = 'rgba(0, 255, 65, 0.2)';
+            btn.style.border = '1px solid #00ff41';
+            
+        } catch (error) {
+            console.error("Wallet connection error:", error);
+            alert("❌ 授權失敗或已取消 / Connection Cancelled.");
+            const btn = document.getElementById(buttonId);
+            btn.innerText = "🦊 CONNECT METAMASK / 連接錢包";
+        }
+    } else {
+        alert("⚠️ 系統偵測不到錢包！請安裝 MetaMask 瀏覽器擴充功能。 / Web3 wallet not found!");
+    }
+}

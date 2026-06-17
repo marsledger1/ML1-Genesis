@@ -194,6 +194,34 @@
             .hud-value { font-size: 1.2rem; }
         }
     </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<script>
+async function connectWallet(inputId, buttonId) {
+    if (typeof window.ethereum !== 'undefined') {
+        try {
+            const btn = document.getElementById(buttonId);
+            const isZh = document.body.classList.contains('lang-zh');
+            btn.innerText = isZh ? "請求授權中..." : "CONNECTING...";
+            
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const userAddress = accounts[0];
+            
+            document.getElementById(inputId).value = userAddress;
+            
+            const shortAddr = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+            btn.innerText = `✅ ${shortAddr}`;
+            btn.style.background = 'rgba(0, 255, 65, 0.2)';
+            btn.style.border = '1px solid #00ff41';
+        } catch (error) {
+            console.error("Wallet error:", error);
+            alert("❌ 授權失敗或已取消 / Connection Cancelled.");
+            document.getElementById(buttonId).innerText = "🦊 CONNECT METAMASK / 連接錢包";
+        }
+    } else {
+        alert("⚠️ 系統偵測不到錢包！請安裝 MetaMask 擴充功能。 / Web3 wallet not found!");
+    }
+}
+</script>
 </head>
 <body class="lang-en">
 
@@ -510,6 +538,9 @@
                         <option value="BTC">Bitcoin 原生鏈</option>
                     </select>
 
+<button type="button" id="btn-connect-portal" onclick="connectWallet('node-wallet', 'btn-connect-portal')" style="background: transparent; border: 1px dashed #00ff41; color: #00ff41; padding: 10px; width: 100%; max-width: 400px; margin-bottom: 10px; cursor: pointer; font-family: inherit; font-weight: bold; letter-spacing: 1px; transition: 0.3s;" onmouseover="this.style.background='rgba(0,255,65,0.1)'" onmouseout="this.style.background='transparent'">
+    🦊 CONNECT METAMASK / 連接錢包
+</button>
                     <input type="text" id="node-wallet" placeholder="Paste your SENDING Wallet Address Here">
                     <input type="text" id="inviter-code" placeholder="Inviter Code (邀請人代碼 - Optional)">
                     <button class="btn-commit" onclick="commitToMars()" id="commit-btn">

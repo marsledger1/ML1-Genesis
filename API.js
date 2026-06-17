@@ -33,55 +33,63 @@ async function updateProgress() {
             });
         }
         
-        let percent = Math.min((totalUSD / GOAL) * 100, 100).toFixed(1);
-        document.getElementById('sync-bar').style.width = percent + '%';
+        let percent = Math.min((totalUSD / GOAL) * 100, 100).toFixed(2);
         document.getElementById('sync-percent').innerText = percent + '%';
+        document.getElementById('sync-bar').style.width = percent + '%';
+        document.getElementById('sync-progress-text').innerText = `SYNCED: $${totalUSD.toLocaleString()} / $${GOAL.toLocaleString()}`;
         
-        let actualNodes = eligibleWallets.size;
-        document.getElementById('sync-progress-text').innerText = `CURRENT PROGRESS: (${totalUSD.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} / 1,000,000 USD)`;
-        if(document.getElementById('sync-nodes')) document.getElementById('sync-nodes').innerText = actualNodes;
-        if(document.getElementById('sync-nodes-zh')) document.getElementById('sync-nodes-zh').innerText = actualNodes;
-
-    } catch (e) { console.error('Telemetry Interrupted:', e); }
+        document.getElementById('sync-nodes').innerText = eligibleWallets.size;
+        if(document.getElementById('sync-nodes-zh')) document.getElementById('sync-nodes-zh').innerText = eligibleWallets.size;
+        
+    } catch (error) {
+        console.error("Failed to fetch progress:", error);
+        document.getElementById('sync-progress-text').innerText = "SYNC FAILED. RETRYING...";
+    }
 }
 
-// --- 2. 提交節點入金資料至資料庫 (Commit to Ledger) ---
+// --- 2. 提交地址到星際帳本 (Submit to Ledger) ---
 async function submitToLedger() {
-    const btn = document.getElementById('t-btn');
     const network = document.getElementById('reg-network').value;
     const amount = document.getElementById('reg-amount').value;
-    const wallet = document.getElementById('reg-wallet').value.trim();
-    const hash = document.getElementById('reg-hash').value.trim();
+    const wallet = document.getElementById('reg-wallet').value;
+    const hash = document.getElementById('reg-hash').value;
     
-    if(!amount || !hash || !wallet) { 
-        alert("DATA INCOMPLETE / 數據不完整，請填寫錢包與 TXID"); 
-        return; 
+    if(!amount || !wallet || !hash) {
+        alert("REQUIRED FIELDS MISSING / 請填寫完整打款資訊 (數量、錢包、TXID)");
+        return;
     }
-    
+
+    const btn = document.getElementById('t-btn');
     const originalBtnText = btn.innerText;
-    btn.innerText = "SYNCHRONIZING...";
+    btn.innerText = "COMMITTING... / 提交中...";
     btn.disabled = true;
-    
+
     const payload = [{
-        "TIMESTAMP (UTC)": new Date().toISOString(), 
-        "NETWORK": network, 
-        "ASSET_AMOUNT": amount, 
-        "PIONEER_ADDRESS": wallet,
-        "TXID": hash,
-        "VALIDATION_STATUS": "PENDING"
+        "Network": network,
+        "Amount": amount,
+        "Wallet_Address": wallet,
+        "TXID_Hash": hash,
+        "Timestamp": new Date().toLocaleString()
     }];
+
     try {
-        const response = await fetch(API_URL, { 
-            method: 'POST', 
+        const response = await fetch("https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/Ledger", {
+            method: 'POST',
             headers: {'Content-Type': 'application/json'}, 
             body: JSON.stringify(payload) 
         });
-        if(response.ok) { 
-            alert("SUCCESS: DATA COMMITTED / 提交成功！裂變系統將自動核對您的地址。"); 
+if(response.ok) { 
+            alert("SUCCESS: DATA COMMITTED / 提交成功！即將為您開啟先鋒樞紐..."); 
+            
+            // 清空輸入框
             document.getElementById('reg-amount').value = '';
             document.getElementById('reg-wallet').value = '';
             document.getElementById('reg-hash').value = '';
             updateProgress(); 
+            
+            // 🚀 核心跳轉魔法：直接飛去 Portal 兼且自帶登入金鑰！
+            window.location.href = 'portal.html?auth=mars2026';
+            
         } else {
             alert("SERVER ERROR / 伺服器錯誤: " + response.status);
         }
@@ -105,12 +113,9 @@ async function fetchLivePrices() {
         if (data.bitcoin && data.bitcoin.usd) livePrices.BTC = data.bitcoin.usd;
         if (data.ethereum && data.ethereum.usd) livePrices.ETH = data.ethereum.usd;
         if (data.solana && data.solana.usd) livePrices.SOL = data.solana.usd;
-        
-    } catch(e) { 
-        console.log('❌ API 連線失敗，啟用本地緩存價格', e); 
-    } finally {
-        if (typeof runPhase1Calc === "function") {
-            runPhase1Calc(); 
-        }
+
+        if (typeof runPhase1Calc === "function") runPhase1Calc();
+    } catch (error) {
+        console.error("CoinGecko API Error, using cached prices.");
     }
 }
