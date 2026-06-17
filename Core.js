@@ -67,7 +67,47 @@ setInterval(() => {
     }
 }, 2000);
 
-// --- Web3 錢包連接模組 (WalletConnect - 智能防劫持 & 防呆版) ---
+// ==========================================
+// --- Web3 錢包連接與自動恢復模組 (終極完美版) ---
+// ==========================================
+
+// 1. 靜默檢查並自動恢復連線 (跨頁面保持登入，大戶免再撳)
+async function autoConnectWallet(inputId, buttonId) {
+    if (typeof window.ethereum !== 'undefined') {
+        try {
+            let provider = window.ethereum;
+            if (window.ethereum.providers) {
+                provider = window.ethereum.providers.find(p => p.isMetaMask) || provider;
+            }
+            
+            // eth_accounts 不會彈出授權視窗，只會靜默讀取「已授權」的帳號
+            const accounts = await provider.request({ method: 'eth_accounts' });
+            if (accounts.length > 0) {
+                const userAddress = accounts[0];
+                const inputField = document.getElementById(inputId);
+                const btn = document.getElementById(buttonId);
+                
+                if (inputField && btn) {
+                    // 自動填寫並鎖死防呆
+                    inputField.value = userAddress;
+                    inputField.readOnly = true;
+                    inputField.style.opacity = '0.7';
+                    inputField.style.cursor = 'not-allowed';
+                    
+                    // 按鈕直接變綠色成功狀態
+                    const shortAddr = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+                    btn.innerText = `✅ ${shortAddr}`;
+                    btn.style.background = 'rgba(0, 255, 65, 0.2)';
+                    btn.style.border = '1px solid #00ff41';
+                }
+            }
+        } catch (error) {
+            console.log("Silent auto-connect failed:", error);
+        }
+    }
+}
+
+// 2. 點擊按鈕主動連線 (防劫持 + 跨平台提示)
 async function connectWallet(inputId, buttonId) {
     if (typeof window.ethereum !== 'undefined') {
         try {
@@ -75,7 +115,7 @@ async function connectWallet(inputId, buttonId) {
             const isZh = document.body.classList.contains('lang-zh');
             btn.innerText = isZh ? "請求授權中..." : "CONNECTING...";
             
-            // 🚀 核心防劫持邏輯：強制找出正牌的 MetaMask
+            // 強制找出正牌的 MetaMask，無視其他錢包劫持
             let provider = window.ethereum;
             if (window.ethereum.providers) {
                 provider = window.ethereum.providers.find(p => p.isMetaMask) || provider;
@@ -85,7 +125,7 @@ async function connectWallet(inputId, buttonId) {
             const accounts = await provider.request({ method: 'eth_requestAccounts' });
             const userAddress = accounts[0];
             
-            // 🚀 授權成功：自動填入對應的 input 欄位
+            // 授權成功：自動填入對應的 input 欄位
             const inputField = document.getElementById(inputId);
             inputField.value = userAddress;
             
@@ -94,7 +134,7 @@ async function connectWallet(inputId, buttonId) {
             inputField.style.opacity = '0.7'; 
             inputField.style.cursor = 'not-allowed';
             
-            // 更新按鈕狀態為成功，並顯示縮短後的地址
+            // 更新按鈕狀態
             const shortAddr = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
             btn.innerText = `✅ ${shortAddr}`;
             btn.style.background = 'rgba(0, 255, 65, 0.2)';
@@ -105,7 +145,7 @@ async function connectWallet(inputId, buttonId) {
             const btn = document.getElementById(buttonId);
             btn.innerText = "🦊 CONNECT METAMASK / 連接錢包";
 
-            // 精準判斷錯誤類型，並給予跨平台提示
+            // 精準判斷錯誤類型，給予跨平台提示
             if (error.code === 4001) {
                 alert("❌ 授權失敗：您拒絕了連接請求。 / Connection Rejected.");
             } else if (error.code === -32002) {
@@ -115,7 +155,19 @@ async function connectWallet(inputId, buttonId) {
             }
         }
     } else {
-        // 系統完全找不到錢包 (例如在普通手機 Safari 打開)
+        // 系統完全找不到錢包 (例如普通手機 Safari)
         alert("⚠️ 系統偵測不到 Web3 錢包！\n\n💻 【電腦用戶】請安裝 MetaMask 擴充功能。\n📱 【手機用戶】請務必在您的錢包 App (如 MetaMask/Trust) 內的「DApp 瀏覽器」中輸入本網址開啟！\n\n您也可以直接在下方手動輸入錢包地址。");
     }
 }
+
+// 3. 頁面載入時自動執行靜默檢查
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        if (document.getElementById('btn-connect-index')) {
+            autoConnectWallet('reg-wallet', 'btn-connect-index');
+        }
+        if (document.getElementById('btn-connect-portal')) {
+            autoConnectWallet('node-wallet', 'btn-connect-portal');
+        }
+    }, 300);
+});
