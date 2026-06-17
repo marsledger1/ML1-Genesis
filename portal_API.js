@@ -211,7 +211,7 @@ async function verifyActiveNodes(myCode) {
     }
 }
 
-// --- 4. 抓取全網即時進度 (Fetch Live Funding Progress) ---
+// --- 4. 抓取全網即時進度 (Fetch Live Funding Progress for Portal) ---
 async function fetchLiveProgress() {
     try {
         // 確保指向同一個數據源：工作表1
@@ -219,30 +219,27 @@ async function fetchLiveProgress() {
         const data = await response.json();
         
         let totalUSD = 0;
-        let eligibleWallets = new Set(); // 🌟 補回：用來計算有幾多個獨立節點
+        let eligibleWallets = new Set(); 
 
         if (Array.isArray(data)) {
             data.forEach(item => {
                 let usdValue = 0;
                 let status = '';
-                let wallet = ''; // 🌟 補回：準備抓取錢包地址
+                let wallet = ''; 
 
                 // 100% 同步首頁的嚴格審批邏輯
                 for (let key in item) {
                     const upperKey = key.toUpperCase();
                     
-                    // 只抓取 USD_VALUATION
                     if (upperKey.includes('USD_VALUATION')) {
                         let val = parseFloat(item[key]);
                         if (!isNaN(val)) usdValue = val;
                     }
                     
-                    // 🌟 補回：抓取錢包地址 (用來計人數)
                     if (upperKey.includes('ADDRESS') || upperKey.includes('WALLET')) {
                         wallet = item[key];
                     }
 
-                    // 抓取狀態 VALIDATION_STATUS
                     if (upperKey.includes('STATUS')) {
                         status = (item[key] || '').toUpperCase();
                     }
@@ -251,34 +248,30 @@ async function fetchLiveProgress() {
                 // 🛡️ 核心防護：必須有數值且狀態為 APPROVED
                 if (usdValue > 0 && status.includes('APPROVED')) {
                     totalUSD += usdValue;
-                    if (wallet) eligibleWallets.add(wallet.trim().toLowerCase()); // 🌟 將符合資格的銀包加入名單
+                    if (wallet) eligibleWallets.add(wallet.trim().toLowerCase()); 
                 }
             });
         }
 
-        const GOAL = 1000000;
+        // 🎯 修正 1：Portal 抽獎進度條的獨立目標為 250,000 USD
+        const GOAL = 250000;
         let percent = Math.min((totalUSD / GOAL) * 100, 100).toFixed(2);
         
-        // 更新 Portal 上的 UI 元素
-        const syncPercent = document.getElementById('sync-percent');
-        const syncBar = document.getElementById('sync-bar');
-        const syncText = document.getElementById('sync-progress-text');
-        
-        // 🌟 補回：抓取網頁上顯示節點數量的元素
-        const syncNodes = document.getElementById('sync-nodes');
-        const syncNodesZh = document.getElementById('sync-nodes-zh');
+        // 🎯 修正 2：對準 portal.html 專屬的 ID (加上 portal- 前綴)
+        const syncPercent = document.getElementById('portal-sync-percent');
+        const syncBar = document.getElementById('portal-sync-bar');
+        const syncText = document.getElementById('portal-sync-text');
+        const syncNodes = document.getElementById('portal-sync-nodes');
         
         if (syncPercent) syncPercent.innerText = percent + '%';
         if (syncBar) syncBar.style.width = percent + '%';
         if (syncText) syncText.innerText = `SYNCED: $${totalUSD.toLocaleString()} / $${GOAL.toLocaleString()}`;
-        
-        // 🌟 補回：將計算好的人數寫入網頁
         if (syncNodes) syncNodes.innerText = eligibleWallets.size;
-        if (syncNodesZh) syncNodesZh.innerText = eligibleWallets.size;
 
     } catch (error) {
         console.error("Portal progress fetch failed:", error);
-        const syncText = document.getElementById('sync-progress-text');
+        // 錯誤時同樣指向正確的 portal ID
+        const syncText = document.getElementById('portal-sync-text');
         if (syncText) syncText.innerText = "SYNC FAILED. RETRYING...";
     }
 }
