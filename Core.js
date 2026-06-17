@@ -79,7 +79,7 @@ async function connectWallet(inputId, buttonId) {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             const userAddress = accounts[0];
             
-            // 授權成功：自動填入對應的 input 欄位
+            // 🚀 授權成功：自動填入對應的 input 欄位 (reg-wallet 或 node-wallet)
             document.getElementById(inputId).value = userAddress;
             
             // 更新按鈕狀態為成功，並顯示縮短後的地址
@@ -90,9 +90,18 @@ async function connectWallet(inputId, buttonId) {
             
         } catch (error) {
             console.error("Wallet connection error:", error);
-            alert("❌ 授權失敗或已取消 / Connection Cancelled.");
             const btn = document.getElementById(buttonId);
             btn.innerText = "🦊 CONNECT METAMASK / 連接錢包";
+
+            // 🎯 精準判斷錯誤類型
+            if (error.code === 4001) {
+                alert("❌ 授權失敗：您拒絕了連接請求。 / Connection Rejected.");
+            } else if (error.code === -32002) {
+                // 這是最常發生的情況：請求已在背景排隊
+                alert("⚠️ 授權請求已發送！\n請點擊瀏覽器右上角的「MetaMask 狐狸圖標」解鎖並確認連接。");
+            } else {
+                alert("❌ 發生未知錯誤 / Unknown Error: " + error.message);
+            }
         }
     } else {
         alert("⚠️ 系統偵測不到錢包！請安裝 MetaMask 瀏覽器擴充功能。 / Web3 wallet not found!");
