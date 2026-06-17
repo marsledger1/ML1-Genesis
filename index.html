@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML1 V6.1.0 | MARS SOVEREIGN SUPREMACY</title>
+    <title>ML1 V5.7.0 | MARS SOVEREIGN SUPREMACY</title>
     <style>
         :root {
             --bg-deep: #050505;
@@ -177,6 +177,39 @@ async function connectWallet(inputId, buttonId) {
 </script>
 </head>
 <body class="lang-en">
+    <div id="legal-disclaimer-gate" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 5, 0.45); z-index: 100000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+    
+    <div style="width: 90%; max-width: 650px; background: rgba(10, 10, 10, 0.75); border: 1px solid rgba(255, 42, 75, 0.6); padding: 40px 30px; box-shadow: 0 0 50px rgba(255, 42, 75, 0.3); font-family: 'JetBrains Mono', monospace; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 4px;">
+        
+        <h2 style="color: #ff2a4b; margin-top: 0; letter-spacing: 2px; font-size: 1.4rem; text-align: center; border-bottom: 1px solid rgba(255, 42, 75, 0.3); padding-bottom: 15px; text-shadow: 0 0 10px rgba(255, 42, 75, 0.5);">
+            ⚠️ INTERSTELLAR LAW PROTOCOL
+        </h2>
+        
+        <div style="height: 250px; overflow-y: auto; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); padding: 15px; font-size: 0.85rem; color: #ccc; line-height: 1.6; margin: 20px 0; text-align: left; border-radius: 4px;">
+            <p style="color: #fff; font-weight: bold; margin-top: 0; text-shadow: 0 0 5px rgba(255,255,255,0.3);">【中文使用者條款與免責聲明】</p>
+            <p>1. 本網站及 Mars Ledger 1 (ML1) 項目所涉及之行為，純屬「去中心化實體基礎設施 (DePIN)」之硬體設備與軟體授權採購，絕不構成任何形式的證券、集資、期貨或集體投資計劃之邀約。</p>
+            <p>2. $ML1、$O2 及 $DUST 等相關代幣，僅作為驅動火星自主網路路由、API 調用與熱力學耗散之「實用型代幣 (Utility Token)」，不具備任何股權、債權或承諾固定收益之金融屬性。</p>
+            <p>3. 參與創世預售即代表您已明確知悉，硬體研發、商業航太載荷部署具有極高之物理與不可抗力風險。您承諾自擔風險，且放棄對本項目發起人、發起機構進行任何形式之民事訴訟或法律追索權。</p>
+            
+            <p style="color: #fff; font-weight: bold; margin-top: 20px; text-shadow: 0 0 5px rgba(255,255,255,0.3);">[ENGLISH TERMS & RISK DISCLOSURE]</p>
+            <p>1. Participation in the ML1 Genesis Presale constitutes a purchase of physical hardware node licenses and network edge-compute utility routing software, NOT a financial security or collective investment scheme.</p>
+            <p>2. Digital assets including $ML1, $O2, and $DUST are strictly defined as Utility Tokens required for machine-to-machine telemetry and network traversal energy consumption. They carry zero financial equity or guaranteed returns.</p>
+            <p>3. By clicking "ENTER", you explicitly warrant that you are NOT a citizen or resident of prohibited jurisdictions (such as the United States) and that you waive all rights to litigation against the Genesis Council.</p>
+        </div>
+
+        <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 25px; text-align: left;">
+            <input type="checkbox" id="legal-agree-check" style="width: 20px; height: 20px; margin-top: 3px; cursor: pointer;" onchange="validateLegalCheck()">
+            <label for="legal-agree-check" style="font-size: 0.85rem; color: #fff; cursor: pointer; line-height: 1.4; text-shadow: 0 0 5px rgba(0,0,0,0.8);">
+                我已閱讀並完全同意上述所有條款，明確知悉此項目為硬體與網路授權採購，並自願承擔深空技術部署之所有風險。<br>
+                <span style="color: #999; font-size: 0.75rem;">I have read, understood, and accept all risk disclosures and terms.</span>
+            </label>
+        </div>
+
+        <button id="legal-enter-btn" disabled onclick="acceptLegalTerms()" style="width: 100%; background: rgba(255, 42, 75, 0.15); color: #ff2a4b; border: 1px solid #ff2a4b; padding: 15px; font-weight: bold; font-family: inherit; letter-spacing: 2px; cursor: not-allowed; opacity: 0.6; transition: all 0.3s ease; border-radius: 2px;">
+            INITIALIZE ENTRANCE // 授權並進入帳本
+        </button>
+    </div>
+</div>
     
     <audio id="index-bgm" loop>
         <source src="https://raw.githubusercontent.com/marsledger1/ML1-Genesis/main/indexbgm.mp3" type="audio/mpeg">
@@ -218,7 +251,7 @@ async function connectWallet(inputId, buttonId) {
             </div>
         </div>
             <h1 id="t-head">MARS LEDGER 1</h1>
-            <div class="tagline" id="t-tag">PROTOCOL: ML1-V6.1.0 // THE THERMODYNAMIC EPOCH</div>
+            <div class="tagline" id="t-tag">PROTOCOL: ML1-V5.7.0 // THE GENESIS COUNCIL EPOCH</div>
         </header>
 
         <div class="main-tab-nav">
@@ -555,7 +588,7 @@ async function connectWallet(inputId, buttonId) {
             // 4. 啟動背景音樂系統
             if(typeof initBGM === 'function') initBGM();
             
-            console.log('%c✅ ML1 V6.1.0 系統全面上線 (UI, Core, API Modules Active)', 'color:#00ff41; font-size:14px');
+            console.log('%c✅ ML1 V5.7.0 系統全面上線 (UI, Core, API Modules Active)', 'color:#00ff41; font-size:14px');
         };
     </script>
 </body>
