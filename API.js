@@ -64,30 +64,33 @@ async function submitToLedger() {
     btn.innerText = "COMMITTING... / 提交中...";
     btn.disabled = true;
 
+    // 🚨 核心修正位置：呢度嘅 Key 已經 100% 對齊你 Google Sheet 嘅標題
     const payload = [{
-        "Network": network,
-        "Amount": amount,
-        "Wallet_Address": wallet,
-        "TXID_Hash": hash,
-        "Timestamp": new Date().toLocaleString()
+        "TIMESTAMP (UTC)": new Date().toISOString(),
+        "PIONEER_ADDRESS": wallet,
+        "NETWORK": network,
+        "ASSET_AMOUNT": amount,
+        "TXID_HASH": hash,  // 我幫你加多咗個 Hash 欄位嚟裝交易代碼
+        "VALIDATION_STATUS": "PENDING" // 預設狀態為 PENDING
     }];
 
     try {
+        // 確保結尾係「工作表1」
         const response = await fetch("https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'}, 
             body: JSON.stringify(payload) 
         });
-if(response.ok) { 
+        
+        if(response.ok) { 
             alert("SUCCESS: DATA COMMITTED / 提交成功！即將為您開啟先鋒樞紐..."); 
             
-            // 清空輸入框
             document.getElementById('reg-amount').value = '';
             document.getElementById('reg-wallet').value = '';
             document.getElementById('reg-hash').value = '';
             updateProgress(); 
             
-            // 🚀 核心跳轉魔法：直接飛去 Portal 兼且自帶登入金鑰！
+            // 跳轉至 portal 並自動帶入通用金鑰解鎖
             window.location.href = 'portal.html?auth=mars2026';
             
         } else {
