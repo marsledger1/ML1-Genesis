@@ -217,14 +217,17 @@ async function fetchLiveProgress() {
         // 確保指向同一個數據源：工作表1
         const response = await fetch('https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1');
         const data = await response.json();
+        
         let totalUSD = 0;
+        let eligibleWallets = new Set(); // 🌟 補回：用來計算有幾多個獨立節點
 
         if (Array.isArray(data)) {
             data.forEach(item => {
                 let usdValue = 0;
                 let status = '';
+                let wallet = ''; // 🌟 補回：準備抓取錢包地址
 
-                // 🌟 100% 同步首頁的嚴格審批邏輯
+                // 100% 同步首頁的嚴格審批邏輯
                 for (let key in item) {
                     const upperKey = key.toUpperCase();
                     
@@ -234,6 +237,11 @@ async function fetchLiveProgress() {
                         if (!isNaN(val)) usdValue = val;
                     }
                     
+                    // 🌟 補回：抓取錢包地址 (用來計人數)
+                    if (upperKey.includes('ADDRESS') || upperKey.includes('WALLET')) {
+                        wallet = item[key];
+                    }
+
                     // 抓取狀態 VALIDATION_STATUS
                     if (upperKey.includes('STATUS')) {
                         status = (item[key] || '').toUpperCase();
@@ -243,6 +251,7 @@ async function fetchLiveProgress() {
                 // 🛡️ 核心防護：必須有數值且狀態為 APPROVED
                 if (usdValue > 0 && status.includes('APPROVED')) {
                     totalUSD += usdValue;
+                    if (wallet) eligibleWallets.add(wallet.trim().toLowerCase()); // 🌟 將符合資格的銀包加入名單
                 }
             });
         }
@@ -255,12 +264,22 @@ async function fetchLiveProgress() {
         const syncBar = document.getElementById('sync-bar');
         const syncText = document.getElementById('sync-progress-text');
         
+        // 🌟 補回：抓取網頁上顯示節點數量的元素
+        const syncNodes = document.getElementById('sync-nodes');
+        const syncNodesZh = document.getElementById('sync-nodes-zh');
+        
         if (syncPercent) syncPercent.innerText = percent + '%';
         if (syncBar) syncBar.style.width = percent + '%';
         if (syncText) syncText.innerText = `SYNCED: $${totalUSD.toLocaleString()} / $${GOAL.toLocaleString()}`;
+        
+        // 🌟 補回：將計算好的人數寫入網頁
+        if (syncNodes) syncNodes.innerText = eligibleWallets.size;
+        if (syncNodesZh) syncNodesZh.innerText = eligibleWallets.size;
 
     } catch (error) {
         console.error("Portal progress fetch failed:", error);
+        const syncText = document.getElementById('sync-progress-text');
+        if (syncText) syncText.innerText = "SYNC FAILED. RETRYING...";
     }
 }
 
