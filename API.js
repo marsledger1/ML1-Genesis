@@ -64,33 +64,30 @@ async function submitToLedger() {
     btn.innerText = "COMMITTING... / 提交中...";
     btn.disabled = true;
 
-    // 🚨 核心修正位置：呢度嘅 Key 已經 100% 對齊你 Google Sheet 嘅標題
+    // 🌟 100% 恢復你原始嘅標題！
     const payload = [{
-        "TIMESTAMP (UTC)": new Date().toISOString(),
-        "PIONEER_ADDRESS": wallet,
-        "NETWORK": network,
-        "ASSET_AMOUNT": amount,
-        "TXID_HASH": hash,  // 我幫你加多咗個 Hash 欄位嚟裝交易代碼
-        "VALIDATION_STATUS": "PENDING" // 預設狀態為 PENDING
+        "Network": network,
+        "Amount": amount,
+        "Wallet_Address": wallet,
+        "TXID_Hash": hash,
+        "Timestamp": new Date().toLocaleString()
     }];
 
     try {
-        // 確保結尾係「工作表1」
-        const response = await fetch("https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1", {
+        // 🌟 100% 恢復指返去你原本寫入嘅 Ledger 分頁！
+        const response = await fetch("https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/Ledger", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'}, 
             body: JSON.stringify(payload) 
         });
-        
         if(response.ok) { 
             alert("SUCCESS: DATA COMMITTED / 提交成功！即將為您開啟先鋒樞紐..."); 
-            
             document.getElementById('reg-amount').value = '';
             document.getElementById('reg-wallet').value = '';
             document.getElementById('reg-hash').value = '';
             updateProgress(); 
             
-            // 跳轉至 portal 並自動帶入通用金鑰解鎖
+            // 🚀 核心跳轉魔法 (保留咗嘅新功能)
             window.location.href = 'portal.html?auth=mars2026';
             
         } else {
@@ -112,7 +109,6 @@ async function fetchLivePrices() {
 
         const data = await response.json();
 
-        // 這裡會自動去更新 Core.js 裡面的 livePrices 變數
         if (data.bitcoin && data.bitcoin.usd) livePrices.BTC = data.bitcoin.usd;
         if (data.ethereum && data.ethereum.usd) livePrices.ETH = data.ethereum.usd;
         if (data.solana && data.solana.usd) livePrices.SOL = data.solana.usd;
