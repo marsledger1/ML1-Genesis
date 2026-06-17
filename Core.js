@@ -67,7 +67,7 @@ setInterval(() => {
     }
 }, 2000);
 
-// --- Web3 錢包連接模組 (WalletConnect - 防劫持版) ---
+// --- Web3 錢包連接模組 (WalletConnect - 智能防劫持 & 防呆版) ---
 async function connectWallet(inputId, buttonId) {
     if (typeof window.ethereum !== 'undefined') {
         try {
@@ -78,19 +78,21 @@ async function connectWallet(inputId, buttonId) {
             // 🚀 核心防劫持邏輯：強制找出正牌的 MetaMask
             let provider = window.ethereum;
             if (window.ethereum.providers) {
-                // 如果瀏覽器裝了多個錢包（例如 OKX + MetaMask），找出 MetaMask！
                 provider = window.ethereum.providers.find(p => p.isMetaMask) || provider;
-            } else if (window.ethereum.isPhantom || window.ethereum.isOKExWallet) {
-                // 防範其他錢包強制覆蓋
-                alert("⚠️ 系統偵測到信號可能被 OKX / Phantom 等其他錢包攔截！\n建議您先在擴充功能中暫時關閉其他錢包，以確保 MetaMask 正常彈出。");
             }
             
             // 彈出 MetaMask 要求授權
             const accounts = await provider.request({ method: 'eth_requestAccounts' });
             const userAddress = accounts[0];
             
-            // 授權成功：自動填入對應的 input 欄位
-            document.getElementById(inputId).value = userAddress;
+            // 🚀 授權成功：自動填入對應的 input 欄位
+            const inputField = document.getElementById(inputId);
+            inputField.value = userAddress;
+            
+            // 🔒 終極防呆：鎖死輸入框，變成半透明，不允許手動修改！
+            inputField.readOnly = true;
+            inputField.style.opacity = '0.7'; 
+            inputField.style.cursor = 'not-allowed';
             
             // 更新按鈕狀態為成功，並顯示縮短後的地址
             const shortAddr = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
@@ -103,16 +105,17 @@ async function connectWallet(inputId, buttonId) {
             const btn = document.getElementById(buttonId);
             btn.innerText = "🦊 CONNECT METAMASK / 連接錢包";
 
-            // 精準判斷錯誤類型
+            // 精準判斷錯誤類型，並給予跨平台提示
             if (error.code === 4001) {
                 alert("❌ 授權失敗：您拒絕了連接請求。 / Connection Rejected.");
             } else if (error.code === -32002) {
                 alert("⚠️ 授權請求已發送！\n請點擊瀏覽器右上角的「MetaMask 狐狸圖標」解鎖並確認連接。");
             } else {
-                alert("❌ 發生未知錯誤 / Error: " + error.message + "\n\n💡 小貼士：如果是 'No active wallet found'，請先去瀏覽器右上角「管理擴充功能」，將 OKX 或 Phantom 等其他錢包【暫時關閉】，只保留 MetaMask！");
+                alert("❌ 發生未知錯誤 / Error: " + error.message + "\n\n💡 排除故障指南：\n💻 【電腦用戶】請暫時去擴充功能關閉 (Disable) 其他錢包 (如 Trust/OKX/Phantom)，只保留 MetaMask！\n📱 【手機用戶】請在錢包 App 內的「發現 / DApp 瀏覽器」中開啟本網站！");
             }
         }
     } else {
-        alert("⚠️ 系統偵測不到錢包！請安裝 MetaMask 瀏覽器擴充功能。 / Web3 wallet not found!");
+        // 系統完全找不到錢包 (例如在普通手機 Safari 打開)
+        alert("⚠️ 系統偵測不到 Web3 錢包！\n\n💻 【電腦用戶】請安裝 MetaMask 擴充功能。\n📱 【手機用戶】請務必在您的錢包 App (如 MetaMask/Trust) 內的「DApp 瀏覽器」中輸入本網址開啟！\n\n您也可以直接在下方手動輸入錢包地址。");
     }
 }
