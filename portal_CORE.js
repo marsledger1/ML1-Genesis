@@ -301,22 +301,32 @@ async function connectWallet(inputId, buttonId) {
         } catch (error) {
             console.error("Wallet connection error:", error);
             const btn = document.getElementById(buttonId);
-            btn.innerText = "🦊 CONNECT METAMASK / 連接錢包";
+            const isZh = document.body.classList.contains('lang-zh'); // 判斷當前語言
+            
+            btn.innerText = isZh ? "🦊 連接 METAMASK 失敗" : "🦊 CONNECTION FAILED";
 
-            // 精準判斷錯誤類型，給予跨平台提示
+            // 精準判斷錯誤類型，給予完美的雙語提示
             if (error.code === 4001) {
-                alert("❌ 授權失敗：您拒絕了連接請求。 / Connection Rejected.");
+                alert(isZh 
+                    ? "❌ 授權失敗：您拒絕了連接請求。" 
+                    : "❌ Connection Rejected: You denied the connection request.");
             } else if (error.code === -32002) {
-                alert("⚠️ 授權請求已發送！\n請點擊瀏覽器右上角的「MetaMask 狐狸圖標」解鎖並確認連接。");
+                alert(isZh 
+                    ? "⚠️ 授權請求已發送！\n請點擊瀏覽器右上角的「MetaMask 狐狸圖標」解鎖並確認連接。" 
+                    : "⚠️ Request already sent!\nPlease click the MetaMask fox icon in your browser extension to unlock and confirm.");
             } else {
-                alert("❌ 發生未知錯誤 / Error: " + error.message + "\n\n💡 排除故障指南：\n💻 【電腦用戶】請暫時去擴充功能關閉 (Disable) 其他錢包 (如 Trust/OKX/Phantom)，只保留 MetaMask！\n📱 【手機用戶】請在錢包 App 內的「發現 / DApp 瀏覽器」中開啟本網站！");
+                alert(isZh 
+                    ? "❌ 發生未知錯誤: " + error.message + "\n\n💡 排除故障指南：\n💻 【電腦用戶】請關閉其他錢包擴充功能 (如 Trust/OKX)，只保留 MetaMask！\n📱 【手機用戶】請在錢包 App 內的「發現 / DApp 瀏覽器」中開啟本網站！" 
+                    : "❌ Unknown Error: " + error.message + "\n\n💡 Troubleshooting Guide:\n💻 [Desktop] Disable other wallet extensions (e.g., Trust/OKX) and keep ONLY MetaMask active!\n📱 [Mobile] Open this website INSIDE your Wallet App's built-in DApp Browser!");
             }
         }
     } else {
         // 系統完全找不到錢包 (例如普通手機 Safari)
-        alert("⚠️ 系統偵測不到 Web3 錢包！\n\n💻 【電腦用戶】請安裝 MetaMask 擴充功能。\n📱 【手機用戶】請務必在您的錢包 App (如 MetaMask/Trust) 內的「DApp 瀏覽器」中輸入本網址開啟！\n\n您也可以直接在下方手動輸入錢包地址。");
+        const isZh = document.body.classList.contains('lang-zh'); // 判斷當前語言
+        alert(isZh 
+            ? "⚠️ 系統偵測不到 Web3 錢包！\n\n💻 【電腦用戶】請先安裝 MetaMask 擴充功能。\n📱 【手機用戶】請複製本站網址，到 MetaMask / Trust Wallet 內建的瀏覽器中開啟！" 
+            : "⚠️ No Web3 Wallet Detected!\n\n💻 [Desktop] Please install the MetaMask extension.\n📱 [Mobile] Please copy this URL and open it INSIDE your MetaMask or Trust Wallet app's built-in browser!");
     }
-}
 
 // 3. 頁面載入時自動執行靜默檢查
 window.addEventListener('load', () => {
