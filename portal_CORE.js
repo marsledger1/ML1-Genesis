@@ -266,46 +266,37 @@ async function autoConnectWallet(inputId, buttonId) {
 }
 
 // 2. 點擊按鈕主動連線 (防劫持 + 跨平台提示)
-async function connectWallet(inputId, buttonId) {
+async function connectWallet(buttonId) {
+    const btn = document.getElementById(buttonId);
+    if (!btn) return;
+    
+    btn.innerText = "VERIFYING...";
+    
     if (typeof window.ethereum !== 'undefined') {
         try {
-            const btn = document.getElementById(buttonId);
-            const isZh = document.body.classList.contains('lang-zh');
-            btn.innerText = isZh ? "請求授權中..." : "CONNECTING...";
+            // 請求連接錢包
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
             
-            // 強制找出正牌的 MetaMask，無視其他錢包劫持
-            let provider = window.ethereum;
-            if (window.ethereum.providers) {
-                provider = window.ethereum.providers.find(p => p.isMetaMask) || provider;
-            }
+            // 縮寫錢包地址 (前6後4)
+            const shortAddr = account.substring(0, 6) + "..." + account.substring(account.length - 4);
             
-            // 彈出 MetaMask 要求授權
-            const accounts = await provider.request({ method: 'eth_requestAccounts' });
-            const userAddress = accounts[0];
-            
-            // 授權成功：自動填入對應的 input 欄位
-            const inputField = document.getElementById(inputId);
-            inputField.value = userAddress;
-            
-            // 🔒 終極防呆：鎖死輸入框，變成半透明，不允許手動修改！
-            inputField.readOnly = true;
-            inputField.style.opacity = '0.7'; 
-            inputField.style.cursor = 'not-allowed';
-            
-            // 更新按鈕狀態
-            const shortAddr = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+            // 成功連接後的按鈕樣式 (發光駭客綠)
             btn.innerText = `✅ ${shortAddr}`;
             btn.style.background = 'rgba(0, 255, 65, 0.2)';
             btn.style.border = '1px solid #00ff41';
+            btn.style.color = '#00ff41';
             
+            // 如果有註冊輸入框，自動填入地址 (適用於 Portal)
+            const regWallet = document.getElementById('reg-wallet');
+            if (regWallet) regWallet.value = account;
+
         } catch (error) {
             console.error("Wallet connection error:", error);
-            const btn = document.getElementById(buttonId);
             const isZh = document.body.classList.contains('lang-zh'); // 判斷當前語言
-            
             btn.innerText = isZh ? "🦊 連接 METAMASK 失敗" : "🦊 CONNECTION FAILED";
 
-            // 精準判斷錯誤類型，給予完美的雙語提示
+            // 精準判斷錯誤類型，給予雙語提示
             if (error.code === 4001) {
                 alert(isZh 
                     ? "❌ 授權失敗：您拒絕了連接請求。" 
@@ -321,12 +312,14 @@ async function connectWallet(inputId, buttonId) {
             }
         }
     } else {
-        // 系統完全找不到錢包 (例如普通手機 Safari)
-        const isZh = document.body.classList.contains('lang-zh'); // 判斷當前語言
+        // 系統完全找不到錢包環境 (例如普通手機 Safari)
+        const isZh = document.body.classList.contains('lang-zh');
+        btn.innerText = isZh ? "🦊 連接 METAMASK" : "🦊 CONNECT METAMASK";
         alert(isZh 
             ? "⚠️ 系統偵測不到 Web3 錢包！\n\n💻 【電腦用戶】請先安裝 MetaMask 擴充功能。\n📱 【手機用戶】請複製本站網址，到 MetaMask / Trust Wallet 內建的瀏覽器中開啟！" 
             : "⚠️ No Web3 Wallet Detected!\n\n💻 [Desktop] Please install the MetaMask extension.\n📱 [Mobile] Please copy this URL and open it INSIDE your MetaMask or Trust Wallet app's built-in browser!");
     }
+}
 
 // 3. 頁面載入時自動執行靜默檢查
 window.addEventListener('load', () => {
