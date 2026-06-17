@@ -243,6 +243,7 @@ async function fetchLiveProgress() {
                     }
                 }
                 
+                // 必須有數值且狀態為 APPROVED
                 if (usdValue > 0 && status.includes('APPROVED')) {
                     totalUSD += usdValue;
                     if (wallet) eligibleWallets.add(wallet.trim().toLowerCase()); 
@@ -250,27 +251,34 @@ async function fetchLiveProgress() {
             });
         }
 
-        // 🎯 抽獎專屬目標：250,000 USD
+        // 🎯 Portal 抽獎專屬目標：250,000 USD
         const GOAL = 250000;
         let percent = Math.min((totalUSD / GOAL) * 100, 100).toFixed(2);
         
-        // 🚨 終極修正：還原回你原本正確的 HTML ID (刪除了 portal- 前綴！)
-        const syncPercent = document.getElementById('sync-percent');
-        const syncBar = document.getElementById('sync-bar');
-        const syncText = document.getElementById('sync-progress-text');
-        const syncNodes = document.getElementById('sync-nodes');
+        // 🚨 完美對齊 portal.html 入面真實存在嘅 ID
+        const btcText = document.getElementById('btc-progress-text');
+        const btcBar = document.getElementById('btc-progress-fill');
+        const nodesEn = document.getElementById('eligible-nodes');
+        const nodesZh = document.getElementById('eligible-nodes-zh');
         
         // 更新網頁畫面
-        if (syncPercent) syncPercent.innerText = percent + '%';
-        if (syncBar) syncBar.style.width = percent + '%';
-        if (syncText) syncText.innerText = `SYNCED: $${totalUSD.toLocaleString()} / $${GOAL.toLocaleString()}`;
-        if (syncNodes) syncNodes.innerText = eligibleWallets.size;
+        if (btcText) btcText.innerText = `SYNCED: $${totalUSD.toLocaleString()} / $${GOAL.toLocaleString()}`;
+        if (btcBar) btcBar.style.width = percent + '%';
+        if (nodesEn) nodesEn.innerText = eligibleWallets.size;
+        if (nodesZh) nodesZh.innerText = eligibleWallets.size;
+
+        // 🎯 判斷是否達到 25萬 目標，並解鎖抽獎按鈕
+        if (totalUSD >= GOAL) {
+            isBtcMilestoneReached = true;
+        } else {
+            isBtcMilestoneReached = false;
+        }
+        if (typeof updateDrawButtonUI === 'function') updateDrawButtonUI();
 
     } catch (error) {
         console.error("Portal progress fetch failed:", error);
-        // 錯誤時同樣指回正確的 ID
-        const syncText = document.getElementById('sync-progress-text');
-        if (syncText) syncText.innerText = "SYNC FAILED. RETRYING...";
+        const btcText = document.getElementById('btc-progress-text');
+        if (btcText) btcText.innerText = "SYNC FAILED. RETRYING...";
     }
 }
 
