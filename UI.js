@@ -87,7 +87,7 @@ const content = {
     en: {
         tab0: "OVERVIEW", tab1: "PIONEER HUB", tab2: "SIMULATOR",
         loc: "LOC: JEZERO_CRATER_ALPHA", sys: "SYS_STATUS: TOP_SECRET",
-        head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V5.7.0 // THE GENESIS COUNCIL EPOCH",
+        head: "MARS LEDGER 1", tag: "PROTOCOL: ML1-V6.1.0 // THE GENESIS COUNCIL EPOCH",
         name: "Jack Yiu", pos: "CHIEF ARCHITECT // MARS COLONY ONE",
         bio: "\"Traditional TCP/IP and legacy Earth-bound blockchains (BTC, ETH, SOL) collapse under the 3-22 minute Latency Wall. Their synchronous consensus mechanisms cannot survive the speed of light barrier. ML1 is the first asynchronous state machine designed for the vacuum of deep space—enabling Mars-native liquidity that remains functional even when Earth is occluded.\"",
         pillH: "CORE INFRASTRUCTURE PILLARS",
@@ -97,7 +97,7 @@ const content = {
             ["PROTOCOL 433", "Sub-Ghz frequency bridges ensuring ledger persistence and peer-to-peer survival even during global Martian dust storms."],
             ["THE THERMODYNAMIC TRINITY", "$ML1 (10M Fixed) acts as the land deed. Stake it to mine $O2 fuel. Burn $O2 to extract ultra-rare $DUST via the 36-month geometric decay Skinner Box."]
         ],
-        tokH: "V5.7.0 SUPREMACY: TOKENOMICS & PRICING TIER",
+        tokH: "V6.1.0 SUPREMACY: THE THERMODYNAMIC TRINITY",
         toks: [
             ["10,000,000 FIXED SUPPLY ($ML1)", "Total supply is hard-capped. Zero inflation. Pure resource-backed interstellar liquidity."],
             ["TIERED BONDING CURVE (FOMO)", "Phase 1 early birds get 1:1 allocation. Cost increases to 1:1.2 at $500k, 1:1.5 at $750k, and doubles (1:2) in Phase 2. The earlier you deploy, the more equity you secure."]
@@ -135,7 +135,7 @@ const content = {
     zh: {
         tab0: "系統總覽", tab1: "先鋒樞紐", tab2: "深空模擬器",
         loc: "座標: JEZERO_CRATER_ALPHA", sys: "系統狀態: 防彈紀元",
-        head: "火星帳本 1 號", tag: "協議: ML1-V5.7.0 // 創世議會與雙幣紀元",
+        head: "火星帳本 1 號", tag: "協議: ML1-V6.1.0 // 創世議會與熱力學三位一體",
         name: "Jack Yiu", pos: "首席架構師 // 火星第一殖民地",
         bio: "「傳統 TCP/IP 與舊有的地球鏈協議（BTC, ETH, SOL）在 3-22 分鐘的延遲牆面前會徹底崩潰。它們的同步共識機制無法跨越光速障礙。ML1 是首個為深空真空設計的非同步狀態機——確保在地球信號被遮蔽時，火星本土流動性依然能自主運作。」",
         pillH: "核心基礎設施四大支柱",
@@ -145,7 +145,7 @@ const content = {
             ["協議 433 (PROTOCOL 433)", "Sub-Ghz 無線橋接技術，確保即使在全球性火星沙塵暴期間，帳本數據仍能點對點存續。"],
             ["熱力學三位一體模型", "$ML1 (恆定千萬) 作為火星地契，質押以挖掘 $O2 (液氧) 燃料；玩家需燃燒 $O2 盲挖極稀有資產 $DUST，產出受 36 個月幾何級數衰減嚴格控制。"]
         ],
-        tokH: "V5.7.0 至高無上：代幣定價階梯",
+        tokH: "V6.1.0 至高無上：代幣定價階梯",
         toks: [
             ["10,000,000 恆定總量 ($ML1)", "供應量永久封頂，零通脹。純粹由資源驅動的星際流動性。"],
             ["階梯式聯合曲線 (Bonding Curve)", "Phase 1 早期參與者享有 1:1 兌換。資金池達 50萬美金後成本上升至 1:1.2，75萬上升至 1:1.5，Phase 2 正式翻倍 (1:2)。越早入金，暴利空間越大。"]
