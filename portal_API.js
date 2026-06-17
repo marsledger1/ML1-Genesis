@@ -214,7 +214,6 @@ async function verifyActiveNodes(myCode) {
 // --- 4. 抓取全網即時進度 (Fetch Live Funding Progress for Portal) ---
 async function fetchLiveProgress() {
     try {
-        // 確保指向同一個數據源：工作表1
         const response = await fetch('https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1');
         const data = await response.json();
         
@@ -227,7 +226,6 @@ async function fetchLiveProgress() {
                 let status = '';
                 let wallet = ''; 
 
-                // 100% 同步首頁的嚴格審批邏輯
                 for (let key in item) {
                     const upperKey = key.toUpperCase();
                     
@@ -245,7 +243,6 @@ async function fetchLiveProgress() {
                     }
                 }
                 
-                // 🛡️ 核心防護：必須有數值且狀態為 APPROVED
                 if (usdValue > 0 && status.includes('APPROVED')) {
                     totalUSD += usdValue;
                     if (wallet) eligibleWallets.add(wallet.trim().toLowerCase()); 
@@ -253,16 +250,17 @@ async function fetchLiveProgress() {
             });
         }
 
-        // 🎯 修正 1：Portal 抽獎進度條的獨立目標為 250,000 USD
+        // 🎯 抽獎專屬目標：250,000 USD
         const GOAL = 250000;
         let percent = Math.min((totalUSD / GOAL) * 100, 100).toFixed(2);
         
-        // 🎯 修正 2：對準 portal.html 專屬的 ID (加上 portal- 前綴)
-        const syncPercent = document.getElementById('portal-sync-percent');
-        const syncBar = document.getElementById('portal-sync-bar');
-        const syncText = document.getElementById('portal-sync-text');
-        const syncNodes = document.getElementById('portal-sync-nodes');
+        // 🚨 終極修正：還原回你原本正確的 HTML ID (刪除了 portal- 前綴！)
+        const syncPercent = document.getElementById('sync-percent');
+        const syncBar = document.getElementById('sync-bar');
+        const syncText = document.getElementById('sync-progress-text');
+        const syncNodes = document.getElementById('sync-nodes');
         
+        // 更新網頁畫面
         if (syncPercent) syncPercent.innerText = percent + '%';
         if (syncBar) syncBar.style.width = percent + '%';
         if (syncText) syncText.innerText = `SYNCED: $${totalUSD.toLocaleString()} / $${GOAL.toLocaleString()}`;
@@ -270,8 +268,8 @@ async function fetchLiveProgress() {
 
     } catch (error) {
         console.error("Portal progress fetch failed:", error);
-        // 錯誤時同樣指向正確的 portal ID
-        const syncText = document.getElementById('portal-sync-text');
+        // 錯誤時同樣指回正確的 ID
+        const syncText = document.getElementById('sync-progress-text');
         if (syncText) syncText.innerText = "SYNC FAILED. RETRYING...";
     }
 }
