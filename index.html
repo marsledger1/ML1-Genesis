@@ -201,6 +201,22 @@ async function connectWallet(inputId, buttonId) {
 
     <div class="container">
         <header>
+            <!-- 🚀 T-Minus 創世倒數引擎 -->
+        <div id="launch-timer-container" style="border: 1px solid var(--mars-red); background: rgba(140, 59, 35, 0.1); padding: 25px; text-align: center; margin-bottom: 40px; box-shadow: 0 0 20px rgba(140, 59, 35, 0.15);">
+            <div style="color: var(--mars-red); font-size: 0.85rem; letter-spacing: 2px; margin-bottom: 12px; font-weight: bold;">
+                <span lang-content="en">[ PHASE 1: GENESIS WINDOW CLOSING ]</span>
+                <span lang-content="zh">[ 第一階段：1:1 創世紅利期 關閉倒數 ]</span>
+            </div>
+            
+            <div id="t-minus-clock" style="font-size: 3rem; color: #fff; font-weight: bold; letter-spacing: 4px; text-shadow: 0 0 10px rgba(255,255,255,0.2); font-family: 'Courier New', monospace;">
+                T-MINUS 00:00:00:00
+            </div>
+            
+            <div id="timer-status" style="font-size: 0.75rem; color: var(--tech-green); margin-top: 15px; letter-spacing: 1px; animation: pulse 2s infinite;">
+                <span lang-content="en">AWAITING ORBITAL ALIGNMENT...</span>
+                <span lang-content="zh">正在等待星際軌道對齊...</span>
+            </div>
+        </div>
             <h1 id="t-head">MARS LEDGER 1</h1>
             <div class="tagline" id="t-tag">PROTOCOL: ML1-V5.7.0 // THE GENESIS COUNCIL EPOCH</div>
         </header>
