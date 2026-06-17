@@ -73,7 +73,7 @@ async function submitToLedger() {
     }];
 
     try {
-        const response = await fetch("https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/Ledger", {
+        const response = await fetch("https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'}, 
             body: JSON.stringify(payload) 
