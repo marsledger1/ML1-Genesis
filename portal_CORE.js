@@ -15,7 +15,11 @@ function clearPioneerCache() {
         localStorage.removeItem('ml1_recruits');
         localStorage.removeItem('ml1_personal_usd');
         localStorage.removeItem('ml1_team_usd');
-        // 🚨 終極防卡死：寫入「手動登出」標記，防止網頁再次自動抓取錢包
+        
+        // 🟢 加入這行：連同法律免責同意書一起清除
+        localStorage.removeItem('ml1_legal_accepted');
+
+        // 🚨 終極防卡死：寫入「手動登出」標記
         localStorage.setItem('ml1_wallet_disconnected', 'true');
         window.location.reload();
     }
