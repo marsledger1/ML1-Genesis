@@ -372,3 +372,50 @@ function triggerBlackout() {
         typeWriter("> EARTH LINK RESTORED. BATCH SYNCING...", "> 地球通訊已恢復. 正在進行批次同步...", "var(--lag-blue)");
     }, 8000);
 }
+// ==========================================
+// 🚀 T-Minus 創世倒數引擎 (Countdown Timer)
+// ==========================================
+
+function initCountdown() {
+    // ⚠️ 在這裡設定你的目標時間 (格式：YYYY-MM-DDTHH:MM:SS) 
+    // 假設我們設定在 2026年7月1日 晚上12點 (香港/台灣時間)
+    const targetDate = new Date("2026-12-31T23:59:59+08:00").getTime();
+    
+    const clockElement = document.getElementById('t-minus-clock');
+    const statusElement = document.getElementById('timer-status');
+    if (!clockElement) return;
+
+    const timerInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        // 計算天、時、分、秒
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // 格式化為兩位數 (例如 09, 05)
+        const format = (num) => (num < 10 ? "0" + num : num);
+
+        if (distance > 0) {
+            clockElement.innerText = `T-${format(days)}:${format(hours)}:${format(minutes)}:${format(seconds)}`;
+        } else {
+            // 倒數歸零時的狀態
+            clearInterval(timerInterval);
+            clockElement.innerText = "T-ZERO 00:00:00:00";
+            clockElement.style.color = "var(--tech-green)";
+            clockElement.style.textShadow = "0 0 20px var(--tech-green)";
+            
+            const isZh = document.body.classList.contains('lang-zh');
+            statusElement.innerHTML = isZh 
+                ? "<span style='color: var(--tier5-gold); font-weight: bold;'>[ 創世階段已結束 / PHASE 2 已啟動 ]</span>" 
+                : "<span style='color: var(--tier5-gold); font-weight: bold;'>[ GENESIS WINDOW CLOSED / PHASE 2 ACTIVE ]</span>";
+        }
+    }, 1000);
+}
+
+// 確保網頁載入時啟動計時器
+document.addEventListener("DOMContentLoaded", () => {
+    initCountdown();
+});
