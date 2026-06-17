@@ -95,7 +95,7 @@ const content = {
             ["ASYNCHRONOUS STATE MACHINE", "Abandoning synchronous confirmation for \"Incremental Snapshot Synchronization.\" Mars nodes process local ledgers and emit encrypted state-diffs, eliminating the requirement for Earth-side real-time ACKs."],
             ["PERMISSIONLESS PoPW", "Any autonomous rover or edge-computing unit on Mars can plug into the ML1 API, anchoring the ledger's value to actual physical ISRU extraction."],
             ["PROTOCOL 433", "Sub-Ghz frequency bridges ensuring ledger persistence and peer-to-peer survival even during global Martian dust storms."],
-            ["THE DUAL-TOKEN ECONOMY", "$ML1 (Fixed 10M supply) acts as the Mars land deed. Post-TGE, nodes can lock $ML1 into 'Cryo-Sleep Staking' to mine $O2 (Liquid Oxygen)."]
+            ["THE THERMODYNAMIC TRINITY", "$ML1 (10M Fixed) acts as the land deed. Stake it to mine $O2 fuel. Burn $O2 to extract ultra-rare $DUST via the 36-month geometric decay Skinner Box."]
         ],
         tokH: "V5.7.0 SUPREMACY: TOKENOMICS & PRICING TIER",
         toks: [
@@ -143,7 +143,7 @@ const content = {
             ["非同步狀態機", "捨棄同步確認機制，採用「增量快照同步」。火星節點處理本地賬本並發射加密狀態差異，徹底消除對地球端實時回應的依賴。"],
             ["無需許可的 PoPW", "火星上任何自主探測車或邊緣計算單元均可接入 ML1 API，將帳本價值錨定於真實的實體 ISRU 資源開採。"],
             ["協議 433 (PROTOCOL 433)", "Sub-Ghz 無線橋接技術，確保即使在全球性火星沙塵暴期間，帳本數據仍能點對點存續。"],
-            ["雙幣生態系統", "$ML1 (恆定1000萬) 作為火星地契。TGE 後，節點可將 $ML1 投入「冷凍休眠質押 (Cryo-Sleep)」以挖掘 $O2 (液氧) 燃料。"]
+            ["熱力學三位一體模型", "$ML1 (恆定千萬) 作為火星地契，質押以挖掘 $O2 (液氧) 燃料；玩家需燃燒 $O2 盲挖極稀有資產 $DUST，產出受 36 個月幾何級數衰減嚴格控制。"]
         ],
         tokH: "V5.7.0 至高無上：代幣定價階梯",
         toks: [
