@@ -58,23 +58,44 @@ async function verifyActiveNodes(myCode) {
         const nodesData = await resNodes.json();
         const fundsData = await resFunds.json();
 
-        const getUSDValue = (fundObj) => {
-            let usdValKey = Object.keys(fundObj).find(k => k.trim().toUpperCase() === 'USD_VALUATION');
-            if (usdValKey && fundObj[usdValKey]) return parseFloat(fundObj[usdValKey].toString().replace(/[^0-9.-]+/g,""));
-            let amtKey = Object.keys(fundObj).find(k => k.trim().toUpperCase().includes('AMOUNT'));
-            return amtKey ? parseFloat(fundObj[amtKey]) : 0; 
-        };
-
         let walletToUSD = {};
+        
+        // 🚨 修正：嚴格審批邏輯 (杜絕 PENDING 和 ASSET_AMOUNT，必須 APPROVED)
         fundsData.forEach(f => {
-            let wKey = Object.keys(f).find(k => k.toUpperCase().includes('ADDRESS') || k.toUpperCase().includes('WALLET'));
-            let w = wKey && f[wKey] ? f[wKey].toString().trim().toLowerCase() : '';
-            if(w) walletToUSD[w] = (walletToUSD[w] || 0) + getUSDValue(f);
+            let usdValue = 0;
+            let w = '';
+            let status = '';
+
+            for (let key in f) {
+                const upperKey = key.toUpperCase();
+                
+                // 1. 只認 USD_VALUATION，不抓 AMOUNT
+                if (upperKey.includes('USD_VALUATION')) {
+                    let val = parseFloat(f[key]);
+                    if (!isNaN(val)) usdValue = val;
+                }
+                
+                // 2. 抓取打款地址
+                if (upperKey.includes('ADDRESS') || upperKey.includes('WALLET')) {
+                    w = f[key] ? f[key].toString().trim().toLowerCase() : '';
+                }
+                
+                // 3. 抓取審批狀態
+                if (upperKey.includes('STATUS')) {
+                    status = (f[key] || '').toUpperCase();
+                }
+            }
+            
+            // 🛡️ 核心交叉驗證：必須是 APPROVED 且有實際 USD 價值，才計入有效業績！
+            if (usdValue > 0 && status.includes('APPROVED') && w) {
+                walletToUSD[w] = (walletToUSD[w] || 0) + usdValue;
+            }
         });
 
         let nodeStats = {};
         let validNodes = Array.isArray(nodesData) ? nodesData : [];
         
+        // 映射 PortalNodes 的上下線關係
         validNodes.forEach(n => {
             let codeKey = Object.keys(n).find(k => k.toUpperCase().includes('FISSION_CODE'));
             let code = codeKey ? n[codeKey] : n.My_Fission_Code;
@@ -93,7 +114,7 @@ async function verifyActiveNodes(myCode) {
                     code: code, 
                     wallet: w, 
                     inviter: inviter, 
-                    pUSD: walletToUSD[w] || 0, 
+                    pUSD: walletToUSD[w] || 0, // 從上面嚴格過濾出來的真實業績
                     tUSD: 0, 
                     score: 0,
                     ip: ip
@@ -101,6 +122,7 @@ async function verifyActiveNodes(myCode) {
             }
         });
 
+        // 結算團隊算力與防女巫 (IP檢查)
         Object.values(nodeStats).forEach(node => {
             let l1 = Object.values(nodeStats).filter(n => n.inviter === node.code);
             let seenIPs = new Set();
@@ -115,7 +137,7 @@ async function verifyActiveNodes(myCode) {
                 
                 if(child.pUSD > 0) {
                     node.tUSD += child.pUSD;
-                    if(validL1) node.score += 1;
+                    if(validL1) node.score += 1; // 必須入金>0 才有算力
                 }
 
                 let l2 = Object.values(nodeStats).filter(n => n.inviter === child.code);
@@ -141,14 +163,12 @@ async function verifyActiveNodes(myCode) {
         localStorage.setItem('ml1_team_usd', myData.tUSD);
         document.getElementById('syncing-indicator').style.display = 'none';
 
-        // --- 排行榜渲染邏輯 (Top 10 + 個人排名兜底) ---
         let activeNodes = Object.values(nodeStats).filter(n => (n.pUSD + n.tUSD) > 0 || n.score > 0);
         activeNodes.sort((a,b) => (b.pUSD + b.tUSD) - (a.pUSD + a.tUSD));
 
         let lbHtml = '';
         let myRank = -1;
         
-        // 尋找自己的真實排名 (如果是 GUEST_MODE，這裡會找不到，myRank 保持 -1)
         let myActiveNode = activeNodes.find((n, idx) => {
             if(n.code === myCode) {
                 myRank = idx + 1;
@@ -157,7 +177,6 @@ async function verifyActiveNodes(myCode) {
             return false;
         });
 
-        // 渲染 Top 10
         activeNodes.slice(0, 10).forEach((n, idx) => {
             let currentRank = idx + 1;
             let totalVol = n.pUSD + n.tUSD;
@@ -175,7 +194,6 @@ async function verifyActiveNodes(myCode) {
             </tr>`;
         });
 
-        // 若自己的排名超過第 10 名，在最後一行補上自己的數據 (訪客不顯示)
         if (myRank > 10 && myActiveNode) {
             let totalVol = myActiveNode.pUSD + myActiveNode.tUSD;
             let maskCode = myActiveNode.code.length > 5 ? myActiveNode.code.substring(0, myActiveNode.code.length - 2) + "**" : myActiveNode.code;
