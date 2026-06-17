@@ -214,39 +214,54 @@ async function verifyActiveNodes(myCode) {
 // --- 4. 抓取全網即時進度 (Fetch Live Funding Progress) ---
 async function fetchLiveProgress() {
     try {
-        const response = await fetch('https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/%E5%B7%A5%E4%BD%9C%E8%A1%A81?timestamp=' + new Date().getTime());
+        // 確保指向同一個數據源：工作表1
+        const response = await fetch('https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1');
         const data = await response.json();
-        let totalUSDValue = 0;
-        let eligibleWallets = new Set(); 
+        let totalUSD = 0;
 
         if (Array.isArray(data)) {
             data.forEach(item => {
-                let usdVal = parseFloat(item.USD_VALUATION || item.Amount || item.ASSET_AMOUNT || 0);
-                const walletKey = Object.keys(item).find(k => k.trim().toUpperCase().includes('ADDRESS') || k.trim().toUpperCase().includes('WALLET'));
+                let usdValue = 0;
+                let status = '';
+
+                // 🌟 100% 同步首頁的嚴格審批邏輯
+                for (let key in item) {
+                    const upperKey = key.toUpperCase();
+                    
+                    // 只抓取 USD_VALUATION
+                    if (upperKey.includes('USD_VALUATION')) {
+                        let val = parseFloat(item[key]);
+                        if (!isNaN(val)) usdValue = val;
+                    }
+                    
+                    // 抓取狀態 VALIDATION_STATUS
+                    if (upperKey.includes('STATUS')) {
+                        status = (item[key] || '').toUpperCase();
+                    }
+                }
                 
-                if (!isNaN(usdVal) && usdVal > 0) {
-                    totalUSDValue += usdVal;
-                    if (walletKey && item[walletKey]) eligibleWallets.add(item[walletKey].trim().toLowerCase());
+                // 🛡️ 核心防護：必須有數值且狀態為 APPROVED
+                if (usdValue > 0 && status.includes('APPROVED')) {
+                    totalUSD += usdValue;
                 }
             });
         }
-        const btcGoal = 250000; 
-        let percent = Math.min((totalUSDValue / btcGoal) * 100, 100).toFixed(2);
-        document.getElementById('btc-progress-fill').style.width = percent + '%';
-        document.getElementById('btc-progress-text').innerText = `CURRENT PROGRESS: ${percent}% (${totalUSDValue.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})} / 250,000 USD)`;
-        
-        let actualNodes = eligibleWallets.size;
-        if(document.getElementById('eligible-nodes')) document.getElementById('eligible-nodes').innerText = actualNodes;
-        if(document.getElementById('eligible-nodes-zh')) document.getElementById('eligible-nodes-zh').innerText = actualNodes;
-        
-        if (totalUSDValue >= btcGoal) {
-            isBtcMilestoneReached = true;
-        } else {
-            isBtcMilestoneReached = false;
-        }
-        if(typeof updateDrawButtonUI === 'function') updateDrawButtonUI();
 
-    } catch (error) { document.getElementById('btc-progress-text').innerText = 'PROGRESS SYNC ERROR'; }
+        const GOAL = 1000000;
+        let percent = Math.min((totalUSD / GOAL) * 100, 100).toFixed(2);
+        
+        // 更新 Portal 上的 UI 元素
+        const syncPercent = document.getElementById('sync-percent');
+        const syncBar = document.getElementById('sync-bar');
+        const syncText = document.getElementById('sync-progress-text');
+        
+        if (syncPercent) syncPercent.innerText = percent + '%';
+        if (syncBar) syncBar.style.width = percent + '%';
+        if (syncText) syncText.innerText = `SYNCED: $${totalUSD.toLocaleString()} / $${GOAL.toLocaleString()}`;
+
+    } catch (error) {
+        console.error("Portal progress fetch failed:", error);
+    }
 }
 
 // --- 5. 註冊新節點至星際帳本 (Commit Node to Mars) ---
