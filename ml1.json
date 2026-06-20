@@ -1,0 +1,16 @@
+{
+  "name": "ML1 Node License",
+  "symbol": "ML1",
+  "description": "The foundational physical node license for the LEVIATHAN Protocol. Establishing the 10,000-year interplanetary matrix at Jezero Crater, Mars.",
+  "image": "https://raw.githubusercontent.com/marsledger1/ML1-Genesis/refs/heads/main/ML1.jpeg",
+  "attributes": [
+    {
+      "trait_type": "Class",
+      "value": "V1 Genesis Node"
+    },
+    {
+      "trait_type": "Architecture",
+      "value": "Decoupled Edge Compute"
+    }
+  ]
+}
