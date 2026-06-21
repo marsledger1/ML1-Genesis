@@ -273,10 +273,10 @@
                     </video>
                 </div>
                 
-                <button class="wp-btn" onclick="openWhitepaper()">
-                    <span lang-content="en">>> ACCESS DeIF MANIFESTO (WHITEPAPER) <<</span>
-                    <span lang-content="zh">>> 查閱星際金融憲章 (核心白皮書) <<</span>
-                </button>
+<button class="wp-btn" onclick="document.getElementById('wp-modal').style.display='flex'">
+    <span lang-content="en">>> ACCESS DeIF MANIFESTO (WHITEPAPER) <<</span>
+    <span lang-content="zh">>> 查閱星際金融憲章 (核心白皮書) <<</span>
+</button>
             </div>
 
             <div class="data-grid">
@@ -676,22 +676,22 @@
             <div class="hud-container">
                 <div class="hud-item">
                     <span class="hud-label">
-                        <span lang-content="en">Land Deed License</span>
-                        <span lang-content="zh">火星地契授權</span>
+                        <span lang-content="en">$ML1 Land Deed License</span>
+                        <span lang-content="zh">$ML1 火星地契授權</span>
                     </span>
                     <span class="hud-value val-ml1" id="ui-ml1">0.00</span>
                 </div>
                 <div class="hud-item">
                     <span class="hud-label">
-                        <span lang-content="en">Industrial Fuel</span>
-                        <span lang-content="zh">工業製氧燃料</span>
+                        <span lang-content="en">$O2 Industrial Fuel</span>
+                        <span lang-content="zh">$O2 工業製氧燃料</span>
                     </span>
                     <span class="hud-value val-o2" id="ui-o2">0.00</span>
                 </div>
                 <div class="hud-item">
                     <span class="hud-label">
-                        <span lang-content="en">Classified Asset</span>
-                        <span lang-content="zh">機密未解鎖資產</span>
+                        <span lang-content="en">$DUST Classified Asset</span>
+                        <span lang-content="zh">$DUST 機密未解鎖資產</span>
                         <span class="classified-tag">TOP SECRET</span>
                     </span>
                     <span class="hud-value val-dust" id="ui-dust">0.00</span>
@@ -704,7 +704,7 @@
                     <span lang-content="zh">ISRU 盲挖邊緣計算模擬器 (v0.1)</span>
                 </div>
                 
-<div class="web3-console" style="padding: 20px; display: flex; flex-direction: column; gap: 15px; height: 100%; overflow-y: auto; z-index: 5;">
+<div class="web3-console" style="padding: 20px; padding-bottom: 160px; display: flex; flex-direction: column; gap: 15px; height: 100%; overflow-y: auto; z-index: 5;">
     
     <div style="background: rgba(255, 223, 0, 0.05); border: 1px dashed var(--tier5-gold); padding: 15px;">
         <div style="font-size: 11px; color: var(--tier5-gold); margin-bottom: 10px; font-weight: bold; letter-spacing: 1px;">
@@ -758,7 +758,7 @@
 
 <div id="wp-modal">
     <div class="wp-content">
-        <button class="close-wp" onclick="closeWhitepaper()">✕ CLOSE</button>
+        <button class="close-wp" onclick="document.getElementById('wp-modal').style.display='none'">✕ CLOSE</button>
         <h2 style="color: var(--tech-green); margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; font-size: 1.4rem;">
             THE DeIF MANIFESTO (v6.1.0)
         </h2>
@@ -929,10 +929,43 @@
         if(typeof fetchLiveProgress === 'function') fetchLiveProgress();
         if(typeof initAggressiveBGM === 'function') initAggressiveBGM();
 
-        // 初始注入基礎雙語日誌
         addLog("> Initializing ML1 Kernel...", "> 正在初始化 ML1 核心...");
         addLog("> Awaiting secure handshake.", "> 等待星際安全握手協議...", "log-sys");
 
+        const urlParams = new URLSearchParams(window.location.search);
+        let authParam = urlParams.get('auth');
+        
+        // 🚀 終極修復：如果是從首頁帶著 auth 跳轉來的，瞬間無縫解鎖，不播第二次讀條動畫！
+        if (authParam) {
+            let key = authParam.toUpperCase();
+            document.getElementById('gate-ui').style.display = 'none';
+            document.getElementById('investor-dashboard').style.display = 'block';
+            if(document.getElementById('portal-tabs')) document.getElementById('portal-tabs').style.display = 'flex';
+            document.getElementById('logout-btn').style.display = 'block'; 
+            
+            if (key === 'ML1-CORE-001') {
+                localStorage.setItem('ml1_fission_code', 'ML1-CORE-001');
+                localStorage.setItem('ml1_recruits', '100'); 
+                localStorage.setItem('ml1_personal_usd', '100000'); 
+                localStorage.setItem('ml1_team_usd', '0'); 
+            } else {
+                localStorage.setItem('ml1_fission_code', key);
+            }
+            
+            if (typeof checkFissionStatus === "function") checkFissionStatus(false);
+            
+            // 靜默抹除網址列的 ?auth=，讓網址保持乾淨專業
+            window.history.replaceState(null, null, window.location.pathname);
+            
+            setTimeout(() => {
+                addLog(`> Welcome, Commander [${key}].`, `> 歡迎登入，指揮官 [${key}].`, 'log-sys');
+                addLog(`> Interstellar uplink established.`, `> 星際鏈路已建立，資料同步完成。`);
+            }, 500);
+
+            return; // 結束執行，不再往下跑
+        }
+
+        // 一般正常的本地快取登入邏輯
         const savedCode = localStorage.getItem('ml1_fission_code');
         if (savedCode) {
             if(typeof checkFissionStatus === 'function') checkFissionStatus(false);
@@ -940,14 +973,6 @@
                 addLog(`> Welcome back, Commander [${savedCode}].`, `> 歡迎回來，指揮官 [${savedCode}].`, 'log-sys');
                 addLog(`> Local ledger state loaded successfully.`, `> 本地帳本狀態已成功同步。`);
             }, 1000);
-        } else {
-            const urlParams = new URLSearchParams(window.location.search);
-            let authParam = urlParams.get('auth');
-            if (authParam) {
-                const keyInput = document.getElementById('pioneer-key');
-                if(keyInput) keyInput.value = authParam;
-                if(typeof startSyncSequence === 'function') startSyncSequence();
-            }
         }
     };
 </script>
