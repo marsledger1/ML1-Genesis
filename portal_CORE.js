@@ -371,33 +371,3 @@ window.addEventListener('load', () => {
         }
     }, 300);
 });
-
-// ==========================================
-// 🚀 Web3 控制台按鈕預備觸發器 (聯動終端機打字特效)
-// ==========================================
-window.web3StakeML1 = function() {
-    const amt = document.getElementById('web3-stake-amount').value;
-    const isZh = document.body.classList.contains('lang-zh');
-    if(!amt || amt <= 0) return alert(isZh ? "請輸入質押數量！" : "Enter amount to stake!");
-    if(typeof typeWriter === 'function') {
-        typeWriter(`> INITIATING CRYO-SLEEP FOR ${amt} $ML1...`, `> 正在啟動 ${amt} 顆 $ML1 冷凍休眠程序...`, "var(--tier5-gold)");
-        setTimeout(() => typeWriter("> AWAITING WALLET SIGNATURE...", "> 正在等待 Solana 錢包簽名授權..."), 800);
-    }
-}
-
-window.web3ClaimO2 = function() {
-    if(typeof typeWriter === 'function') {
-        typeWriter("> EXTRACTING ACCUMULATED $O2 FUEL...", "> 正在提取並結算累積的 $O2 燃料...", "var(--lag-blue)");
-        setTimeout(() => typeWriter("> AWAITING WALLET SIGNATURE...", "> 正在等待 Solana 錢包簽名授權..."), 800);
-    }
-}
-
-window.web3BurnForDust = function() {
-    const amt = document.getElementById('web3-burn-amount').value;
-    const isZh = document.body.classList.contains('lang-zh');
-    if(!amt || amt <= 0) return alert(isZh ? "請輸入燃燒數量！" : "Enter amount to burn!");
-    if(typeof typeWriter === 'function') {
-        typeWriter(`> IGNITING ${amt} $O2. PREPARING ENTROPY EXTRACTION...`, `> 點燃 ${amt} 顆 $O2 引擎。準備進行熵值盲挖...`, "var(--alert-red)");
-        setTimeout(() => typeWriter("> AWAITING WALLET SIGNATURE...", "> 正在等待 Solana 錢包簽名授權..."), 800);
-    }
-}
