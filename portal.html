@@ -205,17 +205,17 @@
             .log-terminal { height: 110px; font-size: 0.65rem; }
         }
     </style>
-<script src="https://bundle.run/buffer@6.0.3"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js"></script>
     <script>
-        window.Buffer = window.Buffer || window.buffer.Buffer;
-        window.process = { env: {} };
+        window.Buffer = window.buffer.Buffer || window.Buffer; // 綁定全域 Buffer
+        window.process = { env: { NODE_ENV: 'production' } };
     </script>
 
-    <script src="https://unpkg.com/@solana/web3.js@1.91.8/lib/index.iife.min.js"></script>
-
-    <script src="https://unpkg.com/@coral-xyz/anchor@0.29.0/dist/browser/index.js"></script>
+    <script src="https://unpkg.com/@solana/web3.js@1.95.8/lib/index.iife.min.js"></script>
 
     <script src="https://unpkg.com/@solana/spl-token@0.3.9/lib/index.iife.js"></script>
+
+    <script src="https://unpkg.com/@coral-xyz/anchor@0.29.0/dist/browser/index.js"></script>
 
 </head>
 <body class="lang-en">
