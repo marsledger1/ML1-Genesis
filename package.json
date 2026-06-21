@@ -1,0 +1,23 @@
+{
+  "name": "primary",
+  "version": "1.0.0",
+  "description": "**Manifest_Version = 6.1.0.SAFE (The Thermodynamic Trinity Epoch)** *DeFi is for Earth. DeIF is for Mars. > The First Asynchronous Decentralized Interplanetary Finance (DeIF) Protocol for the Martian Frontier.*",
+  "main": "API.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marsledger1/ML1-Genesis.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marsledger1/ML1-Genesis/issues"
+  },
+  "homepage": "https://github.com/marsledger1/ML1-Genesis#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}

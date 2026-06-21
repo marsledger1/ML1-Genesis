@@ -158,6 +158,10 @@
     
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     <script src="https://unpkg.com/@coral-xyz/anchor@0.29.0/dist/browser/index.js"></script>
+    <script type="module">
+        import { inject } from 'https://cdn.jsdelivr.net/npm/@vercel/analytics@2.0.1/dist/index.mjs';
+        inject();
+    </script>
 </head>
 <body class="lang-en">
     
@@ -557,7 +561,7 @@
     <script src="API.js"></script> 
     
     <script>
-        // --- 1. 隔離防護版 Solana 錢包連接邏輯 (支援手機與電腦) ---
+        // --- 1. 隔離防護�� Solana 錢包連接邏輯 (支援手機與電腦) ---
         function getSolanaProvider() {
             if ('phantom' in window && window.phantom.solana) return window.phantom.solana;
             if (window.solana && window.solana.isPhantom) return window.solana;
