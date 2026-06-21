@@ -1,13 +1,21 @@
 // ==========================================
-// portal_WEB3.js - Anchor 智能合約橋接與支付引擎 (抗崩潰防彈版)
+// portal_WEB3.js - Anchor 智能合約橋接與支付引擎 (終極防彈修復版)
 // ==========================================
 
 console.log("🚀 Web3 Engine Booting...");
 
+// 補上終端機打字特效的橋接函數，讓黑客面板能顯示文字
+window.typeWriter = function(enText, zhText, color) {
+    let typeClass = '';
+    if (color && color.includes('alert-red')) typeClass = 'log-err';
+    else if (color && color.includes('tier5-gold')) typeClass = 'log-sys';
+    if (typeof addLog === 'function') addLog(enText, zhText, typeClass);
+};
+
 // 🛡️ 延遲執行確保 CDN 載入完成
 setTimeout(() => {
-    // 全局依賴檢查裝甲：如果 CDN 被擋，會立刻報錯而不是靜默死亡
-    if (typeof solanaWeb3 === 'undefined' || typeof anchor === 'undefined' || typeof solanaSplToken === 'undefined') {
+    // 🚨 修正點：官方 CDN 匯出的變數名為 splToken，非 solanaSplToken！
+    if (typeof solanaWeb3 === 'undefined' || typeof anchor === 'undefined' || typeof splToken === 'undefined') {
         console.error("❌ 致命錯誤：Solana Web3 依賴庫載入失敗！請檢查 HTML <head> 中的 CDN 是否正確。");
         alert("⚠️ Web3 核心引擎載入失敗，請重整網頁或關閉廣告阻擋器！");
         return;
@@ -17,8 +25,7 @@ setTimeout(() => {
 
     const { Connection, PublicKey, SystemProgram, Transaction } = solanaWeb3;
     const { Program, AnchorProvider, BN } = anchor;
-    // 🚨 修正點：官方 CDN 匯出的變數名為 solanaSplToken，非 splToken！
-    const { getAssociatedTokenAddressSync, createAssociatedTokenAccountIdempotentInstruction, createTransferInstruction, TOKEN_PROGRAM_ID } = solanaSplToken;
+    const { getAssociatedTokenAddressSync, createAssociatedTokenAccountIdempotentInstruction, createTransferInstruction, TOKEN_PROGRAM_ID } = splToken; // 🚨 改回 splToken
 
     const PROGRAM_ID = new PublicKey("B6hzYR6fuxdjWmqLmqku8Yw9kmfqfJ1fxX8U88jmuPVf");
     const ADMIN_PUBKEY = new PublicKey("DV5rUKjo3ufjyAVNpsQaL19GYtToo5oXJpZ6gjvjhDau");
@@ -70,6 +77,8 @@ setTimeout(() => {
 
         try {
             const record = await anchorProgram.account.userRecord.fetch(userRecordPda);
+            
+            // 🚨 ML1 合約小數點為 0，直接使用 Number()，不用除以 1e9
             userLiveStakedMl1 = Number(record.stakedMl1.toString()); 
             
             const ml1El = document.getElementById('ui-ml1');
@@ -77,7 +86,7 @@ setTimeout(() => {
 
             const nowSec = Math.floor(Date.now() / 1000);
             const timeDiff = Math.max(0, nowSec - record.lastClaimTime.toNumber());
-            const rawO2 = Number(record.unclaimedO2.toString()) / 1e9; 
+            const rawO2 = Number(record.unclaimedO2.toString()) / 1e9; // O2 有 9 位小數
             const livePendingO2 = timeDiff * userLiveStakedMl1; 
             
             const o2El = document.getElementById('ui-o2');
@@ -105,6 +114,8 @@ setTimeout(() => {
         if (!(await window.initWeb3Engine())) return alert("⚠️ 請先連接 Solana 錢包！");
 
         const walletPk = currentProvider.wallet.publicKey;
+        
+        // 🚨 ML1 的小數點為 0，這裡直接取整數轉 BN，不乘 1e9！
         const rawAmount = new BN(Math.floor(amt).toString());
 
         const [globalMl1Vault] = PublicKey.findProgramAddressSync([utf8.encode("global_ml1_vault")], PROGRAM_ID);
@@ -122,6 +133,7 @@ setTimeout(() => {
             try {
                 await anchorProgram.account.userRecord.fetch(userRecordPda);
             } catch (e) {
+                // 自動註冊帳戶
                 tx.add(await anchorProgram.methods.initUserRecord().accounts({ owner: walletPk, userRecord: userRecordPda, systemProgram: SystemProgram.programId }).instruction());
             }
 
@@ -152,7 +164,9 @@ setTimeout(() => {
 
         try {
             const tx = new Transaction();
+            // 自動創建 O2 的代幣錢包
             tx.add(createAssociatedTokenAccountIdempotentInstruction(walletPk, userO2Account, walletPk, o2Mint));
+            
             tx.add(await anchorProgram.methods.claimO2().accounts({
                 owner: walletPk, userRecord: userRecordPda, globalState: globalState, o2Mint: o2Mint, userO2Account: userO2Account, tokenProgram: TOKEN_PROGRAM_ID
             }).instruction());
@@ -172,6 +186,8 @@ setTimeout(() => {
         if (!(await window.initWeb3Engine())) return alert("⚠️ 請先連接 Solana 錢包！");
         
         const walletPk = currentProvider.wallet.publicKey;
+        
+        // 🚨 O2 有 9 位小數，轉為合約底層單位 (x 10^9)
         const amtBn = new BN(Math.floor(amt).toString());
         const decimalsBn = new BN("1000000000"); 
         const rawAmount = amtBn.mul(decimalsBn);
@@ -188,7 +204,9 @@ setTimeout(() => {
 
         try {
             const tx = new Transaction();
+            // 自動創建 DUST 的代幣錢包
             tx.add(createAssociatedTokenAccountIdempotentInstruction(walletPk, userDustAccount, walletPk, dustMint));
+            
             tx.add(await anchorProgram.methods.burnO2ForDust(rawAmount).accounts({
                 owner: walletPk, globalState: globalState, o2Mint: o2Mint, dustMint: dustMint, userO2Account: userO2Account, userDustAccount: userDustAccount, adminO2Account: adminO2Account, tokenProgram: TOKEN_PROGRAM_ID
             }).instruction());
