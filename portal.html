@@ -685,28 +685,41 @@
 
         <div id="tab-simulator" class="portal-tab-content">
             <div class="hud-container">
+                
                 <div class="hud-item">
                     <span class="hud-label">
                         <span lang-content="en">$ML1 Land Deed License</span>
                         <span lang-content="zh">$ML1 火星地契授權</span>
                     </span>
-                    <span class="hud-value val-ml1" id="ui-ml1">0.00</span>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px;">
+                        <img src="https://raw.githubusercontent.com/marsledger1/ML1-Genesis/refs/heads/main/ML1.jpeg" alt="$ML1" style="width: 50px; height: 50px; border-radius: 8px; border: 1px solid var(--tier5-gold); box-shadow: 0 0 15px rgba(255, 223, 0, 0.4); object-fit: cover;">
+                        <span class="hud-value val-ml1" id="ui-ml1" style="font-size: 2.2rem; letter-spacing: 1px;">0.00</span>
+                    </div>
                 </div>
+                
                 <div class="hud-item">
                     <span class="hud-label">
                         <span lang-content="en">$O2 Industrial Fuel</span>
                         <span lang-content="zh">$O2 工業製氧燃料</span>
                     </span>
-                    <span class="hud-value val-o2" id="ui-o2">0.00</span>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px;">
+                        <img src="https://raw.githubusercontent.com/marsledger1/ML1-Genesis/refs/heads/main/O2.jpeg" alt="$O2" style="width: 50px; height: 50px; border-radius: 8px; border: 1px solid var(--lag-blue); box-shadow: 0 0 15px rgba(0, 191, 255, 0.4); object-fit: cover;">
+                        <span class="hud-value val-o2" id="ui-o2" style="font-size: 2.2rem; letter-spacing: 1px;">0.00</span>
+                    </div>
                 </div>
-                <div class="hud-item">
+                
+                <div class="hud-item" style="position: relative;">
                     <span class="hud-label">
                         <span lang-content="en">$DUST Classified Asset</span>
                         <span lang-content="zh">$DUST 機密未解鎖資產</span>
-                        <span class="classified-tag">TOP SECRET</span>
+                        <span class="classified-tag" style="position: absolute; top: -10px; right: 0;">TOP SECRET</span>
                     </span>
-                    <span class="hud-value val-dust" id="ui-dust">0.00</span>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px;">
+                        <img src="https://raw.githubusercontent.com/marsledger1/ML1-Genesis/refs/heads/main/DUST.jpeg" alt="$DUST" style="width: 50px; height: 50px; border-radius: 8px; border: 1px solid var(--tech-green); box-shadow: 0 0 15px rgba(0, 255, 65, 0.4); object-fit: cover;">
+                        <span class="hud-value val-dust" id="ui-dust" style="font-size: 2.2rem; letter-spacing: 1px;">0.00</span>
+                    </div>
                 </div>
+                
             </div>
 
             <div class="sim-panel">
