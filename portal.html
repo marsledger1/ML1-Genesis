@@ -157,16 +157,26 @@
         .val-dust { color: var(--tech-green); }
         .classified-tag { font-size: 8px; background: var(--alert-red); color: #fff; padding: 2px 4px; border-radius: 2px; animation: blink 2s infinite; vertical-align: top; margin-left: 5px;}
         
-        .sim-panel { background: rgba(10,10,10,0.9); border: 1px solid #333; position: relative; height: 450px; display: flex; flex-direction: column; overflow: hidden; margin-bottom: 20px; width: 100%;}
+        .sim-panel { background: rgba(10,10,10,0.9); border: 1px solid #333; height: auto; min-height: 480px; display: flex; flex-direction: column; overflow: hidden; margin-bottom: 20px; width: 100%;}
         .sim-title { color: #fff; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #333; padding: 15px; text-align: center; background: rgba(0,0,0,0.5);}
-        .lock-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 5, 5, 0.85); z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 2px dashed var(--alert-red); backdrop-filter: blur(6px); cursor: not-allowed; transition: 0.3s; padding: 20px; text-align: center;}
-        .lock-title { color: var(--alert-red); font-size: 1.8rem; font-weight: bold; margin-bottom: 15px; text-shadow: 0 0 15px var(--alert-red); letter-spacing: 2px; }
-        .lock-msg { color: #ccc; font-size: 0.85rem; line-height: 1.8; max-width: 500px; }
-        .lock-code { margin-top: 20px; padding: 10px 20px; background: rgba(255,51,51,0.1); border: 1px solid var(--alert-red); color: var(--alert-red); font-size: 0.85rem; font-weight: bold;}
-        .fake-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(30px, 1fr)); gap: 2px; width: 100%; height: 100%; opacity: 0.15; padding: 15px; pointer-events: none;}
-        .fake-cell { background: #222; border: 1px solid #333; }
 
-        .log-terminal { position: absolute; bottom: 20px; left: 20px; width: calc(100% - 40px); max-width: 400px; background: rgba(0,0,0,0.9); border: 1px solid #333; border-left: 3px solid var(--tech-green); padding: 15px; font-size: 0.75rem; color: #888; height: 130px; overflow-y: hidden; display: flex; flex-direction: column; justify-content: flex-end; z-index: 11;}
+        /* 🚀 終極修復：完全摒棄 absolute 定位，將終端機變為 flex 的一環，永遠在最下方 */
+        .log-terminal { 
+            width: 100%; 
+            background: rgba(0,0,0,0.9); 
+            border: 1px solid #333; 
+            border-left: 3px solid var(--tech-green); 
+            padding: 15px; 
+            font-size: 0.75rem; 
+            color: #888; 
+            height: 130px; 
+            overflow-y: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-end; 
+            margin-top: 10px;
+        }
+        
         .log-entry { margin-top: 6px; line-height: 1.4;}
         .log-sys { color: var(--tier5-gold); }
         .log-err { color: var(--alert-red); }
@@ -189,11 +199,10 @@
             .logout-btn { display: block !important; margin-top: 10px; }
             .wp-content { padding: 25px 15px; }
             .portal-tab-btn { font-size: 0.75rem; padding: 12px 5px; }
-            .lock-title { font-size: 1.4rem; }
-            .lock-msg { font-size: 0.75rem; }
             .hud-value { font-size: 1.2rem; }
-            .web3-console { padding-bottom: 240px !important; }
-            .log-terminal { height: 110px !important; bottom: 10px !important; left: 10px !important; width: calc(100% - 20px) !important; font-size: 0.65rem !important; }
+            
+            /* 🚀 終極修復：確保手機版終端機自然排版，不影響按鈕滑動 */
+            .log-terminal { height: 110px; font-size: 0.65rem; }
         }
     </style>
 <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
@@ -275,10 +284,10 @@
                     </video>
                 </div>
                 
-<button class="wp-btn" onclick="document.getElementById('wp-modal').style.cssText='display: flex !important;'">
-    <span lang-content="en">>> ACCESS DeIF MANIFESTO (WHITEPAPER) <<</span>
-    <span lang-content="zh">>> 查閱星際金融憲章 (核心白皮書) <<</span>
-</button>
+                <button class="wp-btn" onclick="document.getElementById('wp-modal').style.display = 'flex';">
+                    <span lang-content="en">>> ACCESS DeIF MANIFESTO (WHITEPAPER) <<</span>
+                    <span lang-content="zh">>> 查閱星際金融憲章 (核心白皮書) <<</span>
+                </button>
             </div>
 
             <div class="data-grid">
@@ -706,52 +715,55 @@
                     <span lang-content="zh">ISRU 盲挖邊緣計算模擬器 (v0.1)</span>
                 </div>
                 
-<div class="web3-console" style="padding: 20px; padding-bottom: 160px; display: flex; flex-direction: column; gap: 15px; height: 100%; overflow-y: auto; z-index: 5;">
-    
-    <div style="background: rgba(255, 223, 0, 0.05); border: 1px dashed var(--tier5-gold); padding: 15px;">
-        <div style="font-size: 11px; color: var(--tier5-gold); margin-bottom: 10px; font-weight: bold; letter-spacing: 1px;">
-            <span lang-content="en">[1] CRYO-SLEEP STAKING ($ML1)</span>
-            <span lang-content="zh">[1] 冷凍休眠質押 ($ML1 礦機)</span>
-        </div>
-        <div style="display: flex; gap: 10px;">
-            <input type="number" id="web3-stake-amount" placeholder="Amount" style="margin: 0; padding: 12px; width: 40%; background: rgba(0,0,0,0.6); border: 1px solid var(--tier5-gold); color: #fff; text-align: center;">
-            <button onclick="window.web3StakeML1 && window.web3StakeML1()" class="btn-submit" style="flex: 1; margin: 0; background: var(--tier5-gold); color: #000;">
-                <span lang-content="en">STAKE & IGNITE</span>
-                <span lang-content="zh">質押並點火啟動</span>
-            </button>
-        </div>
-    </div>
+                <div class="web3-console" style="padding: 20px; display: flex; flex-direction: column; gap: 15px; height: 100%;">
+                    
+                    <div style="background: rgba(255, 223, 0, 0.05); border: 1px dashed var(--tier5-gold); padding: 15px;">
+                        <div style="font-size: 11px; color: var(--tier5-gold); margin-bottom: 10px; font-weight: bold; letter-spacing: 1px;">
+                            <span lang-content="en">[1] CRYO-SLEEP STAKING ($ML1)</span>
+                            <span lang-content="zh">[1] 冷凍休眠質押 ($ML1 礦機)</span>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="number" id="web3-stake-amount" placeholder="Amount" style="margin: 0; padding: 12px; width: 40%; background: rgba(0,0,0,0.6); border: 1px solid var(--tier5-gold); color: #fff; text-align: center;">
+                            <button onclick="window.web3StakeML1 && window.web3StakeML1()" class="btn-submit" style="flex: 1; margin: 0; background: var(--tier5-gold); color: #000;">
+                                <span lang-content="en">STAKE & IGNITE</span>
+                                <span lang-content="zh">質押並點火啟動</span>
+                            </button>
+                        </div>
+                    </div>
 
-    <div style="background: rgba(0, 191, 255, 0.05); border: 1px dashed var(--lag-blue); padding: 15px;">
-        <div style="font-size: 11px; color: var(--lag-blue); margin-bottom: 10px; font-weight: bold; letter-spacing: 1px;">
-            <span lang-content="en">[2] EXTRACT LIQUID OXYGEN ($O2)</span>
-            <span lang-content="zh">[2] 提取液氧燃料 ($O2 產出)</span>
-        </div>
-        <button onclick="window.web3ClaimO2 && window.web3ClaimO2()" class="btn-submit" style="margin: 0; width: 100%; background: transparent; border: 1px solid var(--lag-blue); color: var(--lag-blue); transition: 0.3s;" onmouseover="this.style.background='var(--lag-blue)'; this.style.color='#000'" onmouseout="this.style.background='transparent'; this.style.color='var(--lag-blue)'">
-            <span lang-content="en">⚡ CLAIM ACCUMULATED $O2</span>
-            <span lang-content="zh">⚡ 提取已累積的 $O2</span>
-        </button>
-    </div>
+                    <div style="background: rgba(0, 191, 255, 0.05); border: 1px dashed var(--lag-blue); padding: 15px;">
+                        <div style="font-size: 11px; color: var(--lag-blue); margin-bottom: 10px; font-weight: bold; letter-spacing: 1px;">
+                            <span lang-content="en">[2] EXTRACT LIQUID OXYGEN ($O2)</span>
+                            <span lang-content="zh">[2] 提取液氧燃料 ($O2 產出)</span>
+                        </div>
+                        <button onclick="window.web3ClaimO2 && window.web3ClaimO2()" class="btn-submit" style="margin: 0; width: 100%; background: transparent; border: 1px solid var(--lag-blue); color: var(--lag-blue); transition: 0.3s;" onmouseover="this.style.background='var(--lag-blue)'; this.style.color='#000'" onmouseout="this.style.background='transparent'; this.style.color='var(--lag-blue)'">
+                            <span lang-content="en">⚡ CLAIM ACCUMULATED $O2</span>
+                            <span lang-content="zh">⚡ 提取已累積的 $O2</span>
+                        </button>
+                    </div>
 
-    <div style="background: rgba(0, 255, 65, 0.05); border: 1px dashed var(--tech-green); padding: 15px;">
-        <div style="font-size: 11px; color: var(--tech-green); margin-bottom: 10px; font-weight: bold; letter-spacing: 1px;">
-            <span lang-content="en">[3] THERMODYNAMIC BURN ($DUST)</span>
-            <span lang-content="zh">[3] 熱力學燃燒盲挖 ($DUST)</span>
+                    <div style="background: rgba(0, 255, 65, 0.05); border: 1px dashed var(--tech-green); padding: 15px;">
+                        <div style="font-size: 11px; color: var(--tech-green); margin-bottom: 10px; font-weight: bold; letter-spacing: 1px;">
+                            <span lang-content="en">[3] THERMODYNAMIC BURN ($DUST)</span>
+                            <span lang-content="zh">[3] 熱力學燃燒盲挖 ($DUST)</span>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="number" id="web3-burn-amount" placeholder="$O2 Amount" style="margin: 0; padding: 12px; width: 40%; background: rgba(0,0,0,0.6); border: 1px solid var(--tech-green); color: #fff; text-align: center;">
+                            <button onclick="window.web3BurnForDust && window.web3BurnForDust()" class="btn-submit" style="flex: 1; margin: 0; background: var(--tech-green); color: #000; box-shadow: 0 0 10px rgba(0, 255, 65, 0.4);">
+                                <span lang-content="en">BURN FOR DUST</span>
+                                <span lang-content="zh">燃燒盲挖 DUST</span>
+                            </button>
+                        </div>
+                        <div style="font-size: 9px; color: #888; margin-top: 8px; text-align: right;">
+                            <span lang-content="en">* BASE COST: 100k $O2 | TAX: 5%</span>
+                            <span lang-content="zh">* 盲挖基礎成本: 10萬顆 $O2 | 莊家稅: 5%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="log-terminal" id="log-terminal"></div>
+                </div>
+            </div>
         </div>
-        <div style="display: flex; gap: 10px;">
-            <input type="number" id="web3-burn-amount" placeholder="$O2 Amount" style="margin: 0; padding: 12px; width: 40%; background: rgba(0,0,0,0.6); border: 1px solid var(--tech-green); color: #fff; text-align: center;">
-            <button onclick="window.web3BurnForDust && window.web3BurnForDust()" class="btn-submit" style="flex: 1; margin: 0; background: var(--tech-green); color: #000; box-shadow: 0 0 10px rgba(0, 255, 65, 0.4);">
-                <span lang-content="en">BURN FOR DUST</span>
-                <span lang-content="zh">燃燒盲挖 DUST</span>
-            </button>
-        </div>
-        <div style="font-size: 9px; color: #888; margin-top: 8px; text-align: right;">
-            <span lang-content="en">* BASE COST: 100k $O2 | TAX: 5%</span>
-            <span lang-content="zh">* 盲挖基礎成本: 10萬顆 $O2 | 莊家稅: 5%</span>
-<div class="log-terminal" id="log-terminal">
-        </div>
-    </div>
-</div>
 
 <div id="lag-screen">
     <div id="lag-status" style="font-size: 11px; color: var(--tech-green); letter-spacing: 2px;">ESTABLISHING UPLINK TO JEZERO...</div>
@@ -760,7 +772,7 @@
 
 <div id="wp-modal">
     <div class="wp-content">
-        <button class="close-wp" onclick="document.getElementById('wp-modal').style.cssText='display: none !important;'">✕ CLOSE</button>
+        <button class="close-wp" onclick="document.getElementById('wp-modal').style.display='none'">✕ CLOSE</button>
         <h2 style="color: var(--tech-green); margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; font-size: 1.4rem;">
             THE DeIF MANIFESTO (v6.1.0)
         </h2>
@@ -812,6 +824,7 @@
         </div>
     </div>
 </div>
+</div>
 
 <script src="portal_UI.js"></script>
 <script src="portal_CORE.js"></script>
@@ -862,7 +875,7 @@
     // ================= HUD 數值連動與雙語日誌系統 =================
     const logTerminal = document.getElementById('log-terminal');
     
-    // 雙語日誌生成器：使用 span 標籤讓 CSS 全自動切換語言，無懈可擊
+    // 雙語日誌生成器
     function addLog(enText, zhText, type = '') {
         const entry = document.createElement('div');
         entry.className = `log-entry ${type}`;
@@ -872,7 +885,7 @@
         if(logTerminal.children.length > 5) logTerminal.removeChild(logTerminal.firstChild);
     }
 
-    // 定期抓取 localStorage 中的入金數據來更新 HUD 儀表板 (極度精準連動)
+    // 定期抓取 localStorage 更新 HUD
     setInterval(() => {
         if(document.getElementById('investor-dashboard').style.display === 'block') {
             let pUsd = parseFloat(localStorage.getItem('ml1_personal_usd')) || 0;
@@ -883,47 +896,19 @@
             let estMl1 = 0;
             let estO2 = 0;
 
-            // 1. 判斷 God Mode (創世大帝帳號)
             if (currentUser === "ML1-CORE-001" || currentUser.toUpperCase() === "ARCHITECT") {
                 estMl1 = 120000;
                 estO2 = 50000;
-            } 
-            // 2. 判斷一般登入玩家 (有業績)
-            else if (currentUser !== "GUEST_MODE" && total > 0) {
+            } else if (currentUser !== "GUEST_MODE" && total > 0) {
                 estMl1 = total * 1.2; 
-                // 為了嚴謹符合白皮書「冷凍質押未開放」的設定，這裡將散戶的 O2 強制歸零！
                 estO2 = 0.00; 
             }
-            // 3. 訪客 (GUEST) 或 業績為0的玩家 (包含 MARS2026)，estMl1 和 estO2 皆會完美保持在 0.00
 
-            // 設定小數點精確度至兩位，讓玩家明確知道這是跟業績 $USD 即時連動的
             document.getElementById('ui-ml1').innerText = estMl1.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             document.getElementById('ui-o2').innerText = estO2.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.getElementById('ui-dust').innerText = "0.00"; // DUST 永遠是 0 搞心态
+            document.getElementById('ui-dust').innerText = "0.00";
         }
-    }, 1000); // 縮短至 1 秒，確保強制覆寫舊畫面的值
-
-    // 觸發拒絕效果 (搞心態專用)
-    function triggerDenial() {
-        const isZh = document.body.classList.contains('lang-zh');
-        const msgBoxEn = document.getElementById('denial-msg');
-        const msgBoxZh = document.getElementById('denial-msg-zh');
-        const activeBox = isZh ? msgBoxZh : msgBoxEn;
-        
-        activeBox.style.color = '#fff';
-        activeBox.style.background = 'var(--alert-red)';
-        activeBox.innerText = isZh ? "警告：權限層級不足！" : "WARNING: INSUFFICIENT CLEARANCE LEVEL";
-        
-        let currentUser = localStorage.getItem('ml1_fission_code') || "GUEST_MODE";
-        addLog(`> Unauthorized ISRU access attempt by [${currentUser}].`, `> 系統警告：檢測到 [${currentUser}] 的未授權 ISRU 存取嘗試。`, 'log-err');
-        
-        setTimeout(() => {
-            activeBox.style.color = 'var(--alert-red)';
-            activeBox.style.background = 'rgba(255,51,51,0.1)';
-            // 🚀 在這裡更新了文字，加入 Syndicate Pool 的暗示
-            activeBox.innerText = isZh ? "狀態: 等待聯合礦池 (SYNDICATE POOL) 協議解鎖" : "STATUS: AWAITING SYNDICATE POOL DEPLOYMENT";
-        }, 500);
-    }
+    }, 1000); 
 
     // ================= 核心啟動邏輯 =================
     window.onload = () => {
@@ -937,7 +922,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         let authParam = urlParams.get('auth');
         
-        // 🚀 終極修復：如果是從首頁帶著 auth 跳轉來的，瞬間無縫解鎖，不播第二次讀條動畫！
         if (authParam) {
             let key = authParam.toUpperCase();
             document.getElementById('gate-ui').style.display = 'none';
@@ -956,7 +940,6 @@
             
             if (typeof checkFissionStatus === "function") checkFissionStatus(false);
             
-            // 靜默抹除網址列的 ?auth=，讓網址保持乾淨專業
             window.history.replaceState(null, null, window.location.pathname);
             
             setTimeout(() => {
@@ -964,10 +947,9 @@
                 addLog(`> Interstellar uplink established.`, `> 星際鏈路已建立，資料同步完成。`);
             }, 500);
 
-            return; // 結束執行，不再往下跑
+            return; 
         }
 
-        // 一般正常的本地快取登入邏輯
         const savedCode = localStorage.getItem('ml1_fission_code');
         if (savedCode) {
             if(typeof checkFissionStatus === 'function') checkFissionStatus(false);
