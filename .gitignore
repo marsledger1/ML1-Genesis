@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.turbo/
+
+# Cache directories
+.cache/
+.vercel/
+.parcel-cache/
+
+# Build info
+*.tsbuildinfo
+
+# Lock files (should be committed when package.json changes)
+# package-lock.json is included to ensure consistent installs
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
