@@ -228,81 +228,110 @@ window.web3BurnForDust = async function() {
     }
 };
 
+// ==========================================
+// 🚀 雙模組自適應支付系統 (手動填寫 vs Web3 自動扣款)
+// ==========================================
 window.submitToLedger = async function() {
-    if (!isEngineReady) return alert("⚠️ Web3 引擎正在連線中或載入失敗，請強制重整網頁 (Ctrl+F5)！");
     const network = document.getElementById('reg-network').value;
     const amountStr = document.getElementById('reg-amount').value;
+    const walletInput = document.getElementById('reg-wallet');
+    const hashInput = document.getElementById('reg-hash');
+
+    const manualWallet = walletInput ? walletInput.value.trim() : "";
+    const manualHash = hashInput ? hashInput.value.trim() : "";
     const isZh = document.body.classList.contains('lang-zh');
 
     if (!amountStr || parseFloat(amountStr) <= 0) return alert(isZh ? "請輸入有效的打款數量！" : "Please enter a valid amount!");
-    
-    const solProvider = typeof getSolanaProvider === 'function' ? getSolanaProvider() : window.phantom?.solana;
-    if (!solProvider) return alert(isZh ? "請先連接 Solana 錢包！" : "Please connect your Solana wallet first!");
 
-    if (!solProvider.publicKey) {
-        try { await solProvider.connect(); } catch(e) { return; }
-    }
-
-    const userPubkey = solProvider.publicKey;
+    const amount = parseFloat(amountStr);
     const btn = document.getElementById('t-btn');
     const originalBtnText = btn.innerText;
-    btn.innerText = isZh ? "請求錢包簽名中..." : "AWAITING SIGNATURE...";
-    btn.disabled = true;
+
+    let finalWallet = "";
+    let finalSignature = "";
 
     try {
-        const isMainnet = false; 
-        const connection = new window.solanaWeb3.Connection(isMainnet ? "https://api.mainnet-beta.solana.com" : "https://api.devnet.solana.com", "confirmed");
-        let tx = new window.solanaWeb3.Transaction();
-        const amount = parseFloat(amountStr);
-        let signature = "";
-        const splLib = window.splToken || window.solanaSplToken;
-
-        if (network === "SOL") {
-            const lamports = Math.floor(amount * 1e9); 
-            tx.add(window.solanaWeb3.SystemProgram.transfer({ fromPubkey: userPubkey, toPubkey: ADMIN_PUBKEY, lamports: lamports }));
-        } else {
-            if (!isMainnet) throw new Error(isZh ? "Devnet 測試網僅支援 SOL 支付！請於主網上線後測試 SPL 代幣。" : "Devnet only supports SOL! Switch to SOL.");
-
-            const MINT_ADDRESSES = {
-                "USDC": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", "USDT": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
-                "JUP":  "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN", "JTO":  "jtojtomepa8beP8AuQc6eP9tWbnRZAexgqAEMQ6QZtw",
-                "PYTH": "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3AkT4Z1c16J1iR", "BONK": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
-                "BOME": "ukHH6c7mMyiWCf1b9pnWe25TSpkDDt3H5pQZgZ74J82"
-            };
-            const TOKEN_DECIMALS = { "USDC": 6, "USDT": 6, "JUP": 6, "JTO": 9, "PYTH": 6, "BONK": 5, "BOME": 6 };
-
-            const mintPubkey = new window.solanaWeb3.PublicKey(MINT_ADDRESSES[network]);
-            const decimals = TOKEN_DECIMALS[network];
+        // 🌟 模式 1：玩家手動填寫 TXID (交易所打款 或 手機未連錢包)
+        if (manualHash !== "" && manualHash !== "[ 等待鏈上結算... 系統將自動抓取 TXID ]") {
+            if (!manualWallet) {
+                return alert(isZh ? "請手動填寫您的錢包地址！" : "Please enter your wallet address!");
+            }
+            finalWallet = manualWallet; // 使用手動填寫的地址
+            finalSignature = manualHash; // 使用手動填寫的 TXID
             
-            const amtBn = new window.anchor.BN(Math.floor(amount).toString());
-            const fraction = amount - Math.floor(amount);
-            const fractionBn = new window.anchor.BN(Math.floor(fraction * Math.pow(10, decimals)).toString());
-            const multiplier = new window.anchor.BN(Math.pow(10, decimals).toString());
-            const rawAmount = amtBn.mul(multiplier).add(fractionBn);
+            btn.innerText = isZh ? "驗證資料中..." : "VERIFYING DATA...";
+            btn.disabled = true;
+        } 
+        // 🌟 模式 2：自動 Web3 支付 (呼叫 Phantom 錢包)
+        else {
+            if (!isEngineReady) return alert(isZh ? "⚠️ Web3 引擎正在連線中，請稍後再試！" : "⚠️ Web3 engine connecting, please wait!");
+            
+            const solProvider = typeof getSolanaProvider === 'function' ? getSolanaProvider() : window.phantom?.solana;
+            if (!solProvider) return alert(isZh ? "請填寫 TXID，或點擊上方按鈕連接錢包！" : "Please enter TXID or connect wallet!");
 
-            const userTokenAccount = splLib.getAssociatedTokenAddressSync(mintPubkey, userPubkey);
-            const adminTokenAccount = splLib.getAssociatedTokenAddressSync(mintPubkey, ADMIN_PUBKEY);
+            if (!solProvider.publicKey) {
+                try { await solProvider.connect(); } catch(e) { return; }
+            }
 
-            tx.add(splLib.createTransferInstruction(userTokenAccount, adminTokenAccount, userPubkey, BigInt(rawAmount.toString())));
+            finalWallet = solProvider.publicKey.toString(); // 🚀 自動抓取連線錢包
+            btn.innerText = isZh ? "請求錢包簽名中..." : "AWAITING SIGNATURE...";
+            btn.disabled = true;
+
+            const isMainnet = false; 
+            const connection = new window.solanaWeb3.Connection(isMainnet ? "https://api.mainnet-beta.solana.com" : "https://api.devnet.solana.com", "confirmed");
+            let tx = new window.solanaWeb3.Transaction();
+            const splLib = window.splToken || window.solanaSplToken;
+
+            if (network === "SOL") {
+                const lamports = Math.floor(amount * 1e9); 
+                tx.add(window.solanaWeb3.SystemProgram.transfer({ fromPubkey: solProvider.publicKey, toPubkey: ADMIN_PUBKEY, lamports: lamports }));
+            } else {
+                if (!isMainnet) throw new Error(isZh ? "Devnet 測試網僅支援 SOL 支付！" : "Devnet only supports SOL!");
+
+                const MINT_ADDRESSES = {
+                    "USDC": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", "USDT": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+                    "JUP":  "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN", "JTO":  "jtojtomepa8beP8AuQc6eP9tWbnRZAexgqAEMQ6QZtw",
+                    "PYTH": "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3AkT4Z1c16J1iR", "BONK": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+                    "BOME": "ukHH6c7mMyiWCf1b9pnWe25TSpkDDt3H5pQZgZ74J82"
+                };
+                const TOKEN_DECIMALS = { "USDC": 6, "USDT": 6, "JUP": 6, "JTO": 9, "PYTH": 6, "BONK": 5, "BOME": 6 };
+
+                const mintPubkey = new window.solanaWeb3.PublicKey(MINT_ADDRESSES[network]);
+                const decimals = TOKEN_DECIMALS[network];
+                
+                const amtBn = new window.anchor.BN(Math.floor(amount).toString());
+                const fraction = amount - Math.floor(amount);
+                const fractionBn = new window.anchor.BN(Math.floor(fraction * Math.pow(10, decimals)).toString());
+                const multiplier = new window.anchor.BN(Math.pow(10, decimals).toString());
+                const rawAmount = amtBn.mul(multiplier).add(fractionBn);
+
+                const userTokenAccount = splLib.getAssociatedTokenAddressSync(mintPubkey, solProvider.publicKey);
+                const adminTokenAccount = splLib.getAssociatedTokenAddressSync(mintPubkey, ADMIN_PUBKEY);
+
+                tx.add(splLib.createTransferInstruction(userTokenAccount, adminTokenAccount, solProvider.publicKey, BigInt(rawAmount.toString())));
+            }
+
+            const latestBlockhash = await connection.getLatestBlockhash();
+            tx.recentBlockhash = latestBlockhash.blockhash;
+            tx.feePayer = solProvider.publicKey;
+
+            const signedTx = await solProvider.signTransaction(tx);
+            finalSignature = await connection.sendRawTransaction(signedTx.serialize()); // 🚀 自動產生真實 TXID
+
+            btn.innerText = isZh ? "區塊鏈確認中..." : "CONFIRMING ON-CHAIN...";
+            await connection.confirmTransaction({ signature: finalSignature, blockhash: latestBlockhash.blockhash, lastValidBlockHeight: latestBlockhash.lastValidBlockHeight });
         }
 
-        const latestBlockhash = await connection.getLatestBlockhash();
-        tx.recentBlockhash = latestBlockhash.blockhash;
-        tx.feePayer = userPubkey;
-
-        const signedTx = await solProvider.signTransaction(tx);
-        signature = await connection.sendRawTransaction(signedTx.serialize());
-
-        btn.innerText = isZh ? "區塊鏈確認中..." : "CONFIRMING ON-CHAIN...";
-        await connection.confirmTransaction({ signature: signature, blockhash: latestBlockhash.blockhash, lastValidBlockHeight: latestBlockhash.lastValidBlockHeight });
-
+        // ===================================
+        // 寫入星際帳本 (Google Sheet)
+        // ===================================
         btn.innerText = isZh ? "寫入星際帳本..." : "WRITING TO LEDGER...";
         const payload = [{
             "TIMESTAMP (UTC)": new Date().toLocaleString(),
-            "PIONEER_ADDRESS": userPubkey.toString(),
+            "PIONEER_ADDRESS": finalWallet,  
             "NETWORK": network,
             "ASSET_AMOUNT": amount,
-            "TXID_HASH": signature, 
+            "TXID_HASH": finalSignature,     
             "VALIDATION_STATUS": "PENDING"
         }];
 
@@ -312,8 +341,7 @@ window.submitToLedger = async function() {
 
         if (response.ok) {
             document.getElementById('reg-amount').value = '';
-            const hashInput = document.getElementById('reg-hash');
-            if(hashInput) { hashInput.value = signature; hashInput.readOnly = true; }
+            if(hashInput) { hashInput.value = finalSignature; hashInput.readOnly = true; hashInput.style.color = "var(--tech-green)"; }
             if (typeof updateProgress === 'function') updateProgress();
 
             const lagScreen = document.getElementById('lag-screen');
