@@ -54,14 +54,17 @@ async function updateProgress() {
                     
                     // 📈 動態浮動計算邏輯：真實數量 x 即時市價
                     if (amount > 0 && network) {
-                        if (network.includes('BTC') || network.includes('BITCOIN')) totalUSD += amount * currentPrices.BTC;
-                        else if (network.includes('ETH') || network.includes('BASE')) totalUSD += amount * currentPrices.ETH;
-                        else if (network.includes('SOL')) totalUSD += amount * currentPrices.SOL;
-                        else if (network.includes('USD')) totalUSD += amount; // 穩定幣 1:1
-                        else totalUSD += staticUsd; // 未知幣種，用回 Sheet 記錄的估值
-                    } else if (staticUsd > 0) {
-                        totalUSD += staticUsd; // 防呆：如果忘記填數量，直接吃估值
-                    }
+    if (network.includes('SOL')) totalUSD += amount * currentPrices.SOL;
+    else if (network.includes('JUP')) totalUSD += amount * currentPrices.JUP;
+    else if (network.includes('JTO')) totalUSD += amount * currentPrices.JTO;
+    else if (network.includes('PYTH')) totalUSD += amount * currentPrices.PYTH;
+    else if (network.includes('BONK')) totalUSD += amount * currentPrices.BONK;
+    else if (network.includes('BOME')) totalUSD += amount * currentPrices.BOME;
+    else if (network.includes('USDC') || network.includes('USDT') || network.includes('USD')) totalUSD += amount; 
+    else totalUSD += staticUsd;
+} else if (staticUsd > 0) {
+    totalUSD += staticUsd; 
+}
                 }
             });
         }
@@ -150,14 +153,19 @@ async function submitToLedger() {
 // --- 3. 獲取即時幣價 (Fetch Live Prices) ---
 async function fetchLivePrices() {
     try {
-        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd');
+        const ids = 'solana,usd-coin,tether,jupiter-exchange-solana,jito-governance-token,pyth-network,bonk,book-of-meme';
+        const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`);
         if (!response.ok) throw new Error("API fetch failed");
 
         const data = await response.json();
-
-        if (data.bitcoin && data.bitcoin.usd) livePrices.BTC = data.bitcoin.usd;
-        if (data.ethereum && data.ethereum.usd) livePrices.ETH = data.ethereum.usd;
-        if (data.solana && data.solana.usd) livePrices.SOL = data.solana.usd;
+        if (data['solana']) livePrices.SOL = data['solana'].usd;
+        if (data['usd-coin']) livePrices.USDC = data['usd-coin'].usd;
+        if (data['tether']) livePrices.USDT = data['tether'].usd;
+        if (data['jupiter-exchange-solana']) livePrices.JUP = data['jupiter-exchange-solana'].usd;
+        if (data['jito-governance-token']) livePrices.JTO = data['jito-governance-token'].usd;
+        if (data['pyth-network']) livePrices.PYTH = data['pyth-network'].usd;
+        if (data['bonk']) livePrices.BONK = data['bonk'].usd;
+        if (data['book-of-meme']) livePrices.BOME = data['book-of-meme'].usd;
 
         if (typeof runPhase1Calc === "function") runPhase1Calc();
     } catch (error) {
