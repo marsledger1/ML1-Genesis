@@ -62,6 +62,7 @@ function unlockPioneer() {
         
         if (lagScreen && lBar) {
             if (lagStatus) {
+                // 動態切換讀條文字
                 lagStatus.innerText = isZh ? "VERIFYING PIONEER KEY... / 正在驗證先鋒金鑰..." : "VERIFYING PIONEER KEY...";
             }
             lagScreen.style.display = 'flex';
@@ -74,7 +75,7 @@ function unlockPioneer() {
                     currentProgress = 100;
                     clearInterval(progressInterval);
                     
-                    // 滿 100% 後，延遲 0.5 秒正式跳轉
+                    // 滿 100% 後，延遲 0.5 秒正式絲滑跳轉到 portal
                     setTimeout(() => {
                         window.location.href = 'portal.html?auth=' + encodeURIComponent(key.toLowerCase());
                     }, 500);
