@@ -727,16 +727,12 @@
         <!-- 🚀 傳送門跳轉腳本 -->
         <script>
             function launchWeb3DApp() {
-                // 偵測目前 Portal 選擇的語言
                 const isZh = document.body.classList.contains('lang-zh');
                 const langParam = isZh ? '?lang=zh' : '?lang=en';
-                
-                // 本地開發階段，我們跳轉到 localhost:3000
-                // ⚠️ 未來部署到 Vercel 時，把這個換成你的專屬網址，例如：'https://ml1-dapp-web3.vercel.app/' + langParam
                 const targetUrl = 'https://ml1-dapp.vercel.app/' + langParam;
                 
-                // 打開新分頁進入 Web3 引擎
-                window.open(targetUrl, '_blank');
+                // 🟢 戰略升級：在「同一個分頁」直接切換，不製造多餘的瀏覽器標籤頁！
+                window.location.href = targetUrl;
             }
         </script>
 
