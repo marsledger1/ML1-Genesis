@@ -845,16 +845,17 @@
     animateDust();
 
     // ================= HUD 數值連動與雙語日誌系統 =================
-    const logTerminal = document.getElementById('log-terminal');
-    
     // 雙語日誌生成器
     function addLog(enText, zhText, type = '') {
+        const logTerminal = document.getElementById('log-terminal');
+        if (!logTerminal) return; // 🛡️ 終極防護：如果找不到終端機（已被隱藏或刪除），就安靜跳過，絕不當機！
+        
         const entry = document.createElement('div');
         entry.className = `log-entry ${type}`;
         entry.innerHTML = `<span lang-content="en">${enText}</span><span lang-content="zh">${zhText}</span>`;
         logTerminal.appendChild(entry);
 
-        if(logTerminal.children.length > 5) logTerminal.removeChild(logTerminal.firstChild);
+        if(logTerminal.childElementCount > 5) logTerminal.removeChild(logTerminal.firstChild);
     }
 
     // 定期抓取 localStorage 更新 HUD
@@ -873,64 +874,70 @@
                 estO2 = 50000;
             } else if (currentUser !== "GUEST_MODE" && total > 0) {
                 estMl1 = total * 1.2; 
-                estO2 = 0.00; 
             }
 
-            document.getElementById('ui-ml1').innerText = estMl1.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.getElementById('ui-o2').innerText = estO2.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.getElementById('ui-dust').innerText = "0.00";
+            // 🛡️ 終極防護：確保這些元素存在才更新數字
+            const ml1Ui = document.getElementById('ui-ml1');
+            const o2Ui = document.getElementById('ui-o2');
+            const dustUi = document.getElementById('ui-dust');
+            if(ml1Ui) ml1Ui.innerText = estMl1.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            if(o2Ui) o2Ui.innerText = estO2.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            if(dustUi) dustUi.innerText = "0.00";
         }
     }, 1000); 
 
-    // ================= 核心啟動邏輯 =================
-    window.onload = () => {
-        if(typeof setLanguage === 'function') setLanguage('en');
-        if(typeof fetchLiveProgress === 'function') fetchLiveProgress();
-        if(typeof initAggressiveBGM === 'function') initAggressiveBGM();
-
-        addLog("> Initializing ML1 Kernel...", "> 正在初始化 ML1 核心...");
-        addLog("> Awaiting secure handshake.", "> 等待星際安全握手協議...", "log-sys");
-
+    // ================= 核心啟動邏輯 (光速安全版) =================
+    document.addEventListener("DOMContentLoaded", () => {
+        
+        // 🚀 步驟一：最優先處理 URL 參數與快取！絕對不能放在 setLanguage 後面！
         const urlParams = new URLSearchParams(window.location.search);
         let authParam = urlParams.get('auth');
         
         if (authParam) {
             let key = authParam.toUpperCase();
+            
+            // 光速開門
             document.getElementById('gate-ui').style.display = 'none';
             document.getElementById('investor-dashboard').style.display = 'block';
             if(document.getElementById('portal-tabs')) document.getElementById('portal-tabs').style.display = 'flex';
-            document.getElementById('logout-btn').style.display = 'block'; 
+            if(document.getElementById('logout-btn')) document.getElementById('logout-btn').style.display = 'block'; 
             
             if (key === 'ML1-CORE-001') {
                 localStorage.setItem('ml1_fission_code', 'ML1-CORE-001');
                 localStorage.setItem('ml1_recruits', '100'); 
                 localStorage.setItem('ml1_personal_usd', '100000'); 
                 localStorage.setItem('ml1_team_usd', '0'); 
+            } else if (key === 'MARS2026') {
+                // 🟢 完美解決新用戶：清除舊快取，確保新用戶能看到乾淨的「預約節點表單」
+                localStorage.removeItem('ml1_fission_code');
             } else {
+                // 🟢 寫入老用戶專屬金鑰
                 localStorage.setItem('ml1_fission_code', key);
             }
             
-            if (typeof checkFissionStatus === "function") checkFissionStatus(false);
-            
+            // 清理網址列
             window.history.replaceState(null, null, window.location.pathname);
-            
-            setTimeout(() => {
-                addLog(`> Welcome, Commander [${key}].`, `> 歡迎登入，指揮官 [${key}].`, 'log-sys');
-                addLog(`> Interstellar uplink established.`, `> 星際鏈路已建立，資料同步完成。`);
-            }, 500);
-
-            return; 
+        } else {
+            // 如果沒有網址參數，檢查是否有本地快取
+            const savedCode = localStorage.getItem('ml1_fission_code');
+            if (savedCode) {
+                document.getElementById('gate-ui').style.display = 'none';
+                document.getElementById('investor-dashboard').style.display = 'block';
+                if(document.getElementById('portal-tabs')) document.getElementById('portal-tabs').style.display = 'flex';
+                if(document.getElementById('logout-btn')) document.getElementById('logout-btn').style.display = 'block'; 
+            }
         }
 
-        const savedCode = localStorage.getItem('ml1_fission_code');
-        if (savedCode) {
-            if(typeof checkFissionStatus === 'function') checkFissionStatus(false);
-            setTimeout(() => {
-                addLog(`> Welcome back, Commander [${savedCode}].`, `> 歡迎回來，指揮官 [${savedCode}].`, 'log-sys');
-                addLog(`> Local ledger state loaded successfully.`, `> 本地帳本狀態已成功同步。`);
-            }, 1000);
+        // 🚀 步驟二：狀態確認完畢後，才啟動 UI 渲染與背景音樂
+        if(typeof setLanguage === 'function') setLanguage('en'); // 這行會自動調用 checkFissionStatus
+        if(typeof fetchLiveProgress === 'function') fetchLiveProgress();
+        if(typeof initAggressiveBGM === 'function') initAggressiveBGM();
+
+        if(typeof addLog === 'function') {
+            addLog("> Initializing ML1 Kernel...", "> 正在初始化 ML1 核心...");
+            addLog("> Awaiting secure handshake.", "> 等待星際安全握手協議...", "log-sys");
         }
-    };
+    });
 </script>
 </body>
 </html>

@@ -228,9 +228,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================
-// 🚀 頁面載入時自動執行靜默檢查
+// 🚀 頁面載入時自動執行靜默檢查 (終極修復：改用 DOMContentLoaded)
 // ==========================================
-window.addEventListener('load', () => {
+document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         const indexNetwork = document.getElementById('reg-network');
         if (document.getElementById('btn-connect-index')) {

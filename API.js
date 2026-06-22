@@ -110,7 +110,6 @@ async function submitToLedger() {
     btn.innerText = "COMMITTING... / 提交中...";
     btn.disabled = true;
 
-    // 🚀 將資料完美對齊「工作表1」嘅標題，並自動標記為 PENDING
     const payload = [{
         "TIMESTAMP (UTC)": new Date().toLocaleString(),
         "PIONEER_ADDRESS": wallet,
@@ -121,7 +120,6 @@ async function submitToLedger() {
     }];
 
     try {
-        // 直接寫入 API_URL (即係工作表1)
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'}, 
@@ -129,25 +127,49 @@ async function submitToLedger() {
         });
         
         if(response.ok) { 
-            alert("SUCCESS: DATA COMMITTED / 提交成功！即將為您開啟先鋒樞紐..."); 
-            
+            // 提交成功，清空輸入框
             document.getElementById('reg-amount').value = '';
             document.getElementById('reg-wallet').value = '';
             document.getElementById('reg-hash').value = '';
             updateProgress(); 
             
-            // 🚀 終極跳轉魔法
-            window.location.href = 'portal.html?auth=mars2026';
+            // 🚀 終極跳轉魔法：啟動賽博龐克載入特效
+            const lagScreen = document.getElementById('lag-screen');
+            const lBar = document.getElementById('l-bar');
+            
+            if (lagScreen && lBar) {
+                lagScreen.style.display = 'flex';
+                let currentProgress = 0;
+                
+                // 模擬數據加密與傳輸的進度條
+                const progressInterval = setInterval(() => {
+                    currentProgress += Math.random() * 6; 
+                    if (currentProgress >= 100) {
+                        currentProgress = 100;
+                        clearInterval(progressInterval);
+                        
+                        // 滿 100% 後，延遲 0.5 秒正式跳轉
+                        setTimeout(() => {
+                            window.location.href = 'portal.html?auth=mars2026';
+                        }, 500);
+                    }
+                    lBar.style.width = currentProgress + '%';
+                }, 40);
+            } else {
+                // 防呆機制：如果 HTML 沒貼好，至少還能直接跳轉
+                window.location.href = 'portal.html?auth=mars2026';
+            }
             
         } else {
             alert("SERVER ERROR / 伺服器錯誤: " + response.status);
+            btn.innerText = originalBtnText;
+            btn.disabled = false;
         }
     } catch (e) { 
         alert("SIGNAL LOSS / 信號中斷"); 
-    } finally {
         btn.innerText = originalBtnText;
         btn.disabled = false;
-    }
+    } 
 }
 
 // --- 3. 獲取即時幣價 (Fetch Live Prices) ---

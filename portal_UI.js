@@ -64,13 +64,31 @@ function closeWhitepaper() {
 
 // --- 3. 語言切換系統 (Language System) ---
 function setLanguage(lang) {
-    document.body.className = 'lang-' + lang;
+    document.body.classList.remove('lang-en', 'lang-zh');
+    document.body.classList.add('lang-' + lang);
     
     const btnEn = document.getElementById('btn-en');
     const btnZh = document.getElementById('btn-zh');
     if(btnEn) btnEn.classList.toggle('active', lang === 'en');
     if(btnZh) btnZh.classList.toggle('active', lang === 'zh');
     
+    // 🚀 關鍵修復 1：強制用 JS 替換下拉選單的預設文字 (破解 CSS 免疫 Bug)
+    const networkSelect = document.getElementById('node-network');
+    if (networkSelect && networkSelect.options.length > 0) {
+        if (networkSelect.options[0].value === "") { // 確保改到的是第一個提示選項
+            networkSelect.options[0].text = lang === 'en' ? "-- SELECT NETWORK --" : "-- 選擇發送網路 --";
+        }
+    }
+
+    // 🚀 關鍵修復 2：如果玩家已經選了 SOL/BTC，手動輸入框的浮水印也要跟著切換語言！
+    const walletInput = document.getElementById('node-wallet');
+    if (walletInput && networkSelect && networkSelect.value !== 'EVM' && networkSelect.value !== "") {
+        walletInput.placeholder = lang === 'en' 
+            ? `Please paste your ${networkSelect.value} address here` 
+            : `請手動貼上您的 ${networkSelect.value} 錢包地址`;
+    }
+
+    // 處理註冊成功後的面板語言切換
     const regBox = document.getElementById('reg-box');
     if (regBox && regBox.innerHTML.includes('NODE SECURED')) {
         const spans = regBox.querySelectorAll('[lang-content]');
@@ -79,6 +97,7 @@ function setLanguage(lang) {
         });
     }
     
+    // 觸發其他模組的資料更新
     if (typeof runCalc === "function") runCalc(); 
     if (typeof checkFissionStatus === "function") checkFissionStatus(true);
     if (typeof updateDrawButtonUI === "function") updateDrawButtonUI(); 

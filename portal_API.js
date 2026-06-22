@@ -23,8 +23,8 @@ function checkFissionStatus(isLangSwitch = false) {
         document.getElementById('reg-box').innerHTML = `
             <h3 style="color:var(--tech-green);">[ NODE SECURED ]</h3>
             <p style="font-size:11px; color:#aaa;">
-                <span lang-content="en" style="display:${document.body.className === 'lang-en' ? 'inline' : 'none'};">Your node is secured. Share your Universal Key to build your $O2 Oxygen Network.</span>
-                <span lang-content="zh" style="display:${document.body.className === 'lang-zh' ? 'inline' : 'none'};">您的節點已鎖定。分享通用金鑰以打造你的 $O2 氧氣直銷網。</span>
+                <span lang-content="en" style="display:${document.body.className.includes('lang-en') ? 'inline' : 'none'};">Your node is secured. Share your Universal Key to build your $O2 Oxygen Network.</span>
+                <span lang-content="zh" style="display:${document.body.className.includes('lang-zh') ? 'inline' : 'none'};">您的節點已鎖定。分享通用金鑰以打造你的 $O2 氧氣直銷網。</span>
             </p>
         `;
         
@@ -41,85 +41,87 @@ function checkFissionStatus(isLangSwitch = false) {
             }
         }
     } else {
-        // 【修復核心】：如果是使用 mars2026 等訪客金鑰進入，本地沒有 savedCode
-        // 依然強制觸發 API，去抓取全網數據來渲染排行榜！
+        // 訪客金鑰進入，強制觸發 API 抓取全網數據來渲染排行榜
         if(!isLangSwitch) verifyActiveNodes('GUEST_MODE');
     }
 }
 
-// --- 3. 全局數據映射與算力計算 (Core Verification & Leaderboard) ---
+// --- 3. 全局數據映射與算力計算 (防彈級 Leaderboard) ---
 async function verifyActiveNodes(myCode) {
-    document.getElementById('syncing-indicator').style.display = 'block';
+    const syncInd = document.getElementById('syncing-indicator');
+    if (syncInd) syncInd.style.display = 'block';
+    
     try {
         const [resNodes, resFunds] = await Promise.all([
             fetch('https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/PortalNodes'),
             fetch('https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/%E5%B7%A5%E4%BD%9C%E8%A1%A81?timestamp=' + new Date().getTime())
         ]);
+        
         const nodesData = await resNodes.json();
         const fundsData = await resFunds.json();
 
         let walletToUSD = {};
         
-        // 🚨 修正：嚴格審批邏輯 (杜絕 PENDING 和 ASSET_AMOUNT，必須 APPROVED)
-        fundsData.forEach(f => {
-            let usdValue = 0;
-            let w = '';
-            let status = '';
+        // 🛡️ 防彈處理：確保 fundsData 是陣列才執行
+        if (Array.isArray(fundsData)) {
+            fundsData.forEach(f => {
+                if (!f) return; // 略過空物件
+                
+                let usdValue = 0;
+                let w = '';
+                let status = '';
 
-            for (let key in f) {
-                const upperKey = key.toUpperCase();
-                
-                // 1. 只認 USD_VALUATION，不抓 AMOUNT
-                if (upperKey.includes('USD_VALUATION')) {
-                    let val = parseFloat(f[key]);
-                    if (!isNaN(val)) usdValue = val;
+                for (let key in f) {
+                    const upperKey = key.toUpperCase();
+                    if (upperKey.includes('USD_VALUATION')) {
+                        let val = parseFloat(f[key]);
+                        if (!isNaN(val)) usdValue = val;
+                    }
+                    if (upperKey.includes('ADDRESS') || upperKey.includes('WALLET')) {
+                        w = f[key] ? f[key].toString().trim().toLowerCase() : '';
+                    }
+                    if (upperKey.includes('STATUS')) {
+                        status = (f[key] || '').toUpperCase();
+                    }
                 }
                 
-                // 2. 抓取打款地址
-                if (upperKey.includes('ADDRESS') || upperKey.includes('WALLET')) {
-                    w = f[key] ? f[key].toString().trim().toLowerCase() : '';
+                // 只有 APPROVED 才計入有效業績
+                if (usdValue > 0 && status.includes('APPROVED') && w) {
+                    walletToUSD[w] = (walletToUSD[w] || 0) + usdValue;
                 }
-                
-                // 3. 抓取審批狀態
-                if (upperKey.includes('STATUS')) {
-                    status = (f[key] || '').toUpperCase();
-                }
-            }
-            
-            // 🛡️ 核心交叉驗證：必須是 APPROVED 且有實際 USD 價值，才計入有效業績！
-            if (usdValue > 0 && status.includes('APPROVED') && w) {
-                walletToUSD[w] = (walletToUSD[w] || 0) + usdValue;
-            }
-        });
+            });
+        }
 
         let nodeStats = {};
         let validNodes = Array.isArray(nodesData) ? nodesData : [];
         
-        // 映射 PortalNodes 的上下線關係
+        // 映射 PortalNodes 的上下線關係 (防當機版)
         validNodes.forEach(n => {
+            if (!n) return; // 🛡️ 略過 Google Sheet 裡的空行，防止當機！
+
             let codeKey = Object.keys(n).find(k => k.toUpperCase().includes('FISSION_CODE'));
             let code = codeKey ? n[codeKey] : n.My_Fission_Code;
+            if (!code) return; // 如果沒有金鑰，略過此行
+            code = String(code).trim(); 
 
             let wKey = Object.keys(n).find(k => k.toUpperCase().includes('ADDRESS') || k.toUpperCase().includes('WALLET'));
-            let w = wKey && n[wKey] ? n[wKey].toString().trim().toLowerCase() : '';
+            let w = wKey && n[wKey] ? String(n[wKey]).trim().toLowerCase() : '';
 
             let inviterKey = Object.keys(n).find(k => k.toUpperCase().includes('INVIT'));
-            let inviter = inviterKey ? n[inviterKey] : n.Invited_By;
+            let inviter = inviterKey ? String(n[inviterKey]).trim() : (n.Invited_By || "NONE");
 
             let ipKey = Object.keys(n).find(k => k.toUpperCase().includes('IP'));
-            let ip = ipKey ? n[ipKey] : (n.IP_Address || "UNKNOWN");
+            let ip = ipKey && n[ipKey] ? String(n[ipKey]).trim() : (n.IP_Address || "UNKNOWN");
 
-            if (code) {
-                nodeStats[code] = { 
-                    code: code, 
-                    wallet: w, 
-                    inviter: inviter, 
-                    pUSD: walletToUSD[w] || 0, // 從上面嚴格過濾出來的真實業績
-                    tUSD: 0, 
-                    score: 0,
-                    ip: ip
-                };
-            }
+            nodeStats[code] = { 
+                code: code, 
+                wallet: w, 
+                inviter: inviter, 
+                pUSD: walletToUSD[w] || 0,
+                tUSD: 0, 
+                score: 0,
+                ip: ip
+            };
         });
 
         // 結算團隊算力與防女巫 (IP檢查)
@@ -135,10 +137,10 @@ async function verifyActiveNodes(myCode) {
                     else seenIPs.add(child.ip);
                 }
                 
-                if(child.pUSD > 0) {
-                    node.tUSD += child.pUSD;
-                    if(validL1) node.score += 1; // 必須入金>0 才有算力
-                }
+                if(child.pUSD > 0) node.tUSD += child.pUSD;
+                
+                // 🟢 戰略降級：測試階段，只要有註冊就給直推算力，不強制要求 pUSD > 0！
+                if(validL1) node.score += 1; 
 
                 let l2 = Object.values(nodeStats).filter(n => n.inviter === child.code);
                 l2.forEach(gchild => {
@@ -147,10 +149,8 @@ async function verifyActiveNodes(myCode) {
                         if(seenIPs.has(gchild.ip)) validL2 = false;
                         else seenIPs.add(gchild.ip);
                     }
-                    if(gchild.pUSD > 0) {
-                        node.tUSD += gchild.pUSD; 
-                        if(validL2 && (child.pUSD > 0 || validL1)) node.score += 0.5;
-                    }
+                    if(gchild.pUSD > 0) node.tUSD += gchild.pUSD; 
+                    if(validL2) node.score += 0.5; // 第二代也有分數
                 });
             });
         });
@@ -161,8 +161,10 @@ async function verifyActiveNodes(myCode) {
         localStorage.setItem('ml1_recruits', myData.score);
         localStorage.setItem('ml1_personal_usd', myData.pUSD);
         localStorage.setItem('ml1_team_usd', myData.tUSD);
-        document.getElementById('syncing-indicator').style.display = 'none';
+        
+        if (syncInd) syncInd.style.display = 'none';
 
+        // 顯示在排行榜上的條件：有業績 或 有拉到人
         let activeNodes = Object.values(nodeStats).filter(n => (n.pUSD + n.tUSD) > 0 || n.score > 0);
         activeNodes.sort((a,b) => (b.pUSD + b.tUSD) - (a.pUSD + a.tUSD));
 
@@ -180,7 +182,10 @@ async function verifyActiveNodes(myCode) {
         activeNodes.slice(0, 10).forEach((n, idx) => {
             let currentRank = idx + 1;
             let totalVol = n.pUSD + n.tUSD;
-            let maskCode = n.code.length > 5 ? n.code.substring(0, n.code.length - 2) + "**" : n.code;
+            
+            // 🛡️ 防彈字串處理，防止 n.code 為空時長度檢查當機
+            let codeStr = n.code || "UNKNOWN";
+            let maskCode = codeStr.length > 5 ? codeStr.substring(0, codeStr.length - 2) + "**" : codeStr;
             
             let isMe = (n.code === myCode);
             let rowStyle = isMe ? 'background: rgba(0,255,65,0.1); border-left: 3px solid var(--tech-green);' : '';
@@ -196,7 +201,8 @@ async function verifyActiveNodes(myCode) {
 
         if (myRank > 10 && myActiveNode) {
             let totalVol = myActiveNode.pUSD + myActiveNode.tUSD;
-            let maskCode = myActiveNode.code.length > 5 ? myActiveNode.code.substring(0, myActiveNode.code.length - 2) + "**" : myActiveNode.code;
+            let codeStr = myActiveNode.code || "UNKNOWN";
+            let maskCode = codeStr.length > 5 ? codeStr.substring(0, codeStr.length - 2) + "**" : codeStr;
             
             lbHtml += `<tr><td colspan="4" style="text-align:center; color:#555; padding: 4px; letter-spacing: 2px;">• • •</td></tr>`;
             lbHtml += `<tr style="background: rgba(0,255,65,0.1); border-left: 3px solid var(--tech-green);">
@@ -216,16 +222,22 @@ async function verifyActiveNodes(myCode) {
                 </td></tr>`;
             }
             lbBody.innerHTML = lbHtml;
+            // 重新切換語言確保顯示正確
             if(typeof setLanguage === 'function') setLanguage(document.body.className.replace('lang-', ''));
         }
 
     } catch (error) {
         console.error("Verification failed", error);
-        document.getElementById('syncing-indicator').style.display = 'none';
+        if (syncInd) syncInd.style.display = 'none';
         let r = parseFloat(localStorage.getItem('ml1_recruits') || 0);
         let m = parseFloat(localStorage.getItem('ml1_personal_usd') || 0);
         let t = parseFloat(localStorage.getItem('ml1_team_usd') || 0);
         if(typeof updateTgeTier === 'function') updateTgeTier(r, m, t); 
+        
+        const lbBody = document.getElementById('lb-body');
+        if(lbBody) {
+            lbBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--alert-red);">API SYNC ERROR</td></tr>`;
+        }
     }
 }
 
@@ -237,7 +249,6 @@ async function fetchLiveProgress() {
         if (syncText) syncText.innerText = "SYNCING LIVE TVL...";
         if (btcText) btcText.innerText = "SYNCING LIVE TVL...";
 
-        // 🚀 雙軌並行抓取：Google Sheet 數據 + CoinGecko 即時幣價
         const [sheetRes, priceRes] = await Promise.all([
             fetch('https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1').catch(() => null),
             fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd').catch(() => null)
@@ -272,11 +283,10 @@ async function fetchLiveProgress() {
                     else if (upperKey.includes('ADDRESS') || upperKey.includes('WALLET')) wallet = item[key];
                 }
                 
-                // 🛡️ 核心防護：必須是 APPROVED 才計入
+                // 必須是 APPROVED 才計入全球進度
                 if (status.includes('APPROVED')) {
                     if (wallet) eligibleWallets.add(wallet.trim().toLowerCase()); 
                     
-                    // 📈 動態浮動計算邏輯
                     if (amount > 0 && network) {
                         if (network.includes('BTC') || network.includes('BITCOIN')) totalUSD += amount * currentPrices.BTC;
                         else if (network.includes('ETH') || network.includes('BASE')) totalUSD += amount * currentPrices.ETH;
@@ -290,7 +300,6 @@ async function fetchLiveProgress() {
             });
         }
 
-        // 🎯 1. 更新首頁大進度條 ($1M 目標)
         const MAIN_GOAL = 1000000;
         let mainPercent = Math.min((totalUSD / MAIN_GOAL) * 100, 100).toFixed(2);
         
@@ -305,7 +314,6 @@ async function fetchLiveProgress() {
         if (syncNodes) syncNodes.innerText = eligibleWallets.size;
         if (syncNodesZh) syncNodesZh.innerText = eligibleWallets.size;
 
-        // 🎯 2. 更新 BTC 抽獎進度條 ($250K 目標)
         const BTC_GOAL = 250000;
         let btcPercent = Math.min((totalUSD / BTC_GOAL) * 100, 100).toFixed(2);
         
@@ -319,7 +327,6 @@ async function fetchLiveProgress() {
         if (nodesEn) nodesEn.innerText = eligibleWallets.size;
         if (nodesZh) nodesZh.innerText = eligibleWallets.size;
 
-        // 🎯 3. 判斷抽獎按鈕解鎖狀態
         if (drawBtn) {
             const isZh = document.body.classList.contains('lang-zh');
             if (totalUSD >= BTC_GOAL) {
