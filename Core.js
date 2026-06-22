@@ -51,11 +51,43 @@ function runPhase1Calc() {
 // --- 3. 通用金鑰解鎖邏輯 (Pioneer Key Validation) ---
 function unlockPioneer() {
     const key = document.getElementById('access-key').value.trim().toUpperCase();
+    const isZh = document.body.classList.contains('lang-zh');
     
     if (key === 'MARS2026' || key === 'ML1-CORE-001' || key.startsWith('ML1-')) {
-        window.location.href = 'portal.html?auth=' + encodeURIComponent(key.toLowerCase());
+        
+        // 🚀 觸發賽博龐克載入特效
+        const lagScreen = document.getElementById('lag-screen');
+        const lBar = document.getElementById('l-bar');
+        const lagStatus = document.getElementById('lag-status');
+        
+        if (lagScreen && lBar) {
+            if (lagStatus) {
+                lagStatus.innerText = isZh ? "VERIFYING PIONEER KEY... / 正在驗證先鋒金鑰..." : "VERIFYING PIONEER KEY...";
+            }
+            lagScreen.style.display = 'flex';
+            let currentProgress = 0;
+            
+            // 模擬數據加密與傳輸的進度條
+            const progressInterval = setInterval(() => {
+                currentProgress += Math.random() * 8; 
+                if (currentProgress >= 100) {
+                    currentProgress = 100;
+                    clearInterval(progressInterval);
+                    
+                    // 滿 100% 後，延遲 0.5 秒正式跳轉
+                    setTimeout(() => {
+                        window.location.href = 'portal.html?auth=' + encodeURIComponent(key.toLowerCase());
+                    }, 500);
+                }
+                lBar.style.width = currentProgress + '%';
+            }, 40);
+        } else {
+            // 防呆機制
+            window.location.href = 'portal.html?auth=' + encodeURIComponent(key.toLowerCase());
+        }
+        
     } else {
-        alert('❌ ACCESS DENIED / 無效通用金鑰');
+        alert(isZh ? '❌ 拒絕訪問 / 無效的通用金鑰' : '❌ ACCESS DENIED / INVALID KEY');
     }
 }
 
