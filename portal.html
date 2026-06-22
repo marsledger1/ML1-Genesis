@@ -691,99 +691,54 @@
         </div>
 
         <div id="tab-simulator" class="portal-tab-content">
-            <div class="hud-container">
+            <div class="sim-panel" style="justify-content: center; align-items: center; padding: 40px 20px; background: url('https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=1000&auto=format&fit=crop') center/cover; position: relative;">
                 
-                <div class="hud-item">
-                    <span class="hud-label">
-                        <span lang-content="en">$ML1 Land Deed License</span>
-                        <span lang-content="zh">$ML1 火星地契授權</span>
-                    </span>
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px;">
-                        <img src="https://raw.githubusercontent.com/marsledger1/ML1-Genesis/refs/heads/main/ML1.jpeg" alt="$ML1" style="width: 50px; height: 50px; border-radius: 8px; border: 1px solid var(--tier5-gold); box-shadow: 0 0 15px rgba(255, 223, 0, 0.4); object-fit: cover;">
-                        <span class="hud-value val-ml1" id="ui-ml1" style="font-size: 2.2rem; letter-spacing: 1px;">0.00</span>
-                    </div>
-                </div>
-                
-                <div class="hud-item">
-                    <span class="hud-label">
-                        <span lang-content="en">$O2 Industrial Fuel</span>
-                        <span lang-content="zh">$O2 工業製氧燃料</span>
-                    </span>
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px;">
-                        <img src="https://raw.githubusercontent.com/marsledger1/ML1-Genesis/refs/heads/main/O2.jpeg" alt="$O2" style="width: 50px; height: 50px; border-radius: 8px; border: 1px solid var(--lag-blue); box-shadow: 0 0 15px rgba(0, 191, 255, 0.4); object-fit: cover;">
-                        <span class="hud-value val-o2" id="ui-o2" style="font-size: 2.2rem; letter-spacing: 1px;">0.00</span>
-                    </div>
-                </div>
-                
-                <div class="hud-item" style="position: relative;">
-                    <span class="hud-label">
-                        <span lang-content="en">$DUST Classified Asset</span>
-                        <span lang-content="zh">$DUST 機密未解鎖資產</span>
-                        <span class="classified-tag" style="position: absolute; top: -10px; right: 0;">TOP SECRET</span>
-                    </span>
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px;">
-                        <img src="https://raw.githubusercontent.com/marsledger1/ML1-Genesis/refs/heads/main/DUST.jpeg" alt="$DUST" style="width: 50px; height: 50px; border-radius: 8px; border: 1px solid var(--tech-green); box-shadow: 0 0 15px rgba(0, 255, 65, 0.4); object-fit: cover;">
-                        <span class="hud-value val-dust" id="ui-dust" style="font-size: 2.2rem; letter-spacing: 1px;">0.00</span>
-                    </div>
-                </div>
-                
-            </div>
+                <!-- 黑色遮罩增加科技感 -->
+                <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(5,5,5,0.85); z-index: 0;"></div>
 
-            <div class="sim-panel">
-                <div class="sim-title">
-                    <span lang-content="en">ISRU Edge-Compute Simulator (v0.1)</span>
-                    <span lang-content="zh">ISRU 盲挖邊緣計算模擬器 (v0.1)</span>
-                </div>
-                
-                <div class="web3-console" style="padding: 20px; display: flex; flex-direction: column; gap: 15px; height: 100%;">
+                <div style="position: relative; z-index: 1; text-align: center; max-width: 600px;">
+                    <h2 style="color: var(--tech-green); font-size: 2rem; margin-bottom: 10px; text-shadow: 0 0 15px rgba(0,255,65,0.5);">
+                        <span lang-content="en">[ SYSTEM KERNEL UPGRADED ]</span>
+                        <span lang-content="zh">[ 核心系統已升級至 Web3 ]</span>
+                    </h2>
                     
-                    <div style="background: rgba(255, 223, 0, 0.05); border: 1px dashed var(--tier5-gold); padding: 15px;">
-                        <div style="font-size: 11px; color: var(--tier5-gold); margin-bottom: 10px; font-weight: bold; letter-spacing: 1px;">
-                            <span lang-content="en">[1] CRYO-SLEEP STAKING ($ML1)</span>
-                            <span lang-content="zh">[1] 冷凍休眠質押 ($ML1 礦機)</span>
-                        </div>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="number" id="web3-stake-amount" placeholder="Amount" style="margin: 0; padding: 12px; width: 40%; background: rgba(0,0,0,0.6); border: 1px solid var(--tier5-gold); color: #fff; text-align: center;">
-                            <button onclick="window.web3StakeML1 && window.web3StakeML1()" class="btn-submit" style="flex: 1; margin: 0; background: var(--tier5-gold); color: #000;">
-                                <span lang-content="en">STAKE & IGNITE</span>
-                                <span lang-content="zh">質押並點火啟動</span>
-                            </button>
-                        </div>
-                    </div>
+                    <p style="color: #ccc; font-size: 14px; line-height: 1.8; margin-bottom: 30px;">
+                        <span lang-content="en">
+                            The ISRU Edge Simulator has been migrated to a dedicated React Web3 Engine.<br>
+                            Click below to securely establish an on-chain uplink with your Phantom wallet.
+                        </span>
+                        <span lang-content="zh">
+                            為確保區塊鏈交易的絕對安全，ISRU 盲挖模擬器已遷移至獨立的 React Web3 引擎。<br>
+                            請點擊下方按鈕，安全地與您的 Phantom 錢包建立鏈上直連。
+                        </span>
+                    </p>
 
-                    <div style="background: rgba(0, 191, 255, 0.05); border: 1px dashed var(--lag-blue); padding: 15px;">
-                        <div style="font-size: 11px; color: var(--lag-blue); margin-bottom: 10px; font-weight: bold; letter-spacing: 1px;">
-                            <span lang-content="en">[2] EXTRACT LIQUID OXYGEN ($O2)</span>
-                            <span lang-content="zh">[2] 提取液氧燃料 ($O2 產出)</span>
-                        </div>
-                        <button onclick="window.web3ClaimO2 && window.web3ClaimO2()" class="btn-submit" style="margin: 0; width: 100%; background: transparent; border: 1px solid var(--lag-blue); color: var(--lag-blue); transition: 0.3s;" onmouseover="this.style.background='var(--lag-blue)'; this.style.color='#000'" onmouseout="this.style.background='transparent'; this.style.color='var(--lag-blue)'">
-                            <span lang-content="en">⚡ CLAIM ACCUMULATED $O2</span>
-                            <span lang-content="zh">⚡ 提取已累積的 $O2</span>
-                        </button>
-                    </div>
-
-                    <div style="background: rgba(0, 255, 65, 0.05); border: 1px dashed var(--tech-green); padding: 15px;">
-                        <div style="font-size: 11px; color: var(--tech-green); margin-bottom: 10px; font-weight: bold; letter-spacing: 1px;">
-                            <span lang-content="en">[3] THERMODYNAMIC BURN ($DUST)</span>
-                            <span lang-content="zh">[3] 熱力學燃燒盲挖 ($DUST)</span>
-                        </div>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="number" id="web3-burn-amount" placeholder="$O2 Amount" style="margin: 0; padding: 12px; width: 40%; background: rgba(0,0,0,0.6); border: 1px solid var(--tech-green); color: #fff; text-align: center;">
-                            <button onclick="window.web3BurnForDust && window.web3BurnForDust()" class="btn-submit" style="flex: 1; margin: 0; background: var(--tech-green); color: #000; box-shadow: 0 0 10px rgba(0, 255, 65, 0.4);">
-                                <span lang-content="en">BURN FOR DUST</span>
-                                <span lang-content="zh">燃燒盲挖 DUST</span>
-                            </button>
-                        </div>
-                        <div style="font-size: 9px; color: #888; margin-top: 8px; text-align: right;">
-                            <span lang-content="en">* BASE COST: 100k $O2 | TAX: 5%</span>
-                            <span lang-content="zh">* 盲挖基礎成本: 10萬顆 $O2 | 莊家稅: 5%</span>
-                        </div>
-                    </div>
+                    <!-- 🚀 啟動 DApp 按鈕 -->
+                    <button onclick="launchWeb3DApp()" style="background: var(--tech-green); color: #000; border: none; padding: 20px 40px; font-size: 1.2rem; font-weight: bold; font-family: inherit; cursor: pointer; letter-spacing: 2px; box-shadow: 0 0 25px rgba(0,255,65,0.4); transition: 0.3s;" onmouseover="this.style.boxShadow='0 0 40px rgba(0,255,65,0.8)'" onmouseout="this.style.boxShadow='0 0 25px rgba(0,255,65,0.4)'">
+                        <span lang-content="en">🚀 LAUNCH WEB3 DAPP</span>
+                        <span lang-content="zh">🚀 啟動 WEB3 盲挖引擎</span>
+                    </button>
                     
-                    <div class="log-terminal" id="log-terminal"></div>
+                    <p style="color: #666; font-size: 10px; margin-top: 20px; letter-spacing: 1px;">SECURE CONNECTION VIA @SOLANA/WALLET-ADAPTER</p>
                 </div>
             </div>
         </div>
+
+        <!-- 🚀 傳送門跳轉腳本 -->
+        <script>
+            function launchWeb3DApp() {
+                // 偵測目前 Portal 選擇的語言
+                const isZh = document.body.classList.contains('lang-zh');
+                const langParam = isZh ? '?lang=zh' : '?lang=en';
+                
+                // 本地開發階段，我們跳轉到 localhost:3000
+                // ⚠️ 未來部署到 Vercel 時，把這個換成你的專屬網址，例如：'https://ml1-dapp-web3.vercel.app/' + langParam
+                const targetUrl = 'http://localhost:3000/' + langParam;
+                
+                // 打開新分頁進入 Web3 引擎
+                window.open(targetUrl, '_blank');
+            }
+        </script>
 
 <div id="lag-screen">
     <div id="lag-status" style="font-size: 11px; color: var(--tech-green); letter-spacing: 2px;">ESTABLISHING UPLINK TO JEZERO...</div>
