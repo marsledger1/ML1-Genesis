@@ -132,9 +132,15 @@
             .percentage { font-size: 1.52rem !important; line-height: 1 !important; margin: 4px 0 0 0 !important; padding: 4px 8px !important; align-self: flex-start !important; }
             #t-sync-p { font-size: 0.6rem !important; line-height: 1.4 !important; margin-top: 8px !important; } 
             
-            .address-item { flex-wrap: wrap !important; gap: 8px !important; padding: 12px !important; }
-            .address-item code { font-size: 0.73rem !important; word-break: break-all !important; }
+            /* --- 🚀 修正 1: 錢包/項目地址與 COPY 按鈕完美置中 --- */
+            .address-item { flex-direction: column !important; align-items: center !important; justify-content: center !important; text-align: center !important; gap: 12px !important; padding: 16px !important; }
+            .address-item span { white-space: nowrap !important; }
+            .address-item code { font-size: 0.73rem !important; word-break: break-all !important; text-align: center !important; }
+            .address-item button { margin: 5px auto 0 !important; min-width: 120px !important; white-space: nowrap !important; }
             
+            /* --- 🚀 修正 3: 確保 Connect Wallet 按鈕強制一行顯示 --- */
+            #btn-connect-index { white-space: nowrap !important; }
+
             .architect-profile { flex-direction: column !important; gap: 25px !important; padding: 25px !important; }
             .architect-photo { width: 100% !important; height: 320px !important; }
             .tech-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
