@@ -2,7 +2,7 @@
   "name": "O2 Kinetic Fuel",
   "symbol": "O2",
   "description": "Cryogenic kinetic fuel required to trigger the L3 Cloud ZK-Matrix and execute PoPW (Proof of Physical Work) data routing.",
-  "image": "https://raw.githubusercontent.com/marsledger1/ML1-Genesis/refs/heads/main/O2.jpeg",
+  "image": "https://raw.githubusercontent.com/marsledger1/ML1-Genesis/refs/heads/main/O2_v2.jpeg",
   "attributes": [
     {
       "trait_type": "Utility",
