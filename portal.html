@@ -42,19 +42,6 @@
         .lang-btn { background: transparent; border: 1px solid #333; color: #555; padding: 4px 10px; font-size: 10px; cursor: pointer; transition: 0.3s; }
         .lang-btn.active { color: var(--tech-green); border-color: var(--tech-green); }
         .lang-btn:hover { background: rgba(0, 255, 65, 0.1); }
-
-        header { border-left: 4px solid var(--mars-red); padding-left: 15px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;}
-        .title { color: var(--tech-green); font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; }
-        .logout-btn { background: transparent; border: 1px dashed #555; color: #888; font-size: 9px; padding: 4px 8px; cursor: pointer; display: none; transition: 0.3s; }
-        .logout-btn:hover { border-color: var(--alert-red); color: var(--alert-red); }
-
-        .auth-gate { background: var(--terminal-gray); border: 1px solid #222; padding: 50px 20px; text-align: center; margin-top: 10vh; box-shadow: 0 0 30px rgba(0, 255, 65, 0.05); backdrop-filter: blur(5px);}
-        input.key-input { background: #000; border: 1px solid #333; color: var(--tech-green); padding: 15px; width: 100%; max-width: 350px; text-align: center; font-size: 1rem; outline: none; transition: 0.3s; font-weight: bold; text-transform: uppercase;}
-        input.key-input:focus { border-color: var(--tech-green); box-shadow: 0 0 10px rgba(0,255,65,0.2); }
-        .btn-primary { background: var(--mars-red); color: #fff; border: none; padding: 15px 40px; font-weight: bold; margin-top: 20px; width: 100%; max-width: 350px; cursor: pointer; transition: 0.3s; letter-spacing: 1px;}
-        .btn-primary:hover { background: #a8472a; box-shadow: 0 0 15px rgba(211, 84, 0, 0.4);}
-
-        #investor-dashboard { display: none; }
         
         .portal-tab-nav { display: flex; background: #111; border: 1px solid #333; margin-bottom: 20px; }
         .portal-tab-btn { flex: 1; padding: 15px; background: none; border: none; color: #888; font-family: inherit; font-size: 0.9rem; cursor: pointer; transition: 0.3s; font-weight: bold; }
@@ -93,9 +80,6 @@
 
         @media (max-width: 600px) {
             .container { width: 95%; padding: 10px 0;}
-            .auth-gate { padding: 30px 15px; margin-top: 5vh;}
-            input.key-input, .btn-primary { font-size: 0.9rem; padding: 12px;}
-            .logout-btn { display: block !important; margin-top: 10px; }
             .wp-content { padding: 25px 15px; }
             .portal-tab-btn { font-size: 0.75rem; padding: 12px 5px; }
         }
@@ -122,7 +106,7 @@
 
 <div class="container">
     <div class="top-nav">
-        <div style="font-size: 9px; color: #555; letter-spacing: 1px;">ML1_V6.1_CORE // ACCESS_RESTRICTED</div>
+        <div style="font-size: 9px; color: #555; letter-spacing: 1px;">ML1_V6.1_CORE // STRATEGIC_TERMINAL</div>
         <div style="display: flex; gap: 10px; align-items: center;">
             <button class="lang-btn" id="bgm-toggle" onclick="toggleBGM(event)">🔇 BGM: AWAITING SYNC</button>
             <div style="display: flex; border-left: 1px solid #333; padding-left: 10px; margin-left: 5px;">
@@ -132,37 +116,10 @@
         </div>
     </div>
 
-    <header>
-        <div class="title">
-            <span lang-content="en">PIONEER STRATEGY TERMINAL</span>
-            <span lang-content="zh">創世者戰略終端</span>
-        </div>
-        <button class="logout-btn" id="logout-btn" onclick="clearPioneerCache()">
-            <span lang-content="en">CLEAR CACHE (LOGOUT)</span>
-            <span lang-content="zh">清除快取並登出</span>
-        </button>
-    </header>
-
-    <div class="auth-gate" id="gate-ui">
-        <p style="font-size: 12px; letter-spacing: 2px; margin-bottom: 30px; color: var(--tech-green);">
-            <span lang-content="en">ENTER UNIVERSAL KEY TO SYNC</span>
-            <span lang-content="zh">請輸入通用金鑰以同步網絡</span>
-        </p>
-        <input type="text" id="pioneer-key" class="key-input" placeholder="e.g. ML1-XXXX or MARS2026">
-        <br>
-        <button class="btn-primary" onclick="startSyncSequence()">
-            <span lang-content="en">INITIATE HANDSHAKE</span>
-            <span lang-content="zh">啟動星際握手</span>
-        </button>
-        <p style="font-size: 10px; color: #666; margin-top: 15px;">
-            <span lang-content="en">Universal Key syncs your wallet equity and Fission progress seamlessly.</span>
-            <span lang-content="zh">通用金鑰將無縫同步您的資產與裂變進度。</span>
-        </p>
-    </div>
-
+    <!-- 直達戰略面板，無需密碼登入 -->
     <div id="investor-dashboard">
         
-        <div class="portal-tab-nav" id="portal-tabs" style="display:none;">
+        <div class="portal-tab-nav" id="portal-tabs">
             <button class="portal-tab-btn active" onclick="switchPortalTab('dashboard', event)">
                 <span lang-content="en">DASHBOARD</span><span lang-content="zh">戰略總覽</span>
             </button>
@@ -171,6 +128,7 @@
             </button>
         </div>
 
+        <!-- 第一分頁：純粹的戰略樞紐 (影片 + 路線圖) -->
         <div id="tab-dashboard" class="portal-tab-content active">
             <div class="asset-card">
                 <h3 style="color: var(--tech-green); margin-top: 0;">
@@ -260,53 +218,37 @@
                 CODE IS LAW. PHYSICS IS THE JUDGE. © 2026 ML1 GENESIS
             </footer>
 
+            <!-- ⚠️ 防崩潰舊版 UI 依賴區域 (請勿刪除) -->
             <div id="legacy-dependencies" style="display: none;">
-                <div id="fission-pre-reg"></div>
-                <div id="fission-post-reg"></div>
-                <div id="user-code"></div>
-                <div id="reg-box"></div>
-                <div id="recruit-count"></div>
-                <div id="tier-name"></div>
-                <div id="tier-fill"></div>
-                <div id="next-tier-hint"></div>
-                <div id="phase2-quota"></div>
-                <div id="syncing-indicator"></div>
-                <div id="my-usd-amount"></div>
-                <div id="personal-usd-display"></div>
-                <div id="team-usd-display"></div>
-                <div id="personal-usd-display-zh"></div>
-                <div id="team-usd-display-zh"></div>
-                <div id="tge-display"></div>
-                <div id="tge-bar-fill"></div>
-                <div id="tge-label"></div>
-                <div id="seed-advantage"></div>
-                <div id="o2-boost-display"></div>
-                <div id="node-wallet"></div>
-                <div id="inviter-code"></div>
-                <div id="commit-btn"></div>
-                <div id="btc-draw-btn"></div>
-                <div id="sync-progress-text"></div>
-                <div id="btc-progress-text"></div>
-                <div id="sync-percent"></div>
-                <div id="sync-bar"></div>
-                <div id="sync-nodes"></div>
-                <div id="sync-nodes-zh"></div>
-                <div id="btc-progress-fill"></div>
-                <div id="eligible-nodes"></div>
-                <div id="eligible-nodes-zh"></div>
-                <div id="fomo-alert"></div>
-                <div id="inv-amount"></div>
-                <div id="res-total"></div>
+                <div id="gate-ui"></div><button id="logout-btn"></button>
+                <div id="fission-pre-reg"></div><div id="fission-post-reg"></div>
+                <div id="user-code"></div><div id="reg-box"></div>
+                <div id="recruit-count"></div><div id="tier-name"></div>
+                <div id="tier-fill"></div><div id="next-tier-hint"></div>
+                <div id="phase2-quota"></div><div id="syncing-indicator"></div>
+                <div id="my-usd-amount"></div><div id="personal-usd-display"></div>
+                <div id="team-usd-display"></div><div id="personal-usd-display-zh"></div>
+                <div id="team-usd-display-zh"></div><div id="tge-display"></div>
+                <div id="tge-bar-fill"></div><div id="tge-label"></div>
+                <div id="seed-advantage"></div><div id="o2-boost-display"></div>
+                <div id="node-wallet"></div><div id="inviter-code"></div>
+                <div id="commit-btn"></div><div id="btc-draw-btn"></div>
+                <div id="sync-progress-text"></div><div id="btc-progress-text"></div>
+                <div id="sync-percent"></div><div id="sync-bar"></div>
+                <div id="sync-nodes"></div><div id="sync-nodes-zh"></div>
+                <div id="btc-progress-fill"></div><div id="eligible-nodes"></div>
+                <div id="eligible-nodes-zh"></div><div id="fomo-alert"></div>
+                <div id="inv-amount"></div><div id="res-total"></div>
                 <div id="res-phase2"></div>
                 <select id="node-network"><option value="SOL"></option></select>
                 <select id="reg-network"><option value="SOL"></option></select>
                 <select id="wallet-network"><option value="SOL"></option></select>
-                <button id="btn-connect-portal"></button>
-                <button id="btn-connect-index"></button>
+                <button id="btn-connect-portal"></button><button id="btn-connect-index"></button>
                 <div id="ui-ml1"></div><div id="ui-o2"></div><div id="ui-dust"></div>
             </div>
         </div>
 
+        <!-- 第二分頁：宇宙協議引擎 -->
         <div id="tab-simulator" class="portal-tab-content">
             <div class="sim-panel" style="justify-content: center; align-items: center; padding: 40px 20px; background: url('https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=1000&auto=format&fit=crop') center/cover; position: relative;">
                 
@@ -329,6 +271,7 @@
                         </span>
                     </p>
 
+                    <!-- 🚀 啟動 DApp 按鈕 (跳轉至 go.ml1.space) -->
                     <button onclick="launchWeb3DApp()" style="background: var(--tech-green); color: #000; border: none; padding: 20px 40px; font-size: 1.2rem; font-weight: bold; font-family: inherit; cursor: pointer; letter-spacing: 2px; box-shadow: 0 0 25px rgba(0,255,65,0.4); transition: 0.3s;" onmouseover="this.style.boxShadow='0 0 40px rgba(0,255,65,0.8)'" onmouseout="this.style.boxShadow='0 0 25px rgba(0,255,65,0.4)'">
                         <span lang-content="en">LAUNCH SPACE-ENGINE</span>
                         <span lang-content="zh">啟動宇宙協議引擎</span>
@@ -342,12 +285,12 @@
             </div>
         </div>
 
+        <!-- 🚀 傳送門跳轉腳本 -->
         <script>
             function launchWeb3DApp() {
                 const isZh = document.body.classList.contains('lang-zh');
                 const langParam = isZh ? '?lang=zh' : '?lang=en';
                 const targetUrl = 'https://go.ml1.space/' + langParam;
-                
                 window.location.href = targetUrl;
             }
         </script>
@@ -462,45 +405,7 @@
 
     // ================= 核心啟動邏輯 =================
     document.addEventListener("DOMContentLoaded", () => {
-        
-        // 🚀 步驟一：處理 URL 參數與快取
-        const urlParams = new URLSearchParams(window.location.search);
-        let authParam = urlParams.get('auth');
-        
-        if (authParam) {
-            let key = authParam.toUpperCase();
-            
-            // 光速開門
-            document.getElementById('gate-ui').style.display = 'none';
-            document.getElementById('investor-dashboard').style.display = 'block';
-            if(document.getElementById('portal-tabs')) document.getElementById('portal-tabs').style.display = 'flex';
-            if(document.getElementById('logout-btn')) document.getElementById('logout-btn').style.display = 'block'; 
-            
-            if (key === 'ML1-CORE-001') {
-                localStorage.setItem('ml1_fission_code', 'ML1-CORE-001');
-                localStorage.setItem('ml1_recruits', '100'); 
-                localStorage.setItem('ml1_personal_usd', '100000'); 
-                localStorage.setItem('ml1_team_usd', '0'); 
-            } else if (key === 'MARS2026') {
-                localStorage.removeItem('ml1_fission_code');
-            } else {
-                localStorage.setItem('ml1_fission_code', key);
-            }
-            
-            // 清理網址列
-            window.history.replaceState(null, null, window.location.pathname);
-        } else {
-            // 如果沒有網址參數，檢查是否有本地快取
-            const savedCode = localStorage.getItem('ml1_fission_code');
-            if (savedCode) {
-                document.getElementById('gate-ui').style.display = 'none';
-                document.getElementById('investor-dashboard').style.display = 'block';
-                if(document.getElementById('portal-tabs')) document.getElementById('portal-tabs').style.display = 'flex';
-                if(document.getElementById('logout-btn')) document.getElementById('logout-btn').style.display = 'block'; 
-            }
-        }
-
-        // 🚀 步驟二：狀態確認完畢後，才啟動 UI 渲染與背景音樂
+        // UI 渲染與背景音樂
         if(typeof setLanguage === 'function') setLanguage('en'); 
         if(typeof fetchLiveProgress === 'function') fetchLiveProgress();
         if(typeof initAggressiveBGM === 'function') initAggressiveBGM();
