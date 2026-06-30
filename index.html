@@ -90,11 +90,6 @@
         .spec-card h4 { color: #fff; margin: 0 0 15px 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
         .spec-card p { font-size: 0.8rem; color: #999; margin: 0; }
 
-        .sync-monitor { background: #000; border: 1px solid #222; padding: 35px; margin: 50px 0; }
-        .percentage { font-size: 2rem; color: var(--tech-green); font-weight: bold; }
-        .bar-outer { width: 100%; height: 8px; background: #111; margin: 20px 0; }
-        .bar-inner { height: 100%; background: var(--tech-green); box-shadow: 0 0 15px var(--tech-green); width: 0%; transition: width 2s ease; }
-
         .node-allocation { background: #000; border: 1px solid #333; padding: 40px; margin-bottom: 30px; }
         .address-item { display: flex; justify-content: space-between; align-items: center; background: #0a0a0a; padding: 15px; border: 1px solid #222; margin-bottom: 10px; }
         .address-item code { color: var(--tech-green); font-size: 0.85rem; }
@@ -112,10 +107,6 @@
         .sub-tab-content { background: rgba(0,0,0,0.85); border: 1px solid #333; padding: 40px; min-height: 500px; }
         .simulation-video { width: 100%; background: #000; border: 2px solid var(--tech-green); margin: 20px 0; }
         
-        #whitepaper-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.97); z-index: 99999; color: #00ff41; font-family: 'JetBrains Mono', monospace; overflow-y: auto; }
-        .modal-content { max-width: 960px; margin: 60px auto; padding: 50px 40px; background: #000; border: 1px solid #00ff41; box-shadow: 0 0 40px rgba(0, 255, 65, 0.6); }
-        .modal-close { float: right; background: none; border: 2px solid #00ff41; color: #00ff41; padding: 8px 16px; cursor: pointer; font-size: 1.1rem; }
-
         /* 🚀 賽博龐克載入畫面的專屬 CSS */
         #lag-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999999; flex-direction: column; justify-content: center; align-items: center; }
         .loader { width: 80%; max-width: 400px; height: 2px; background: #222; position: relative; margin-top: 20px; }
@@ -126,10 +117,6 @@
 
         @media (max-width: 768px) {
             .container { padding: 15px !important; max-width: 100% !important; }
-            .sync-monitor { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; padding: 28px 20px !important; }
-            .percentage { font-size: 1.52rem !important; line-height: 1 !important; margin: 4px 0 0 0 !important; padding: 4px 8px !important; align-self: flex-start !important; }
-            #t-sync-p { font-size: 0.6rem !important; line-height: 1.4 !important; margin-top: 8px !important; } 
-            
             .address-item { flex-wrap: wrap !important; gap: 8px !important; padding: 12px !important; }
             .address-item code { font-size: 0.73rem !important; word-break: break-all !important; }
             
@@ -142,7 +129,6 @@
             h3 { font-size: 1.15rem !important; }
             * { max-width: 100% !important; box-sizing: border-box !important; overflow-x: hidden !important; }
             
-            #sync-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
             #calc-grid-container { grid-template-columns: 1fr !important; gap: 20px !important; }
             #calc-asset { padding: 12px 8px !important; font-size: 1.1rem !important; }
             #calc-amount { padding: 12px !important; font-size: 1.3rem !important; }
@@ -280,22 +266,8 @@
         </div> 
         
         <div id="main-content-1" class="tab-content">
-            <section class="sync-monitor">
-                <div id="sync-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
-                    <div>
-                        <h3 id="t-sync-h" style="font-size: 0.8rem; color: var(--lag-blue); margin: 0;">GENESIS FUNDING SYNCHRONIZATION</h3>
-                        <p id="t-sync-p" style="font-size: 0.7rem; color: var(--mars-red); margin: 5px 0 0 0; letter-spacing: 1px;">[ LIVE SYNC WITH DAPP // 進度條與去中心化鑄造引擎實時同步 ]</p>
-                    </div>
-                    <div class="percentage" id="sync-percent">0%</div>
-                </div>
-                <div class="bar-outer"><div class="bar-inner" id="sync-bar"></div></div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 8px;">
-                    <span id="sync-progress-text" style="font-size: 0.65rem; color: var(--tech-green); font-weight: bold; letter-spacing: 1px;">SYNCING LIVE USD DATA...</span>
-                </div>
-            </section>
-
-            <section class="node-allocation" style="border: 1px solid var(--tech-green); box-shadow: 0 0 20px rgba(0, 255, 65, 0.05); text-align: center;">
+            
+            <section class="node-allocation" style="border: 1px solid var(--tech-green); box-shadow: 0 0 20px rgba(0, 255, 65, 0.05); text-align: center; margin-top: 20px;">
                 <h3 id="t-node-h" style="margin-top: 0; font-size: 1.2rem; color: var(--tech-green); letter-spacing: 2px;">PIONEER VALIDATION VAULT</h3>
                 <p style="font-size: 11px; color: #888; margin-bottom: 20px;">
                     <span lang-content="en">This unified Genesis Vault accepts native <b>SOL</b> and all supported SPL assets <b>(USDC, USDT, JUP, JTO, PYTH, BONK, BOME)</b> seamlessly.</span>
@@ -362,11 +334,43 @@
                 </div>
             </div>
 
+            <!-- 全新乾淨俐落的白皮書跳轉按鈕 -->
             <div style="text-align: center; margin: 60px 0 40px;">
                 <button onclick="window.location.href='portal.html'" style="background: transparent; color: var(--tech-green); border: 1px dashed var(--tech-green); padding: 15px 40px; font-size: 1rem; font-weight: bold; cursor: pointer; letter-spacing: 2px; transition: 0.3s;" onmouseover="this.style.background='rgba(0, 255, 65, 0.1)';" onmouseout="this.style.background='transparent';">
                     <span lang-content="en">>> ACCESS DeIF MANIFESTO (WHITEPAPER) <<</span>
                     <span lang-content="zh">>> 查閱星際金融憲章 (核心白皮書) <<</span>
                 </button>
+            </div>
+
+            <div id="exclusive-subsystem" style="display: none; margin-top: 40px; border: 2px solid var(--tech-green); padding: 20px;">
+                <div class="subsystem-header">
+                    [CREATOR SEEDER EXCLUSIVE] // 創世播種者專屬子系統<br>
+                    <span style="font-size:1rem; opacity:0.8;">JEZERO CRATER // PROTOCOL: ML1_LEVIATHAN // STATUS: DEPLOYING</span>
+                </div>
+
+                <div class="tab-nav">
+                    <button class="tab-btn active" onclick="switchSubTab(0)" id="sub-tab0">Telemetry [SIGNAL_SIMULATION_LOG]</button>
+                    <button class="tab-btn" onclick="switchSubTab(1)" id="sub-tab1">Secure Archive [WHITEPAPER]</button>
+                </div>
+
+                <div id="sub-tab-content-0" class="sub-tab-content" style="display:block;">
+                    <h3 style="color:var(--tech-green); margin-top:0;">SIGNAL_SIMULATION_LOG</h3>
+                    <div style="text-align:center; margin:30px 0;">
+                        <video class="simulation-video" controls autoplay loop muted>
+                            <source src="https://i.imgur.com/PNf6Jkz.mp4" type="video/mp4">
+                            您的瀏覽器不支援影片播放。
+                        </video>
+                    </div>
+                </div>
+
+                <div id="sub-tab-content-1" class="sub-tab-content" style="display:none;">
+                    <h3 style="color:var(--tech-green); margin-top:0;">SECURE ARCHIVE // 技術白皮書</h3>
+                    <div style="text-align:center; margin:40px 0;">
+                        <button onclick="openWhitepaperModal()" style="background:#000; color:#00ff41; border:2px solid #00ff41; padding:20px 50px; font-size:1.1rem; cursor:pointer;">
+                            ENTER SECURE ARCHIVE
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -393,13 +397,30 @@
                     <span lang-content="zh">Mars Ledger 1 (ML1) 的底層架構深受 NASA「延遲/中斷容忍網路」(DTN) 及「星際覆蓋網路」(ION) 軟體的啟發。藉由放棄地球傳統的同步 TCP/IP 握手協議，DTN 採用「儲存並轉發」(Store-and-Forward) 封包技術。ML1 透過在 Solana 虛擬機 (SVM) 上構建「非同步狀態機」來實現此一概念，確保在火星生成的密碼學證明能跨越 22 分鐘的通訊延遲牆，安全地在地球主網結算。</span>
                 </p>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <a href="https://www.nasa.gov/technology/space-comms/delay-disruption-tolerant-networking-mission-resources/" target="_blank" style="color: var(--lag-blue); text-decoration: none; font-size: 0.8rem; border: 1px dashed var(--lag-blue); padding: 8px 15px; transition: 0.3s;" onmouseover="this.style.background='rgba(0,191,255,0.1)'" onmouseout="this.style.background='transparent'">[🔗 NASA DTN OFFICIAL DOCS]</a>
+                    <a href="https://www.nasa.gov/directorates/somd/space-communications-and-navigation-scan/delay-disruption-tolerant-networking-dtn/" target="_blank" style="color: var(--lag-blue); text-decoration: none; font-size: 0.8rem; border: 1px dashed var(--lag-blue); padding: 8px 15px; transition: 0.3s;" onmouseover="this.style.background='rgba(0,191,255,0.1)'" onmouseout="this.style.background='transparent'">[🔗 NASA DTN OFFICIAL DOCS]</a>
                     <a href="https://sourceforge.net/projects/ion-dtn/" target="_blank" style="color: var(--tier5-gold); text-decoration: none; font-size: 0.8rem; border: 1px dashed var(--tier5-gold); padding: 8px 15px; transition: 0.3s;" onmouseover="this.style.background='rgba(255,223,0,0.1)'" onmouseout="this.style.background='transparent'">[🔗 ION OPEN SOURCE]</a>
                 </div>
             </div>
         </div>
 
         <footer id="t-foot">JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT</footer>
+    </div>
+
+    <!-- ⚠️ 隱藏的舊版 UI 依賴區域 (請勿刪除此區域，否則會導致 UI.js 或 API.js 報錯) -->
+    <div id="legacy-dependencies" style="display: none;">
+        <div id="t-sync-h"></div>
+        <div id="t-sync-p"></div>
+        <div id="sync-percent"></div>
+        <div id="sync-bar"></div>
+        <div id="sync-progress-text"></div>
+        <div id="invite-title"></div>
+        <div id="invite-desc"></div>
+        <input id="access-key">
+        <button id="unlock-btn"></button>
+        <input id="reg-wallet">
+        <input id="reg-amount">
+        <input id="reg-hash">
+        <button id="t-btn"></button>
     </div>
 
     <div id="lag-screen">
@@ -464,91 +485,12 @@
             }
         };
 
-        // --- 2. 升級版提交跳轉邏輯 (附帶賽博龐克動畫) ---
-        window.submitToLedger = async function() {
-            const network = document.getElementById('reg-network').value;
-            const amount = document.getElementById('reg-amount').value;
-            const wallet = document.getElementById('reg-wallet').value;
-            const hash = document.getElementById('reg-hash').value;
-
-            const isZh = document.body.classList.contains('lang-zh');
-
-            if(!amount || !wallet || !hash) {
-                alert(isZh ? "請填寫完整打款資訊 (數量、錢包、TXID)" : "REQUIRED FIELDS MISSING / 請填寫完整打款資訊");
-                return;
-            }
-
-            const btn = document.getElementById('t-btn');
-            const originalBtnText = btn.innerText;
-            btn.innerText = isZh ? "提交中..." : "COMMITTING...";
-            btn.disabled = true;
-
-            const payload = [{
-                "TIMESTAMP (UTC)": new Date().toLocaleString(),
-                "PIONEER_ADDRESS": wallet,
-                "NETWORK": network,
-                "ASSET_AMOUNT": amount,
-                "TXID_HASH": hash,
-                "VALIDATION_STATUS": "PENDING"
-            }];
-
-            try {
-                // 發送到 Google Sheet
-                const API_URL = 'https://api.steinhq.com/v1/storages/69ff888492b1163e97ef10df/工作表1';
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(payload)
-                });
-
-                if(response.ok) {
-                    document.getElementById('reg-amount').value = '';
-                    document.getElementById('reg-wallet').value = '';
-                    document.getElementById('reg-hash').value = '';
-                    if(typeof updateProgress === 'function') updateProgress();
-
-                    // 🚀 觸發賽博龐克載入動畫
-                    const lagScreen = document.getElementById('lag-screen');
-                    const lBar = document.getElementById('l-bar');
-
-                    if (lagScreen && lBar) {
-                        lagScreen.style.display = 'flex';
-                        let currentProgress = 0;
-                        const progressInterval = setInterval(() => {
-                            currentProgress += Math.random() * 6;
-                            if (currentProgress >= 100) {
-                                currentProgress = 100;
-                                clearInterval(progressInterval);
-                                setTimeout(() => {
-                                    window.location.href = 'portal.html?auth=mars2026';
-                                }, 500);
-                            }
-                            lBar.style.width = currentProgress + '%';
-                        }, 40);
-                    } else {
-                        // 防呆，若動畫模組出錯仍可跳轉
-                        window.location.href = 'portal.html?auth=mars2026';
-                    }
-                } else {
-                    alert(isZh ? "伺服器錯誤: " + response.status : "SERVER ERROR: " + response.status);
-                    btn.innerText = originalBtnText;
-                    btn.disabled = false;
-                }
-            } catch (e) {
-                alert(isZh ? "信號中斷，請重試" : "SIGNAL LOSS");
-                btn.innerText = originalBtnText;
-                btn.disabled = false;
-            }
-        };
-
-        // --- 3. 系統初始化核心 ---
+        // --- 2. 系統初始化核心 ---
         window.onload = function() {
             if(typeof setLang === 'function') setLang('en');
-            if(typeof updateProgress === 'function') updateProgress();
             if(typeof fetchLivePrices === 'function') fetchLivePrices(); 
             
             setInterval(() => { if(typeof fetchLivePrices === 'function') fetchLivePrices(); }, 30000); 
-            setInterval(() => { if(typeof updateProgress === 'function') updateProgress(); }, 60000);
             if(typeof initBGM === 'function') initBGM();
             
             // 嘗試自動靜默連線
@@ -573,7 +515,7 @@
                     }
                 }).catch(() => {});
             }
-            console.log('%c✅ ML1 V6.1.0 系統全面上線 (UI, Core, API Modules Active)', 'color:#00ff41; font-size:14px');
+            console.log('%c✅ ML1 V6.1.0 系統全面上線 (UI, Core Modules Active)', 'color:#00ff41; font-size:14px');
         };
     </script>
 </body>
