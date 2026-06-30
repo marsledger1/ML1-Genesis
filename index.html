@@ -112,8 +112,6 @@
         .sub-tab-content { background: rgba(0,0,0,0.85); border: 1px solid #333; padding: 40px; min-height: 500px; }
         .simulation-video { width: 100%; background: #000; border: 2px solid var(--tech-green); margin: 20px 0; }
         
-        #invite-section { margin: 80px 0 40px; padding: 30px; background: var(--terminal-gray); border: 2px dashed var(--tech-green); text-align: center; }
-
         #whitepaper-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.97); z-index: 99999; color: #00ff41; font-family: 'JetBrains Mono', monospace; overflow-y: auto; }
         .modal-content { max-width: 960px; margin: 60px auto; padding: 50px 40px; background: #000; border: 1px solid #00ff41; box-shadow: 0 0 40px rgba(0, 255, 65, 0.6); }
         .modal-close { float: right; background: none; border: 2px solid #00ff41; color: #00ff41; padding: 8px 16px; cursor: pointer; font-size: 1.1rem; }
@@ -286,7 +284,7 @@
                 <div id="sync-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
                     <div>
                         <h3 id="t-sync-h" style="font-size: 0.8rem; color: var(--lag-blue); margin: 0;">GENESIS FUNDING SYNCHRONIZATION</h3>
-                        <p id="t-sync-p" style="font-size: 0.7rem; color: var(--mars-red); margin: 5px 0 0 0; letter-spacing: 1px;">[ TARGET: 1,000,000 USD // SECURE PHASE 1 HARDWARE & MINT 10M $ML1 (THE ANCHOR OF FAITH) ]</p>
+                        <p id="t-sync-p" style="font-size: 0.7rem; color: var(--mars-red); margin: 5px 0 0 0; letter-spacing: 1px;">[ LIVE SYNC WITH DAPP // 進度條與去中心化鑄造引擎實時同步 ]</p>
                     </div>
                     <div class="percentage" id="sync-percent">0%</div>
                 </div>
@@ -294,10 +292,6 @@
                 
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 8px;">
                     <span id="sync-progress-text" style="font-size: 0.65rem; color: var(--tech-green); font-weight: bold; letter-spacing: 1px;">SYNCING LIVE USD DATA...</span>
-                    <div style="text-align: right; font-size: 0.65rem; color: #ccc;">
-                        <span lang-content="en">Eligible Nodes: <b id="sync-nodes" style="color:var(--lag-blue);">0</b> (Shared)</span>
-                        <span lang-content="zh">符合資格節點: <b id="sync-nodes-zh" style="color:var(--lag-blue);">0</b> (共同分配)</span>
-                    </div>
                 </div>
             </section>
 
@@ -308,47 +302,10 @@
                     <span lang-content="zh">此統一創世金庫地址支援無縫接收原生 <b>SOL</b> 及所有指定的 SPL 星際資產 <b>(USDC, USDT, JUP, JTO, PYTH, BONK, BOME)</b>。</span>
                 </p>
                 <div class="address-item" style="border-color: var(--tech-green); background: rgba(0, 255, 65, 0.05); display: flex; justify-content: space-between; align-items: center; padding: 15px 20px;">
-                    <span style="color: var(--tech-green); font-weight: bold; font-size: 0.9rem;">SOLANA MULTI-ASSET VAULT</span>
-                    <code style="font-size: 1rem; color: #fff; letter-spacing: 1px;">HaxcCmk9zDndKPiudNJKTGtXueSNHQC6FrmnTPnH8g7f</code>
-                    <button style="background: var(--tech-green); border: none; color: #000; font-size: 0.8rem; font-weight: bold; cursor: pointer; padding: 8px 20px; transition: 0.3s;" onmouseover="this.style.boxShadow='0 0 15px var(--tech-green)'" onmouseout="this.style.boxShadow='none'" onclick="copy('HaxcCmk9zDndKPiudNJKTGtXueSNHQC6FrmnTPnH8g7f')">COPY</button>
+                    <span style="color: var(--tech-green); font-weight: bold; font-size: 0.9rem;">PROJECT CONTRACT</span>
+                    <code style="font-size: 0.9rem; color: #fff; letter-spacing: 1px;">DV5rUKjo3ufjyAVNpsQaL19GYtToo5oXJpZ6gjvjhDau</code>
+                    <button style="background: var(--tier5-gold); border: none; color: #000; font-size: 0.95rem; font-weight: bold; cursor: pointer; padding: 12px 30px; letter-spacing: 1px; transition: 0.3s; box-shadow: 0 0 15px rgba(255, 223, 0, 0.4);" onmouseover="this.style.boxShadow='0 0 25px rgba(255, 223, 0, 0.8)'; this.style.transform='scale(1.05)';" onmouseout="this.style.boxShadow='0 0 15px rgba(255, 223, 0, 0.4)'; this.style.transform='scale(1)';" onclick="window.location.href='https://go.ml1.space'">🚀 MINT NOW</button>
                 </div>
-            </section>
-
-            <section class="node-allocation" style="background: var(--mars-red); border: 1px solid var(--mars-red); text-align: center; padding: 40px; margin-bottom: 30px;">
-                <h3 id="t-reg-h" style="margin-top: 0; font-size: 1.2rem; color: #fff; letter-spacing: 1px;">PIONEER REGISTRY (NODE PRESALE)</h3>
-                
-                <p style="font-size: 0.75rem; color: #ffcc00; font-weight: bold; margin-bottom: 15px; border: 1px dashed #ffcc00; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 0;">
-                    <span lang-content="en">⚠️ AFTER COMMITTING: Proceed to the Pioneer Hub (Portal) to register your Fission Code and activate On-Chain Cross-Validation!</span>
-                    <span lang-content="zh">⚠️ 強烈建議：打款提交後，請務必前往「先鋒樞紐 (Pioneer Hub)」註冊您的專屬裂變代碼，啟動星際鏈上交叉驗證！</span>
-                </p>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                    <select id="reg-network" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 15px; width: 100%; outline: none; font-family: inherit; text-align: center;">
-                        <option value="SOL">SOLANA</option>
-                        <option value="USDC">USDC</option>
-                        <option value="USDT">USDT</option>
-                        <option value="JUP">JUPITER</option>
-                        <option value="JTO">JITO</option>
-                        <option value="PYTH">PYTH</option>
-                        <option value="BONK">BONK</option>
-                        <option value="BOME">BOME</option>
-                    </select>
-                    <input type="number" id="reg-amount" placeholder="Token Amount (e.g., 0.112)" step="any" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 15px; width: 100%; outline: none; text-align: center;">
-                </div>
-
-                <button type="button" id="btn-connect-index" onclick="connectWallet('reg-wallet', 'btn-connect-index')" style="background: transparent; border: 1px dashed #00ff41; color: #00ff41; padding: 10px; width: 100%; margin-bottom: 10px; cursor: pointer; font-family: inherit; font-weight: bold; letter-spacing: 1px; transition: 0.3s;" onmouseover="this.style.background='rgba(0,255,65,0.1)'" onmouseout="this.style.background='transparent'">
-                    👻 CONNECT SOLANA WALLET
-                </button>
-                <input type="text" id="reg-wallet" placeholder="Wallet Address (Must match reservation)" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 15px; width: 100%; outline: none; text-align: center; margin-bottom: 10px;">
-                
-                <div style="background: rgba(0, 0, 0, 0.4); border-left: 3px solid #ffdf00; padding: 10px; margin-bottom: 15px; font-size: 0.7rem; color: #ffdf00; text-transform: uppercase; text-align: left;">
-                    <span lang-content="en">⚠️ CRITICAL: DO NOT SEND FUNDS FROM EXCHANGES (BINANCE, OKX, COINBASE). USE ONLY SELF-CUSTODIAL WALLETS (PHANTOM, METAMASK, TRUST). YOU MUST CONTROL THE PRIVATE KEYS TO CLAIM ML1 AT TGE. EXCHANGES WILL CAUSE PERMANENT LOSS OF ALLOCATION.</span>
-                    <span lang-content="zh">⚠️ 嚴重警告：絕對禁止從交易所（幣安、OKX等）直接提現打款！請務必使用個人錢包（Phantom, Solflare, Trust 等）。您必須擁有私鑰才能在 TGE 時申領 ML1。從交易所提現將導致份額永久喪失！</span>
-                </div>
-                
-                <input type="text" id="reg-hash" placeholder="Transaction Hash (TXID)" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 15px; width: 100%; outline: none; text-align: center; margin-bottom: 15px;">
-                
-                <button class="btn-submit" id="t-btn" onclick="submitToLedger()" style="background: #fff; color: #000; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.3s; letter-spacing: 1px;">COMMIT TO INTERSTELLAR LEDGER</button>
             </section>
 
             <div style="display: none; background:#111; border:2px solid var(--lag-blue); padding:20px; margin-bottom:40px; max-width:860px; margin-left:auto; margin-right:auto;">
@@ -405,50 +362,11 @@
                 </div>
             </div>
 
-            <div id="invite-section">
-                <h3 id="invite-title">PIONEER UNIVERSAL KEY // 先鋒通用金鑰</h3>
-                <p id="invite-desc" style="font-size:0.9rem; margin-bottom:20px; color:#ccc;"></p>
-                <input id="access-key" type="text" placeholder="" style="max-width:420px; margin:0 auto 15px;">
-                <button id="unlock-btn" onclick="unlockPioneer()" class="btn-submit" style="max-width:420px; margin:0 auto; background:var(--tech-green); color:#000;">
-                    UNLOCK JEZERO CRATER
+            <div style="text-align: center; margin: 60px 0 40px;">
+                <button onclick="window.location.href='portal.html'" style="background: transparent; color: var(--tech-green); border: 1px dashed var(--tech-green); padding: 15px 40px; font-size: 1rem; font-weight: bold; cursor: pointer; letter-spacing: 2px; transition: 0.3s;" onmouseover="this.style.background='rgba(0, 255, 65, 0.1)';" onmouseout="this.style.background='transparent';">
+                    <span lang-content="en">>> ACCESS DeIF MANIFESTO (WHITEPAPER) <<</span>
+                    <span lang-content="zh">>> 查閱星際金融憲章 (核心白皮書) <<</span>
                 </button>
-                <p style="font-size:0.75rem; color:#555; margin-top:15px;" lang-content="zh">
-                    // 輸入您的專屬邀請碼 (例: ML1-XXXX) 即可無縫登入，免連錢包同步資產進度。
-                </p>
-                <p style="font-size:0.75rem; color:#555; margin-top:15px;" lang-content="en">
-                    // Enter your unique invite code (e.g., ML1-XXXX) to seamlessly login and sync asset progress without connecting a wallet.
-                </p>
-            </div>
-
-            <div id="exclusive-subsystem" style="display: none; margin-top: 40px; border: 2px solid var(--tech-green); padding: 20px;">
-                <div class="subsystem-header">
-                    [CREATOR SEEDER EXCLUSIVE] // 創世播種者專屬子系統<br>
-                    <span style="font-size:1rem; opacity:0.8;">JEZERO CRATER // PROTOCOL: ML1_LEVIATHAN // STATUS: DEPLOYING</span>
-                </div>
-
-                <div class="tab-nav">
-                    <button class="tab-btn active" onclick="switchSubTab(0)" id="sub-tab0">Telemetry [SIGNAL_SIMULATION_LOG]</button>
-                    <button class="tab-btn" onclick="switchSubTab(1)" id="sub-tab1">Secure Archive [WHITEPAPER]</button>
-                </div>
-
-                <div id="sub-tab-content-0" class="sub-tab-content" style="display:block;">
-                    <h3 style="color:var(--tech-green); margin-top:0;">SIGNAL_SIMULATION_LOG</h3>
-                    <div style="text-align:center; margin:30px 0;">
-                        <video class="simulation-video" controls autoplay loop muted>
-                            <source src="https://i.imgur.com/PNf6Jkz.mp4" type="video/mp4">
-                            您的瀏覽器不支援影片播放。
-                        </video>
-                    </div>
-                </div>
-
-                <div id="sub-tab-content-1" class="sub-tab-content" style="display:none;">
-                    <h3 style="color:var(--tech-green); margin-top:0;">SECURE ARCHIVE // 技術白皮書</h3>
-                    <div style="text-align:center; margin:40px 0;">
-                        <button onclick="openWhitepaperModal()" style="background:#000; color:#00ff41; border:2px solid #00ff41; padding:20px 50px; font-size:1.1rem; cursor:pointer;">
-                            ENTER SECURE ARCHIVE
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -456,99 +374,32 @@
             <div style="text-align:center; margin-bottom:25px;">
                 <h2 style="color:var(--tech-green); letter-spacing:3px;">ML1 // DEEP SPACE TELEMETRY</h2>
                 <p style="color:#666; font-size:0.9rem;">
-                    <span lang-content="en">Edge-Compute Hardware Sync • NASA Open Telemetry</span>
-                    <span lang-content="zh">邊緣運算實體節點同步 • NASA 開源遙測鏈路</span>
+                    <span lang-content="en">Live NASA Solar System Orbit • Delay-Tolerant Networking (DTN)</span>
+                    <span lang-content="zh">NASA 即時太陽系軌道 • 延遲容忍網路 (DTN) 節點</span>
                 </p>
             </div>
 
-            <div style="position:relative; border:2px solid var(--tech-green); height:450px; margin:0 auto 30px; max-width:940px; overflow:hidden; background-color:#000;">
-                <div id="telemetry-bg" style="position:absolute; top:0; left:0; width:100%; height:100%; opacity: 0.85; transition: all 0.3s; filter: grayscale(10%) contrast(120%) hue-rotate(320deg);">
-                    <iframe src="https://eyes.nasa.gov/apps/solar-system/#/mars?embed=true" width="100%" height="100%" frameborder="0" style="pointer-events: auto;"></iframe>
-                </div>
-                <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 65, 0.05) 50%); background-size: 100% 4px; pointer-events:none;"></div>
-                <div id="screen-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,0,0,0); transition: background 0.5s; pointer-events:none;"></div>
-
-                <div style="position:absolute; top:20px; left:20px; color:var(--tech-green); font-size:0.8rem; letter-spacing:1px; text-shadow: 0 0 8px #000; pointer-events:none; background: rgba(0,0,0,0.6); padding: 5px 10px; border: 1px solid #333;">
-                    <span lang-content="en">[CAM_01] JEZERO_BASE // EDGE_NODE_ACTIVE</span>
-                    <span lang-content="zh">[CAM_01] 耶澤羅基地 // 邊緣運算節點在線</span><br>
-                    <span lang-content="en">SYS_LOAD: </span><span lang-content="zh">系統負載: </span><span id="sys-load">42</span>%
-                </div>
-                <div style="position:absolute; top:20px; right:20px; color:var(--tech-green); font-size:0.8rem; text-align:right; text-shadow: 0 0 8px #000; pointer-events:none; background: rgba(0,0,0,0.6); padding: 5px 10px; border: 1px solid #333;">
-                    <span lang-content="en">LATENCY: </span><span lang-content="zh">通訊延遲: </span><span id="live-latency">21.4</span> MIN<br>
-                    <span id="conn-status" style="color:#00ff41; font-weight:bold;">
-                        <span lang-content="en">■ UPLINK SECURE</span>
-                        <span lang-content="zh">■ 上行鏈路安全</span>
-                    </span>
-                </div>
-
-                <div style="position:absolute; bottom:20px; left:20px; right:20px; background:rgba(0,0,0,0.85); border:1px solid var(--tech-green); padding:15px; font-family:'Courier New', monospace; height: 120px; overflow:hidden; pointer-events:none;">
-                    <div id="terminal-output" style="color:var(--tech-green); font-size:0.85rem; line-height:1.5;">
-                        <div lang-content="en">> INITIALIZING ML1 ASYNCHRONOUS ENGINE...<br>> AWAITING HARDWARE COMMAND...</div>
-                        <div lang-content="zh">> 正在初始化 ML1 非同步引擎...<br>> 等待硬體指令輸入...</div>
-                        <div style="color:#888; font-size:0.7rem; margin-top:10px;">// TOUCH & DRAG TO EXPLORE MARS 3D ORBIT //</div>
-                    </div>
-                </div>
+            <div style="position:relative; border:1px solid var(--tech-green); height:500px; margin:0 auto 30px; max-width:100%; overflow:hidden; background-color:#000;">
+                <iframe src="https://eyes.nasa.gov/apps/solar-system/#/mars?embed=true" width="100%" height="100%" frameborder="0" style="pointer-events: auto;"></iframe>
             </div>
 
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; margin:30px 0 40px;">
-                <button onclick="triggerISRU()" style="background:#0a0a0a; color:var(--tech-green); border:1px solid var(--tech-green); padding:20px; font-size:0.9rem; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:0.3s; font-weight:bold;" onmouseover="this.style.background='rgba(0,255,65,0.1)'" onmouseout="this.style.background='#0a0a0a'">
-                    <span lang-content="en">[01] FETCH NASA ION (DTN) TELEMETRY</span>
-                    <span lang-content="zh">[01] 獲取 NASA ION 延遲容忍網路數據</span>
-                </button>
-                <button onclick="triggerSnapshot()" style="background:#0a0a0a; color:var(--tier5-gold); border:1px solid var(--tier5-gold); padding:20px; font-size:0.9rem; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:0.3s; font-weight:bold;" onmouseover="this.style.background='rgba(255,223,0,0.1)'" onmouseout="this.style.background='#0a0a0a'">
-                    <span lang-content="en">[02] COMPILE ZK-PROOF VIA H100 MATRIX</span>
-                    <span lang-content="zh">[02] 呼叫地球 H100 矩陣編譯 ZK 證明</span>
-                </button>
-                <button onclick="triggerBlackout()" style="background:#0a0a0a; color:var(--lag-blue); border:1px solid var(--lag-blue); padding:20px; font-size:0.9rem; cursor:pointer; text-transform:uppercase; letter-spacing:1px; transition:0.3s; font-weight:bold;" onmouseover="this.style.background='rgba(0,191,255,0.1)'" onmouseout="this.style.background='#0a0a0a'">
-                    <span lang-content="en">[03] BROADCAST TO SOLANA MAINNET</span>
-                    <span lang-content="zh">[03] 廣播至 SOLANA 主網進行結算</span>
-                </button>
+            <div style="background: rgba(0, 255, 65, 0.05); border-left: 3px solid var(--tech-green); padding: 25px; margin-bottom: 40px;">
+                <h3 style="color: var(--tech-green); margin-top: 0; font-size: 1.1rem; letter-spacing: 1px;">
+                    <span lang-content="en">RESEARCH ARCHIVE: NASA ION & DTN PROTOCOL</span>
+                    <span lang-content="zh">科研檔案：NASA ION 與 DTN 協議</span>
+                </h3>
+                <p style="color: #ccc; font-size: 0.85rem; line-height: 1.8; margin-bottom: 15px;">
+                    <span lang-content="en">The Mars Ledger 1 (ML1) architecture is deeply inspired by NASA's Delay/Disruption Tolerant Networking (DTN) and the Interplanetary Overlay Network (ION) software. By abandoning synchronous TCP/IP handshakes, DTN utilizes a "Store-and-Forward" bundle protocol. ML1 implements this via an Asynchronous State Machine on the Solana Virtual Machine (SVM), ensuring that cryptographic proofs generated on Mars can survive the 22-minute latency wall and securely settle on Earth.</span>
+                    <span lang-content="zh">Mars Ledger 1 (ML1) 的底層架構深受 NASA「延遲/中斷容忍網路」(DTN) 及「星際覆蓋網路」(ION) 軟體的啟發。藉由放棄地球傳統的同步 TCP/IP 握手協議，DTN 採用「儲存並轉發」(Store-and-Forward) 封包技術。ML1 透過在 Solana 虛擬機 (SVM) 上構建「非同步狀態機」來實現此一概念，確保在火星生成的密碼學證明能跨越 22 分鐘的通訊延遲牆，安全地在地球主網結算。</span>
+                </p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <a href="https://www.nasa.gov/technology/space-comms/delay-disruption-tolerant-networking-mission-resources/" target="_blank" style="color: var(--lag-blue); text-decoration: none; font-size: 0.8rem; border: 1px dashed var(--lag-blue); padding: 8px 15px; transition: 0.3s;" onmouseover="this.style.background='rgba(0,191,255,0.1)'" onmouseout="this.style.background='transparent'">[🔗 NASA DTN OFFICIAL DOCS]</a>
+                    <a href="https://sourceforge.net/projects/ion-dtn/" target="_blank" style="color: var(--tier5-gold); text-decoration: none; font-size: 0.8rem; border: 1px dashed var(--tier5-gold); padding: 8px 15px; transition: 0.3s;" onmouseover="this.style.background='rgba(255,223,0,0.1)'" onmouseout="this.style.background='transparent'">[🔗 ION OPEN SOURCE]</a>
+                </div>
             </div>
+        </div>
 
         <footer id="t-foot">JEZERO CRATER // ARCHITECT: JACK YIU // ALPHA DEPLOYMENT</footer>
-    </div>
-
-    <div id="whitepaper-modal">
-        <div class="modal-content">
-            <button onclick="closeWhitepaperModal()" class="modal-close">✕ CLOSE ARCHIVE</button>
-            <h1>ML1 PROTOCOL TECHNICAL WHITEPAPER v6.1.0</h1>
-            
-            <h2 style="margin-top:60px;">ENGLISH VERSION</h2>
-            <p><strong>The Latency Wall</strong><br>
-            Earth-Mars communication delay is 3–22 minutes. Traditional TCP/IP and Earth-bound blockchains collapse under this barrier. ML1 is the first asynchronous state machine designed for deep space.</p>
-            
-            <p><strong>Core Pillars</strong><br>
-            • Asynchronous State Machine (Incremental Snapshot Synchronization)<br>
-            • Permissionless PoPW (Proof of Physical Work for Edge-Compute Robots)<br>
-            • The Thermodynamic Trinity Engine ($ML1 Mass, $O2 Energy, $DUST Entropy)</p>
-
-            <p><strong>Mesh Expansion & 2-Tier Volume Penetration</strong><br>
-            The expansion protocol utilizes a mathematically bulletproof 2-Tier penetration model. L1 recruits grant 100% volume and 1.0 score; L2 recruits grant 100% volume and 0.5 score. A strict On-Chain + IP Anti-Sybil rule requires actual deposited value (pUSD > 0) to validate nodes, protecting the system from bot farming.</p>
-
-            <p><strong>Non-Inflationary Financial Protocol & ISRU Economy</strong><br>
-            Earth-based systems rely on synchronous consensus and infinite money printing. ML1 solves this with a fixed 10,000,000 supply ($ML1). Post-TGE, Genesis Nodes can stake their $ML1 into "Cryo-Sleep" to mine $O2. $O2 is the industrial energy token of Mars, burnt for: <b>1. Edge-Compute API Calls (e.g., Tesla Optimus), 2. Mesh Bandwidth Routing Fees, 3. DAO Governance Voting.</b> Pure resource-backed interstellar liquidity.</p>
-            
-            <p><strong>The Genesis Council ($1M Hard Cap)</strong><br>
-            First-mover advantage in the Phase 1 Tiered Bonding Curve. Upon reaching the $1,000,000 Phase 1 Hard Cap, the Top 10 wallets on the Interstellar Leaderboard will permanently form the Genesis Council. They will unlock a permanent 5% Global $O2 Tax dividend, Phase 2 Price Lock quota, and Admin Keys for Jezero hardware nodes.</p>
-
-            <h2 style="margin-top:60px;">中文版（繁體）</h2>
-            <p><strong>延遲之牆</strong><br>
-            地球與火星通訊延遲為 3–22 分鐘。傳統 TCP/IP 與地球鏈在這道障礙前徹底崩潰。ML1 是首個為深空設計的非同步狀態機。</p>
-            
-            <p><strong>三大核心支柱</strong><br>
-            • 非同步狀態機（增量快照同步）<br>
-            • 無需許可的實體工作證明（PoPW）<br>
-            • 熱力學三位一體引擎（$ML1 質量、$O2 能量、$DUST 絕對稀缺）</p>
-
-            <p><strong>網格裂變機制與兩代資金穿透</strong><br>
-            系統採用無懈可擊的兩代穿透 (2-Tier Penetration) 模型：直推 (L1) 貢獻 100% 業績與 1.0 算力；間推 (L2) 貢獻 100% 業績與 0.5 算力。底層強制綁定 IP 指紋與星際鏈上資金交叉防刷機制，零資金機器人帳號無法產生 any 算力。</p>
-
-            <p><strong>非通脹金融協議與 ISRU 經濟</strong><br>
-            地球金融系統依賴同步共識與無限印鈔。ML1 以固定 10,000,000 總量 ($ML1) 徹底解決。在 TGE 後，創世節點可將 $ML1 放入「冷凍休眠質押」以挖掘 $O2。$O2 是火星的工業能源代幣，其剛需銷毀場景包含：<b>1. 邊緣計算 API 調用 (如自動化機器人)，2. 網格頻寬路由過路費，3. 節點 DAO 治理投票。</b>這是純工業資源驅動的星際流動性。</p>
-            
-            <p><strong>創世議會戰力榜 ($1M 硬頂特權)</strong><br>
-            在 Phase 1 階梯式聯合曲線中享有絕對的先發優勢。當 100 萬美金硬頂達成瞬間，全網排名前 10 的大戶將永久晉升為「創世議會」，並解鎖：全網 5% $O2 燃燒稅永久分紅、Phase 2 創世匯率 1:1 鎖定額度，以及火星實體節點之多簽管理員密鑰。</p>
-        </div>
     </div>
 
     <div id="lag-screen">

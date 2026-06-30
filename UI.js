@@ -204,8 +204,6 @@ function setLang(lang) {
     document.getElementById('t-sync-h').innerText = d.syncH;
     document.getElementById('t-sync-p').innerText = d.syncP;
     document.getElementById('t-node-h').innerText = d.nodeH;
-    document.getElementById('t-reg-h').innerText = d.regH;
-    document.getElementById('t-btn').innerText = d.btn;
     document.getElementById('t-foot').innerText = d.foot;
 
     document.getElementById('pill-grid').innerHTML = d.pills.map(p => `
@@ -224,26 +222,6 @@ function setLang(lang) {
             <h4 style="color: var(--tier5-gold);">${m[0]}</h4><p>${m[1]}</p>
         </div>
     `).join('');
-
-    document.getElementById('invite-title').innerHTML = d.inviteTitle;
-    document.getElementById('invite-desc').innerHTML = d.inviteDesc;
-    document.getElementById('access-key').placeholder = d.invitePlaceholder;
-    document.getElementById('unlock-btn').innerText = d.unlockBtn;
-
-    const regWallet = document.getElementById('reg-wallet');
-    if(regWallet) {
-        regWallet.placeholder = lang === 'en' ? "Wallet Address (Must match reservation)" : "錢包地址 (必須與預約地址相同)";
-    }
-    
-    const regAmount = document.getElementById('reg-amount');
-    if(regAmount) {
-        regAmount.placeholder = lang === 'en' ? "Token Amount (e.g., 0.112)" : "代幣數量 (例如: 0.112)";
-    }
-    
-    const regHash = document.getElementById('reg-hash');
-    if(regHash) {
-        regHash.placeholder = lang === 'en' ? "Transaction Hash (TXID)" : "交易哈希 (打款 TXID)";
-    }
 
     if (document.getElementById('calc-title')) {
         document.getElementById('calc-title').innerHTML = d.calcTitle;
