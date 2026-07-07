@@ -104,8 +104,8 @@ const content = {
         ],
         meshH: "MESH EXPANSION & THE GENESIS COUNCIL",
         meshes: [
-            ["2-TIER VOLUME PENETRATION", "A bulletproof network expansion algorithm. Direct recruits (L1) grant 100% volume and 1.0 score. Indirect recruits (L2) grant 100% volume and 0.5 score."],
-            ["MILITARY RANK SYSTEM", "Your capital and mesh size determine your Tier (From Genesis to Emperor). Reach Tier 5 ($50k+ or 100 Nodes) to unlock 40% TGE, 100 BTC Raffle Tickets, and a 100% $O2 Mining Boost."],
+            ["SINGLE-TIER FISSION MATRIX", "A bulletproof network expansion algorithm. Direct recruits (L1) grant 100% team volume and trigger instant smart-contract commission payouts directly to your wallet. Pure direct impact."],
+            ["MILITARY RANK SYSTEM", "Your capital and mesh size determine your Tier (From Genesis to Emperor). Reach Tier 5 ($50k+ or 100 Nodes) to unlock 40% TGE,  and $O2 Mining Boost."],
             ["THE GENESIS COUNCIL (TOP 10)", "When the $1M Phase 1 Hard Cap is reached, the Top 10 Leaderboard wallets permanently become the Genesis Council, unlocking a 5% Global $O2 Tax dividend, Phase 2 Price Lock quota, and hardware Admin Keys."],
             ["ANTI-SYBIL SUPREMACY", "Strict IP Fingerprinting combined with On-Chain Ledger cross-validation. A hard-coded requirement ensures only real capital generates network power. Zero tolerance for bot farming."]
         ],
@@ -152,8 +152,8 @@ const content = {
         ],
         meshH: "網格裂變機制與創世議會",
         meshes: [
-            ["兩代資金穿透 (2-TIER PENETRATION)", "無懈可擊的擴張演算法。直推 (L1) 貢獻 100% 業績與 1.0 算力；間推 (L2) 貢獻 100% 業績與 0.5 算力。讓資金雪球自動為您滾動。"],
-            ["軍閥階級系統 (MILITARY TIERS)", "由您的入金總量與網格規模決定軍階（從創世到火星大帝）。達成第五階 ($50k 或 100 節點) 即可解鎖 40% TGE、100 張 BTC 抽獎券與 100% $O2 挖礦極限加速。"],
+            ["單代直推矩陣 (SINGLE-TIER FISSION)", "無懈可擊的直屬擴張演算法。所有透過專屬連結的直推 (L1) 將為您貢獻 100% 團隊業績，並觸發智能合約秒結算高額佣金。專注核心裂變，直接掌控現金流。"],
+            ["軍閥階級系統 (MILITARY TIERS)", "由您的入金總量與網格規模決定軍階（從創世到火星大帝）。達成第五階 ($50k 或 100 節點) 即可解鎖 40% TGE、$O2 挖礦極限加速。"],
             ["創世議會戰力榜 (THE GENESIS COUNCIL)", "當 Phase 1 達成 100 萬美金硬頂瞬間，排名前 10 的大戶將永久晉升為創世議會，解鎖「全網 5% $O2 稅收分紅」、「Phase 2 創世匯率鎖定額度」與「實體節點最高管理員密鑰」。"],
             ["反女巫防刷矩陣 (ANTI-SYBIL)", "結合 IP 指紋追蹤與星際鏈上資金交叉驗證。底層強制要求真實入金才能產生裂變算力。零容忍任何無資金的機器人刷號行為，絕對保護真實大戶權益。"]
         ],
