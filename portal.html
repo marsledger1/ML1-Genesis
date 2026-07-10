@@ -106,7 +106,15 @@
 
 <div class="container">
     <div class="top-nav">
-        <div style="font-size: 9px; color: #555; letter-spacing: 1px;">ML1_V6.1_CORE // STRATEGIC_TERMINAL</div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="font-size: 9px; color: #555; letter-spacing: 1px;">ML1_V6.1_CORE // STRATEGIC_TERMINAL</div>
+            
+            <button onclick="window.location.href='index.html'" style="background: transparent; color: var(--lag-blue); border: 1px solid rgba(0, 191, 255, 0.5); padding: 5px 12px; font-size: 10px; font-weight: bold; cursor: pointer; letter-spacing: 1px; transition: 0.3s; box-shadow: 0 0 10px rgba(0, 191, 255, 0.2); width: fit-content;" onmouseover="this.style.background='var(--lag-blue)'; this.style.color='#000';" onmouseout="this.style.background='transparent'; this.style.color='var(--lag-blue)';">
+                <span lang-content="en">◀ [ RETURN TO ORIGIN ]</span>
+                <span lang-content="zh">◀ [ 返回官網首頁 ]</span>
+            </button>
+        </div>
+
         <div style="display: flex; gap: 10px; align-items: center;">
             <button class="lang-btn" id="bgm-toggle" onclick="toggleBGM(event)">🔇 BGM: AWAITING SYNC</button>
             <div style="display: flex; border-left: 1px solid #333; padding-left: 10px; margin-left: 5px;">
